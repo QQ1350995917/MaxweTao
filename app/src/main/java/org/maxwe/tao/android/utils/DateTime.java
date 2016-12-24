@@ -62,4 +62,10 @@ public class DateTime {
     public static long getCurrentTimestamp(){
         return new Date().getTime();
     }
+
+    public static String getCurrentTime(){
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        String format = simpleDateFormat.format(new Date());
+        return format;
+    }
 }

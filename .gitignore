@@ -1,0 +1,48 @@
+# Generate by MAC OS.
+.DS_Store
+
+# Windows thumbnail db
+Thumbs.db
+
+# Generate by Gradle
+gradle.properties
+build/
+gradle/
+.gradle/
+
+# Generate by Maven
+target/
+gen-external-apklibs/
+
+# Generate by IntelliJ IDEA
+*.iml
+*.ipr
+*.iws
+.idea/
+out/
+.idea_modules/
+
+# Genetate by Android Studio
+.navigation/
+captures/
+
+# Generate by Eclipse
+.settings/
+.project
+.classpath
+bin/
+gen/
+proguard/
+
+# Generate by java
+*.class
+
+# Generate by Andorid
+*.apk
+*.ap_
+*.dex
+local.properties
+obj/
+
+# Generate by Log
+*.log
