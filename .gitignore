@@ -46,3 +46,5 @@ obj/
 
 # Generate by Log
 *.log
+
+*.keystore

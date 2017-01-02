@@ -1,20 +1,13 @@
 <resources>
     <string name="app_name">seller</string>
-    <string name="string_splash_tip">Wealth, is earned out!</string>
-    <string name="string_label_user_login">用户登录</string>
-    <string name="string_label_user_register">用户注册</string>
+    <string name="string_search">搜索</string>
+    <string name="string_promotion">推广位</string>
+    <string name="string_link_convert">转链工具</string>
+    <string name="string_modify_password">修改密码</string>
+    <string name="string_newbie">新手教程</string>
+    <string name="string_version_upgrade">版本升级</string>
+    <string name="string_about_us">关于我们</string>
+    <string name="string_toast_last_version">已经是最新版本了</string>
 
-    <string name="string_button_login">登录</string>
-    <string name="string_button_register">注册</string>
-    <string name="string_button_password_lost">忘记密码？立即找回</string>
-    <string name="string_button_get_access_code_how">如何获取</string>
-    <string name="string_button_verify_get_code">获取验证码</string>
-
-    <string name="string_tip_access_code">请输入授权码</string>
-    <string name="string_tip_phone_number_input">请输入手机号码</string>
-    <string name="string_tip_password_input">请输入登录密码</string>
-    <string name="string_tip_verify_code_input">请输入验证码</string>
-    <string name="string_tip_password_setting1">请设置登录密码</string>
-    <string name="string_tip_password_setting2">请确认登录密码</string>
-
+    <integer name="type_id">1</integer>
 </resources>

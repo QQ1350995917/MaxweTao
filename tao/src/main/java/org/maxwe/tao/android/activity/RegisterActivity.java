@@ -41,7 +41,7 @@ public class RegisterActivity extends BaseActivity {
     private Button bt_act_cellphone_code;
 
     private String cellphoneOfGetCode = null;
-    private int DELAY = 5;
+    private int DELAY = 60;
     private Handler handler = new Handler() {
         public void handleMessage(android.os.Message msg) {
             if (msg.what > 0) {

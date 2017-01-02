@@ -1,13 +1,62 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="10dp"
+    android:background="#FFFFFF">
 
 
-    <TextView
+    <Button
+        android:id="@+id/bt_frg_mine_promotion"
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:text="@string/string_promotion" />
+
+    <Button
+        android:id="@+id/bt_frg_mine_link_convert"
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:layout_below="@+id/bt_frg_mine_promotion"
+        android:text="@string/string_link_convert" />
+
+    <Button
+        android:id="@+id/bt_frg_mine_password"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="mine"
-        android:background="#FF00FF"/>
+        android:layout_marginTop="20dp"
+        android:layout_below="@+id/bt_frg_mine_link_convert"
+        android:text="@string/string_modify_password" />
 
-</LinearLayout>
+    <Button
+        android:id="@+id/bt_frg_mine_newbie"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:layout_below="@+id/bt_frg_mine_password"
+        android:text="@string/string_newbie" />
+
+    <Button
+        android:id="@+id/bt_frg_mine_version_upgrade"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/bt_frg_mine_newbie"
+        android:text="@string/string_version_upgrade" />
+
+    <Button
+        android:id="@+id/bt_frg_mine_about_us"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/bt_frg_mine_version_upgrade"
+        android:text="@string/string_about_us" />
+
+    <Button
+        android:id="@+id/bt_frg_mine_exit"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/bt_frg_mine_about_us"
+        android:layout_marginTop="30dp"
+        android:background="#CC0000"
+        android:textColor="#FFFFFF"
+        android:text="@string/string_exit" />
+
+</RelativeLayout>

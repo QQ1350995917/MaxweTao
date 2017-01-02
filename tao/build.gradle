@@ -10,13 +10,29 @@ android {
         versionCode 1
         versionName "1.0"
     }
-    buildTypes {
+
+    signingConfigs {
         release {
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            storeFile file("../maxwetao.keystore")
+            storePassword System.getenv("MAXWETAOPWD")
+            keyAlias System.getenv("MAXWETAOKEYALIAS")
+            keyPassword System.getenv("MAXWETAOPWD")
         }
     }
 
+    buildTypes {
+        release {
+            minifyEnabled true
+            shrinkResources true
+            zipAlignEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig  signingConfigs.release
+        }
+    }
+
+    lintOptions {
+        abortOnError false
+    }
 
     productFlavors {
         agent {
@@ -24,7 +40,7 @@ android {
             versionName "1.0.0"
         }
         seller {
-            applicationId "org.maxwe.tao.android"
+            applicationId "org.maxwe.tao.seler.android"
             versionName "1.0.0"
         }
     }

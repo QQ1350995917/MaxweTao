@@ -11,8 +11,6 @@ import android.text.TextUtils;
 
 import org.maxwe.tao.android.Constants;
 import org.maxwe.tao.android.R;
-import org.maxwe.tao.android.activity.BaseActivity;
-import org.maxwe.tao.android.activity.LoginActivity;
 import org.maxwe.tao.android.main.MainActivity;
 import org.xutils.view.annotation.ContentView;
 
