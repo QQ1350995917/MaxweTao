@@ -1,1 +1,1 @@
-include ':seller', ':proxy'
+include ':tao'

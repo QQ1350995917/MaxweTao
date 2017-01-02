@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">agent</string>
+    <string name="string_my_agent">我的代理</string>
+    <string name="string_access_code_trade">授权转让</string>
+    <string name="string_search">搜索</string>
+    <string name="string_access">授权</string>
+
+    <integer name="type_id">2</integer>
+</resources>

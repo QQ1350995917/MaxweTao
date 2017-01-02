@@ -1,0 +1,51 @@
+<resources>
+
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="@style/Theme.AppCompat.Light.NoActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+    </style>
+
+    <style name="title">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">50dp</item>
+    </style>
+
+    <style name="title_text" parent="title">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_centerVertical">true</item>
+        <item name="android:textAlignment">center</item>
+        <item name="android:textSize">28dp</item>
+    </style>
+
+    <style name="title_button" parent="title">
+        <item name="android:layout_width">50dp</item>
+        <item name="android:layout_height">50dp</item>
+        <item name="android:background">#00000000</item>
+        <item name="android:layout_centerVertical">true</item>
+        <item name="android:scaleType">fitXY</item>
+    </style>
+
+    <style name="navigate">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:button">@null</item>
+        <item name="android:textAlignment">center</item>
+    </style>
+
+    <style name="index_block">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_weight">1</item>
+    </style>
+    <style name="index_block_image">
+        <item name="android:layout_width">100dp</item>
+        <item name="android:layout_height">100dp</item>
+        <item name="android:scaleType">fitXY</item>
+    </style>
+
+</resources>

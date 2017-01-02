@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <RelativeLayout
+        android:id="@+id/rl_act_agent_nav"
+        style="@style/nav_header_of_act">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:text="@string/string_my_agent"
+            android:textSize="24dp" />
+
+        <Button
+            android:id="@+id/bt_act_agent_back"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_centerVertical="true"
+            android:background="#00000000"
+            android:text="@string/string_back" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/rl_act_agent_access"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/rl_act_agent_nav"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp">
+
+        <EditText
+            android:id="@+id/et_act_agent_search_content"
+            style="@style/editor"
+            android:hint="@string/string_input_cellphone"
+            android:inputType="number"
+            android:maxLength="11" />
+
+        <Button
+            android:id="@+id/bt_act_agent_search_action"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:layout_alignBaseline="@+id/et_act_agent_search_content"
+            android:layout_alignRight="@+id/et_act_agent_search_content"
+            android:layout_marginBottom="10dp"
+            android:text="@string/string_access" />
+
+    </RelativeLayout>
+
+    <ListView
+        android:id="@+id/lv_act_agent_agents"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/rl_act_agent_access"></ListView>
+
+</RelativeLayout>
