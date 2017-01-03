@@ -53,6 +53,10 @@
         android:id="@+id/lv_act_agent_agents"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
         android:layout_below="@+id/rl_act_agent_access"></ListView>
+
+
 
 </RelativeLayout>

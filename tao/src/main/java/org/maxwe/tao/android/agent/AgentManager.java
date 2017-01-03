@@ -23,6 +23,7 @@ public class AgentManager {
     private static final String URL_MODIFY = Constants.DOMAIN + "/agent/password";
     private static final String URL_LOGIN = Constants.DOMAIN + "/agent/login";
     private static final String URL_LOGOUT = Constants.DOMAIN + "/agent/logout";
+    private static final String URL_GET_ACCESS = Constants.DOMAIN + "/agent/getAccess";
 
     public interface OnRequestCallback {
         void onSuccess(Response response);
@@ -88,6 +89,10 @@ public class AgentManager {
 
     public static Callback.Cancelable requestModifyPassword(AgentEntityInter agentEntity, OnRequestCallback onCreateCallback) {
         return request(URL_MODIFY, agentEntity, onCreateCallback);
+    }
+
+    public static Callback.Cancelable requestAccessCode(AgentEntityInter agentEntity, OnRequestCallback onCreateCallback){
+        return request(URL_GET_ACCESS, agentEntity, onCreateCallback);
     }
 
     public static Callback.Cancelable createToLocal(AgentEntityInter agentEntity, OnRequestCallback onCreateCallback) {

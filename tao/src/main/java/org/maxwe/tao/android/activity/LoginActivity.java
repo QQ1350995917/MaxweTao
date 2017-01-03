@@ -80,11 +80,9 @@ public class LoginActivity extends BaseActivity {
         edit.putString(Constants.KEY_SHARD_T_ACCOUNT, cellphone);
         edit.commit();
 
-        AgentEntityInter agentEntity = new AgentEntityInter();
-        agentEntity.setCellphone(cellphone);
-        agentEntity.setPassword(password);
-        agentEntity.setType(this.getResources().getInteger(R.integer.type_id));
-        AgentManager.requestLogin(agentEntity, new AgentManager.OnRequestCallback() {
+        AgentEntity agentEntity = new AgentEntity(cellphone,password,this.getResources().getInteger(R.integer.type_id));
+        AgentEntityInter agentEntityInter = new AgentEntityInter(agentEntity);
+        AgentManager.requestLogin(agentEntityInter, new AgentManager.OnRequestCallback() {
             @Override
             public void onSuccess(Response response) {
                 if (response.getCode() == IResponse.ResultCode.RC_SUCCESS.getCode()) {

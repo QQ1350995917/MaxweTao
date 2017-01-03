@@ -1,6 +1,7 @@
 package org.maxwe.tao.android.main;
 
 import android.app.Activity;
+import android.app.Dialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -41,6 +42,11 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
             this.rg_act_navigate.getChildAt(index).setOnClickListener(this);
         }
         this.setCurrentFragment(R.id.rb_act_main_index);
+
+        Dialog dialog = new AccessDialog(this);
+        dialog.show();
+
+
     }
 
     @Override
@@ -89,11 +95,17 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     @Override
     public void onStart() {
         super.onStart();
+
     }
 
     @Override
     public void onStop() {
         super.onStop();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
     }
 
     @Override

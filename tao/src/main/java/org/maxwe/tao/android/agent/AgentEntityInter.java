@@ -15,6 +15,10 @@ public class AgentEntityInter extends AgentEntity {
         super();
     }
 
+    public AgentEntityInter(String cellPhoneCode,String token,int type){
+
+    }
+
     public AgentEntityInter(AgentEntity agentEntity) {
         this.setAgentId(agentEntity.getAgentId());
         this.setAgentPId(agentEntity.getAgentPId());

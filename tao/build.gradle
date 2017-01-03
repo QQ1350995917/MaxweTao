@@ -39,10 +39,10 @@ android {
             applicationId "org.maxwe.tao.agent.android"
             versionName "1.0.0"
         }
-        seller {
-            applicationId "org.maxwe.tao.seler.android"
-            versionName "1.0.0"
-        }
+//        seller {
+//            applicationId "org.maxwe.tao.seler.android"
+//            versionName "1.0.0"
+//        }
     }
 }
 

@@ -10,8 +10,8 @@ public class Constants {
     public static final String KEY_SHARD_T_CONTENT = "SHARED_CONTENT";
     public static final String KEY_SHARD_T_ACCOUNT = "SHARED_ACCOUNT";
 
-    public static final String DOMAIN = "http://192.168.10.69:8080/tao";
-//    public static final String DOMAIN = "http://192.168.0.106:8080/tao";
+//    public static final String DOMAIN = "http://192.168.10.69:8080/tao";
+    public static final String DOMAIN = "http://192.168.0.106:8080/tao";
     public static final String PARAMS = "p";
     public static final String T = "t";
 

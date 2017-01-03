@@ -4,6 +4,7 @@
     <string name="string_access_code_trade">授权转让</string>
     <string name="string_search">搜索</string>
     <string name="string_access">授权</string>
+    <string name="string_access_trade">授权转让</string>
 
     <integer name="type_id">2</integer>
 </resources>

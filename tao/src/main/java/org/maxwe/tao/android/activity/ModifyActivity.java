@@ -73,8 +73,9 @@ public class ModifyActivity extends BaseActivity {
         }
 
         SharedPreferences sharedPreferences = getSharedPreferences(Constants.KEY_SHARD_NAME, Activity.MODE_PRIVATE);
+        String cellphone = sharedPreferences.getString(Constants.KEY_SHARD_T_ACCOUNT, null);
         String key = sharedPreferences.getString(Constants.KEY_SHARD_T_CONTENT, null);
-        AgentEntity agentEntity = new AgentEntity(null, null, this.getResources().getInteger(R.integer.type_id));
+        AgentEntity agentEntity = new AgentEntity(cellphone, null, this.getResources().getInteger(R.integer.type_id));
         AgentEntityInter agentEntityInter = new AgentEntityInter(agentEntity);
         agentEntityInter.setT(key);
         agentEntityInter.setOrdPassword(oldPassword);
