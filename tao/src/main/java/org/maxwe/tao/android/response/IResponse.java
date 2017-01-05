@@ -1,11 +1,13 @@
 package org.maxwe.tao.android.response;
 
+import java.io.Serializable;
+
 /**
  * Created by Pengwei Ding on 2016-12-30 14:23.
  * Email: www.dingpengwei@foxmail.com www.dingpegnwei@gmail.com
  * Description: TODO
  */
-public interface IResponse {
+public interface IResponse extends Serializable {
 
     enum ResultCode {
         RC_SUCCESS(200),//执行成功

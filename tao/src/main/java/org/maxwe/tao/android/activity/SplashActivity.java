@@ -7,12 +7,15 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.Nullable;
+import android.support.v4.widget.TextViewCompat;
 import android.text.TextUtils;
+import android.widget.TextView;
 
 import org.maxwe.tao.android.Constants;
 import org.maxwe.tao.android.R;
 import org.maxwe.tao.android.main.MainActivity;
 import org.xutils.view.annotation.ContentView;
+import org.xutils.view.annotation.ViewInject;
 
 /**
  * Created by Pengwei Ding on 2016-12-30 13:03.
@@ -49,6 +52,9 @@ public class SplashActivity extends BaseActivity {
         }
     };
 
+    @ViewInject(R.id.tv_act_splash_version)
+    private TextView tv_act_splash_version;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -59,6 +65,19 @@ public class SplashActivity extends BaseActivity {
         } else {
             this.handler.sendEmptyMessageDelayed(WHAT_1, DELAY);
         }
+        this.tv_act_splash_version.setText(this.getVersionName());
+    }
 
+    private String getVersionName() {
+        try {
+            String packageName = this.getPackageName();
+            String versionName = this.getPackageManager().getPackageInfo(packageName, 0).versionName;
+            //int versionCode = this.getPackageManager().getPackageInfo(packageName, 0).versionCode;
+//            return packageName + "   " + versionName + "  " + versionCode;
+            return versionName;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 }

@@ -1,11 +1,13 @@
 package org.maxwe.tao.android.agent;
 
+import java.io.Serializable;
+
 /**
  * Created by Pengwei Ding on 2016-12-30 18:50.
  * Email: www.dingpengwei@foxmail.com www.dingpegnwei@gmail.com
  * Description: TODO
  */
-public class AgentEntity {
+public class AgentEntity implements Serializable{
     private String agentId;
     private String agentPId; // 可为空，只有经过了转让授权码的账户才不为空
     private String cellphone; // 不为空

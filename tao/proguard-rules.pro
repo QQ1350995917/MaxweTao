@@ -23,6 +23,7 @@
 -keep public interface org.xutils.** {
     public protected *;
 }
+-keep public class * extends org.xutils.http.BaseParams
 -keepclassmembers class * extends org.xutils.** {
     public protected *;
 }
@@ -32,13 +33,36 @@
     @org.xutils.view.annotation.Event <methods>;
 }
 #################### end region
+
 -dontwarn android.support.**
+
 -dontwarn com.alibaba.fastjson.**
--keep class com.alibaba.fastjson.** { *; }
--keepattributes *Annotation*
--keepattributes SourceFile,LineNumberTable
--ignorewarning
+-keep class com.alibaba.fastjson.**{*;}
+-keep class * implements java.io.Serializable { *; }
+-keep public class * extends org.maxwe.tao.android.agent.AgentEntity
+-keep public class * extends org.maxwe.tao.android.response.IResponse
+-keep public class * extends android.app.Fragment
+-keep public class * extends android.app.Activity
+-keep public class * extends android.app.Application
+-keep public class * extends android.app.Service
+-keep public class * extends android.content.BroadcastReceiver
+-keep public class * extends android.content.ContentProvider
+-keep public class * extends android.app.backup.BackupAgentHelper
+-keep public class * extends android.preference.Preference
+-keep public class * extends android.support.v4.**
+-keep public class com.android.vending.licensing.ILicensingService
+
 -keep public class * extends android.database.sqlite.SQLiteOpenHelper{*;}
+
+-keepattributes *Annotation*
+-keepattributes Signature
+
+-keepattributes SourceFile,LineNumberTable
+
+-ignorewarning
+-keepclassmembers class fqcn.of.javascript.interface.for.webview {
+   public *;
+}
 
 # 保留所有的本地native方法不被混淆
 -keepclasseswithmembernames class * {

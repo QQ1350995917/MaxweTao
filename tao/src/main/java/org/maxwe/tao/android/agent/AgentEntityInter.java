@@ -68,4 +68,9 @@ public class AgentEntityInter extends AgentEntity {
     public void setCellPhoneCode(String cellPhoneCode) {
         this.cellPhoneCode = cellPhoneCode;
     }
+
+    @Override
+    public String toString() {
+        return "cellphone = " + getCellphone();
+    }
 }

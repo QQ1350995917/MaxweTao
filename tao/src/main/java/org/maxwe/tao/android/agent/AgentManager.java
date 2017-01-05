@@ -34,7 +34,7 @@ public class AgentManager {
     private static Callback.Cancelable request(String url, final AgentEntityInter agentEntity, final OnRequestCallback onCreateCallback) {
         RequestParams requestParams = new RequestParams(url);
         requestParams.addParameter(Constants.PARAMS, JSON.toJSONString(agentEntity));
-        Callback.Cancelable cancelable = x.http().get(requestParams, new Callback.CommonCallback<String>() {
+        Callback.Cancelable cancelable = x.http().post(requestParams, new Callback.CommonCallback<String>() {
             @Override
             public void onSuccess(String result) {
                 System.out.println(result);
