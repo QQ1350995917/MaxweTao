@@ -1,22 +1,19 @@
 package org.maxwe.tao.android.agent;
 
-import java.util.LinkedList;
-
 /**
- * Created by Pengwei Ding on 2017-01-05 21:59.
+ * Created by Pengwei Ding on 2017-01-06 11:06.
  * Email: www.dingpengwei@foxmail.com www.dingpegnwei@gmail.com
  * Description: TODO
  */
-public class SubAgentModel extends AgentEntityInter {
-    private int pageIndex;
-    private int counter;
-    private LinkedList<AgentEntity> subAgents;
+public class TradeAgentModel extends AgentEntityInter{
+    private int tradeCode;//交易授权码的数量
+    private AgentEntity authorizedAgent;
 
-    public SubAgentModel() {
+    public TradeAgentModel() {
         super();
     }
 
-    public SubAgentModel(AgentEntityInter agentEntity) {
+    public TradeAgentModel(AgentEntityInter agentEntity) {
         this.setT(agentEntity.getT());
         this.setAgentId(agentEntity.getAgentId());
         this.setAgentPId(agentEntity.getAgentPId());
@@ -35,27 +32,19 @@ public class SubAgentModel extends AgentEntityInter {
         this.setUpdateTime(agentEntity.getUpdateTime());
     }
 
-    public int getPageIndex() {
-        return pageIndex;
+    public int getTradeCode() {
+        return tradeCode;
     }
 
-    public void setPageIndex(int pageIndex) {
-        this.pageIndex = pageIndex;
+    public void setTradeCode(int tradeCode) {
+        this.tradeCode = tradeCode;
     }
 
-    public int getCounter() {
-        return counter;
+    public AgentEntity getAuthorizedAgent() {
+        return authorizedAgent;
     }
 
-    public void setCounter(int counter) {
-        this.counter = counter;
-    }
-
-    public LinkedList<AgentEntity> getSubAgents() {
-        return subAgents;
-    }
-
-    public void setSubAgents(LinkedList<AgentEntity> subAgents) {
-        this.subAgents = subAgents;
+    public void setAuthorizedAgent(AgentEntity authorizedAgent) {
+        this.authorizedAgent = authorizedAgent;
     }
 }

@@ -27,6 +27,7 @@ public class AgentManager {
     private static final String URL_LOGOUT = Constants.DOMAIN + "/agent/logout";
     private static final String URL_AGENT = Constants.DOMAIN + "/agent/agent";//获取自己的信息
     private static final String URL_GRANT = Constants.DOMAIN + "/bus/grant";//授权
+    private static final String URL_AGENT_BUS = Constants.DOMAIN + "/bus/agent";//授权码交易前的检索
     private static final String URL_TRADE = Constants.DOMAIN + "/bus/trade";//授权码交易
     private static final String URL_AGENTS = Constants.DOMAIN + "/bus/agents";//获取下属代理
 
@@ -42,12 +43,12 @@ public class AgentManager {
         Callback.Cancelable cancelable = x.http().post(requestParams, new Callback.CommonCallback<String>() {
             @Override
             public void onSuccess(String result) {
-                System.out.println(result);
                 onCreateCallback.onSuccess(JSONObject.parseObject(result, Response.class));
             }
 
             @Override
             public void onError(Throwable ex, boolean isOnCallback) {
+                ex.printStackTrace();
                 onCreateCallback.onError(ex, agentEntity);
             }
 
@@ -104,9 +105,14 @@ public class AgentManager {
         return request(URL_GRANT, agentEntity, onCreateCallback);
     }
 
+    public static Callback.Cancelable requestAgentBus(AgentEntityInter agentEntity, OnRequestCallback onCreateCallback) {
+        return request(URL_AGENT_BUS, agentEntity, onCreateCallback);
+    }
+
     public static Callback.Cancelable requestTrade(AgentEntityInter agentEntity, OnRequestCallback onCreateCallback) {
         return request(URL_TRADE, agentEntity, onCreateCallback);
     }
+
     public static Callback.Cancelable requestAgents(SubAgentModel agentEntity, OnRequestCallback onCreateCallback) {
         return request(URL_AGENTS, agentEntity, onCreateCallback);
     }

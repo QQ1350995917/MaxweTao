@@ -6,7 +6,8 @@
     <string name="string_access">授权</string>
     <string name="string_access_trade">授权转让</string>
     <string name="string_grant_cellphone">请您正确输入要授权的手机号码</string>
-    <string name="string_grant_self">不能对自己授权</string>
+    <string name="string_right_cellphone">请您输入正确的手机号码</string>
+    <string name="string_grant_self">不能输入自己手机号码</string>
     <string name="string_grant_cellphone_dialog_title1">对</string>
     <string name="string_grant_cellphone_dialog_title2">授权</string>
     <string name="string_grant_cellphone_cancel">取消</string>
@@ -18,8 +19,16 @@
     <string name="string_grant_cellphone_no_exist">被授权人不存在</string>
     <string name="string_grant_cellphone_repeat">该号码已经被授权</string>
     <string name="string_agents_no_data">没有更多的数据了</string>
-
-
+    <string name="string_params_error">参数错误</string>
+    <string name="string_agents_no_code">您已经没有授权码了</string>
+    <string name="string_result_empty">没有数据</string>
+    <string name="string_agent_other">该号码不是你的代理</string>
+    <string name="string_agent_code_no_enough">您的授权码数量不足</string>
+    <string name="string_input_grant_code_number">请输入转让授权码数量</string>
+    <string name="string_input_grant_code_number_integer">授权码数量必须为整数</string>
+    <string name="string_input_grant_data_error">数据错误，请重新搜索</string>
+    <string name="string_input_trade_fail">转让失败</string>
+    <string name="string_input_trade_success">转让成功</string>
 
     <integer name="type_id">2</integer>
 </resources>

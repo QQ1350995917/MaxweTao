@@ -65,6 +65,16 @@ public class SplashActivity extends BaseActivity {
         } else {
             this.handler.sendEmptyMessageDelayed(WHAT_1, DELAY);
         }
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
         this.tv_act_splash_version.setText(this.getVersionName());
     }
 

@@ -26,7 +26,7 @@ public class MainActivity extends BaseActivity {
 
     @Event(value = R.id.bt_act_main_my_proxy, type = View.OnClickListener.class)
     private void onMyProxyAction(View view) {
-        Intent intent = new Intent(this, AgentActivity.class);
+        Intent intent = new Intent(this, GrantActivity.class);
         this.startActivityForResult(intent,REQUEST_CODE_PROXY);
     }
 

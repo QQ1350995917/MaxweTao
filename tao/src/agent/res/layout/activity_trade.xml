@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
     android:layout_height="match_parent">
 
     <RelativeLayout
@@ -22,6 +22,23 @@
             android:background="#00000000"
             android:text="@string/string_back" />
     </RelativeLayout>
+
+    <ProgressBar
+        android:id="@+id/pb_act_trade_progress"
+        style="?android:attr/progressBarStyleInverse"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:visibility="gone" />
+
+    <TextView
+        android:id="@+id/tv_act_trade_search_result"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:gravity="center"
+        android:text="22dp"
+        android:visibility="gone" />
 
     <RelativeLayout
         android:id="@+id/rl_act_trade_search_container"
@@ -52,38 +69,50 @@
         android:id="@+id/ll_act_trade_search_result_list"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:visibility="invisible"
+        android:layout_below="@+id/rl_act_trade_search_container"
         android:orientation="vertical"
-        android:padding="15dp">
+        android:padding="15dp"
+        android:visibility="gone">
+
         <TextView
+            android:id="@+id/tv_act_trade_search_result_cellphone"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="电话：13333333333"
-            android:textSize="20dp"/>
+            android:textColor="#000000"
+            android:textSize="18dp" />
+
         <TextView
+            android:id="@+id/tv_act_trade_search_result_grant_status"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="授权码：FFFFFFFFFFF"
-            android:textSize="20dp"/>
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="状态：20/30"
-            android:textSize="20dp"/>
+            android:textColor="#000000"
+            android:textSize="18dp" />
 
         <EditText
+            android:id="@+id/et_act_trade_code_number"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:hint="请输入转让数量"/>
-        <Button
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="确认转让"/>
-    </LinearLayout>
+            android:hint="请输入转让数量"
+            android:inputType="number"
+            android:maxLength="4"
+            android:layout_marginTop="20dp"/>
 
-</LinearLayout>
+        <Button
+            android:id="@+id/tv_act_trade_code_action"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="确认转让" />
+
+        <TextView
+            android:id="@+id/tv_act_trade_trade_result"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            android:gravity="center"
+            android:layout_marginTop="20dp"/>
+    </LinearLayout>
+</RelativeLayout>

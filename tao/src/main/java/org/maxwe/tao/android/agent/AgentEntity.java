@@ -14,7 +14,7 @@ public class AgentEntity implements Serializable{
     private String password; // 不为空
     private String name; // 自己命名的名字
     private String named; // 被上级备注的名字
-    private String code; //自己的授权码
+    private String grantCode; //自己的授权码
     private int type;// 业务类型，1普通的代理，2高级代理，3综合业务代理
     private int level; // 0 标示创始人，超级管理者
     private int status; // 状态
@@ -82,12 +82,12 @@ public class AgentEntity implements Serializable{
         this.named = named;
     }
 
-    public String getCode() {
-        return code;
+    public String getGrantCode() {
+        return grantCode;
     }
 
-    public void setCode(String code) {
-        this.code = code;
+    public void setGrantCode(String grantCode) {
+        this.grantCode = grantCode;
     }
 
     public int getType() {

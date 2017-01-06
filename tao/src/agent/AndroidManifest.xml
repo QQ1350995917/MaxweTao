@@ -17,7 +17,8 @@
         <activity android:name=".activity.LostActivity"></activity>
         <activity android:name=".activity.ModifyActivity"></activity>
         <activity android:name=".main.MainActivity"></activity>
-        <activity android:name=".main.AgentActivity"></activity>
+        <activity android:name=".main.GrantActivity"></activity>
+        <activity android:name=".main.GrantDialogActivity" android:theme="@style/AppTheme_activity_dialog"></activity>
         <activity android:name=".main.TradeActivity"></activity>
     </application>
 

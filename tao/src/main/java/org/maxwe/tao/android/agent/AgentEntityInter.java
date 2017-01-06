@@ -26,7 +26,7 @@ public class AgentEntityInter extends AgentEntity {
         this.setPassword(agentEntity.getPassword());
         this.setName(agentEntity.getName());
         this.setNamed(agentEntity.getNamed());
-        this.setCode(agentEntity.getCode());
+        this.setGrantCode(agentEntity.getGrantCode());
         this.setType(agentEntity.getType());
         this.setLevel(agentEntity.getLevel());
         this.setStatus(agentEntity.getStatus());

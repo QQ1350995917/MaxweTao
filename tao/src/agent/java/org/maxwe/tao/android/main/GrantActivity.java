@@ -2,14 +2,13 @@ package org.maxwe.tao.android.main;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
-import android.view.TextureView;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
@@ -22,7 +21,6 @@ import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
 
-import org.json.JSONObject;
 import org.maxwe.tao.android.Constants;
 import org.maxwe.tao.android.activity.BaseActivity;
 import org.maxwe.tao.android.R;
@@ -45,8 +43,8 @@ import java.util.List;
  * Email: www.dingpengwei@foxmail.com www.dingpegnwei@gmail.com
  * Description: TODO
  */
-@ContentView(R.layout.activity_agent)
-public class AgentActivity extends BaseActivity implements SwipeRefreshLayout.OnRefreshListener,AbsListView.OnScrollListener {
+@ContentView(R.layout.activity_grant)
+public class GrantActivity extends BaseActivity implements SwipeRefreshLayout.OnRefreshListener,AbsListView.OnScrollListener {
 
     private class AgentItemAdapter extends BaseAdapter {
         private LayoutInflater layoutInflater;
@@ -72,7 +70,7 @@ public class AgentActivity extends BaseActivity implements SwipeRefreshLayout.On
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
-            View inflate = this.layoutInflater.inflate(R.layout.activity_agent_item, null);
+            View inflate = this.layoutInflater.inflate(R.layout.activity_grant_item, null);
             TextView tv_act_agent_item_agents = (TextView) inflate.findViewById(R.id.tv_act_agent_item_agents);
             TextView tv_act_agent_item_cellphone = (TextView) inflate.findViewById(R.id.tv_act_agent_item_cellphone);
             TextView tv_act_agent_item_access_code = (TextView) inflate.findViewById(R.id.tv_act_agent_item_access_code);
@@ -80,8 +78,7 @@ public class AgentActivity extends BaseActivity implements SwipeRefreshLayout.On
             AgentEntity agentEntity = list.get(position);
             tv_act_agent_item_agents.setText("累计授权：" + agentEntity.getType());
             tv_act_agent_item_cellphone.setText("电话号码：" + agentEntity.getCellphone());
-            tv_act_agent_item_access_code.setText("授权号码：" + agentEntity.getCellphone());
-
+            tv_act_agent_item_access_code.setText("授权号码：" + agentEntity.getGrantCode());
             return inflate;
         }
     }
@@ -139,9 +136,9 @@ public class AgentActivity extends BaseActivity implements SwipeRefreshLayout.On
             return;
         }
 
-        AgentDialog agentDialog = new AgentDialog(this);
-        agentDialog.setCellphone(cellphone);
-        agentDialog.show();
+        Intent intent = new Intent(this, GrantDialogActivity.class);
+        intent.putExtra(GrantDialogActivity.KEY_CELLPHONE,cellphone);
+        this.startActivity(intent);
     }
 
 
@@ -192,7 +189,7 @@ public class AgentActivity extends BaseActivity implements SwipeRefreshLayout.On
                     return;
                 }
                 if (response.getCode() == IResponse.ResultCode.RC_SUCCESS_EMPTY.getCode()){
-                    Toast.makeText(AgentActivity.this,R.string.string_agents_no_data,Toast.LENGTH_SHORT).show();
+                    Toast.makeText(GrantActivity.this,R.string.string_agents_no_data,Toast.LENGTH_SHORT).show();
                     srl_act_agent_list_container.setRefreshing(false);
                 }
             }
