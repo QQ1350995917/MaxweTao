@@ -9,11 +9,10 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import org.maxwe.tao.android.Constants;
-import org.maxwe.tao.android.activity.BaseActivity;
 import org.maxwe.tao.android.R;
 import org.maxwe.tao.android.agent.AgentEntity;
 import org.maxwe.tao.android.agent.AgentEntityInter;
-import org.maxwe.tao.android.agent.AgentManager;
+import org.maxwe.tao.android.NetworkManager;
 import org.maxwe.tao.android.response.IResponse;
 import org.maxwe.tao.android.response.Response;
 import org.xutils.view.annotation.ContentView;
@@ -80,7 +79,7 @@ public class ModifyActivity extends BaseActivity {
         agentEntityInter.setT(key);
         agentEntityInter.setOrdPassword(oldPassword);
         agentEntityInter.setNewPassword(newPassword);
-        AgentManager.requestModifyPassword(agentEntityInter, new AgentManager.OnRequestCallback() {
+        NetworkManager.requestModifyPassword(agentEntityInter, new NetworkManager.OnRequestCallback() {
             @Override
             public void onSuccess(Response response) {
                 if (response.getCode() == IResponse.ResultCode.RC_SUCCESS.getCode()) {
@@ -104,7 +103,7 @@ public class ModifyActivity extends BaseActivity {
             }
 
             @Override
-            public void onError(Throwable exception, AgentEntity agentEntity) {
+            public void onError(Throwable exception, Object agentEntity) {
                 Toast.makeText(ModifyActivity.this, R.string.string_toast_network_error, Toast.LENGTH_SHORT).show();
             }
         });

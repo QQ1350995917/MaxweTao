@@ -8,12 +8,11 @@ import android.widget.Toast;
 
 import org.maxwe.tao.android.BaseFragment;
 import org.maxwe.tao.android.Constants;
+import org.maxwe.tao.android.NetworkManager;
 import org.maxwe.tao.android.R;
 import org.maxwe.tao.android.activity.LoginActivity;
 import org.maxwe.tao.android.activity.ModifyActivity;
-import org.maxwe.tao.android.agent.AgentEntity;
 import org.maxwe.tao.android.agent.AgentEntityInter;
-import org.maxwe.tao.android.agent.AgentManager;
 import org.maxwe.tao.android.main.MainActivity;
 import org.maxwe.tao.android.response.Response;
 import org.xutils.view.annotation.ContentView;
@@ -63,7 +62,7 @@ public class MineFragment extends BaseFragment {
         final SharedPreferences sharedPreferences = this.getActivity().getSharedPreferences(Constants.KEY_SHARD_NAME, Activity.MODE_PRIVATE);
         AgentEntityInter agentEntityInter = new AgentEntityInter();
         agentEntityInter.setT(sharedPreferences.getString(Constants.KEY_SHARD_T_CONTENT, null));
-        AgentManager.requestLogout(agentEntityInter, new AgentManager.OnRequestCallback() {
+        NetworkManager.requestLogout(agentEntityInter, new NetworkManager.OnRequestCallback() {
             @Override
             public void onSuccess(Response response) {
                 SharedPreferences.Editor edit = sharedPreferences.edit();
@@ -75,7 +74,7 @@ public class MineFragment extends BaseFragment {
             }
 
             @Override
-            public void onError(Throwable exception, AgentEntity agentEntity) {
+            public void onError(Throwable exception, Object agentEntity) {
                 Toast.makeText(MineFragment.this.getActivity(), R.string.string_toast_network_error, Toast.LENGTH_SHORT).show();
             }
         });

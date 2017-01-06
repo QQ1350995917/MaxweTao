@@ -10,12 +10,10 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.alibaba.fastjson.JSON;
-
 import org.maxwe.tao.android.Constants;
 import org.maxwe.tao.android.agent.AgentEntity;
 import org.maxwe.tao.android.agent.AgentEntityInter;
-import org.maxwe.tao.android.agent.AgentManager;
+import org.maxwe.tao.android.NetworkManager;
 import org.maxwe.tao.android.response.IResponse;
 import org.maxwe.tao.android.response.Response;
 import org.maxwe.tao.android.utils.CellPhoneUtils;
@@ -80,14 +78,14 @@ public class RegisterActivity extends BaseActivity {
             return;
         }
         this.cellphoneOfGetCode = cellphone;
-        AgentManager.requestSMSCode(cellphone, new AgentManager.OnRequestCallback() {
+        NetworkManager.requestSMSCode(cellphone, new NetworkManager.OnRequestCallback() {
             @Override
             public void onSuccess(Response response) {
                 Toast.makeText(RegisterActivity.this,R.string.string_toast_cellphone_code_send,Toast.LENGTH_SHORT).show();
             }
 
             @Override
-            public void onError(Throwable exception, AgentEntity agentEntity) {
+            public void onError(Throwable exception, Object agentEntity) {
 
             }
         });
@@ -147,7 +145,7 @@ public class RegisterActivity extends BaseActivity {
         AgentEntity agentEntity = new AgentEntity(cellphone, password, this.getResources().getInteger(R.integer.type_id));
         AgentEntityInter agentEntityInter = new AgentEntityInter(agentEntity);
         agentEntityInter.setCellPhoneCode(cellphoneCode);
-        AgentManager.requestCreate(agentEntityInter, new AgentManager.OnRequestCallback() {
+        NetworkManager.requestCreate(agentEntityInter, new NetworkManager.OnRequestCallback() {
             @Override
             public void onSuccess(Response response) {
                 if (response.getCode() == IResponse.ResultCode.RC_SUCCESS.getCode()) {
@@ -169,7 +167,7 @@ public class RegisterActivity extends BaseActivity {
             }
 
             @Override
-            public void onError(Throwable exception, AgentEntity agentEntity) {
+            public void onError(Throwable exception, Object agentEntity) {
                 Toast.makeText(RegisterActivity.this, R.string.string_toast_network_error, Toast.LENGTH_SHORT).show();
             }
         });

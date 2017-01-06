@@ -19,7 +19,7 @@ import org.maxwe.tao.android.R;
 import org.maxwe.tao.android.activity.BaseActivity;
 import org.maxwe.tao.android.agent.AgentEntity;
 import org.maxwe.tao.android.agent.AgentEntityInter;
-import org.maxwe.tao.android.agent.AgentManager;
+import org.maxwe.tao.android.NetworkManager;
 import org.maxwe.tao.android.agent.TradeAgentModel;
 import org.maxwe.tao.android.response.IResponse;
 import org.maxwe.tao.android.response.Response;
@@ -159,7 +159,7 @@ public class TradeActivity extends BaseActivity {
         TradeAgentModel tradeAgentModel = new TradeAgentModel(agentEntityInter);
         AgentEntity authorizedAgent = new AgentEntity(cellphone, null, -1);
         tradeAgentModel.setAuthorizedAgent(authorizedAgent);
-        AgentManager.requestAgentBus(tradeAgentModel, new AgentManager.OnRequestCallback() {
+        NetworkManager.requestAgentBus(tradeAgentModel, new NetworkManager.OnRequestCallback() {
             @Override
             public void onSuccess(Response response) {
                 if (response.getCode() == IResponse.ResultCode.RC_PARAMS_BAD.getCode()) {
@@ -197,7 +197,7 @@ public class TradeActivity extends BaseActivity {
             }
 
             @Override
-            public void onError(Throwable exception, AgentEntity agentEntity) {
+            public void onError(Throwable exception, Object agentEntity) {
                 Toast.makeText(TradeActivity.this, R.string.string_toast_network_error, Toast.LENGTH_SHORT).show();
                 onSearchErrorResult(TradeActivity.this.getString(R.string.string_toast_network_error));
             }
@@ -233,7 +233,7 @@ public class TradeActivity extends BaseActivity {
         tradeAgentModel.setTradeCode(Integer.parseInt(number));
         tradeAgentModel.setAuthorizedAgent(this.currentAuthorizedAgent);
 
-        AgentManager.requestTrade(tradeAgentModel, new AgentManager.OnRequestCallback() {
+        NetworkManager.requestTrade(tradeAgentModel, new NetworkManager.OnRequestCallback() {
             @Override
             public void onSuccess(Response response) {
                 if (response.getCode() == IResponse.ResultCode.RC_PARAMS_BAD.getCode()) {
@@ -265,7 +265,7 @@ public class TradeActivity extends BaseActivity {
             }
 
             @Override
-            public void onError(Throwable exception, AgentEntity agentEntity) {
+            public void onError(Throwable exception, Object agentEntity) {
                 Toast.makeText(TradeActivity.this, R.string.string_toast_network_error, Toast.LENGTH_SHORT).show();
                 onTradeFail(TradeActivity.this.getString(R.string.string_toast_network_error));
             }

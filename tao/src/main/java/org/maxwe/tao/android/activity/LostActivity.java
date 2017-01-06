@@ -13,7 +13,7 @@ import android.widget.Toast;
 import org.maxwe.tao.android.Constants;
 import org.maxwe.tao.android.agent.AgentEntity;
 import org.maxwe.tao.android.agent.AgentEntityInter;
-import org.maxwe.tao.android.agent.AgentManager;
+import org.maxwe.tao.android.NetworkManager;
 import org.maxwe.tao.android.response.IResponse;
 import org.maxwe.tao.android.response.Response;
 import org.maxwe.tao.android.utils.CellPhoneUtils;
@@ -79,14 +79,14 @@ public class LostActivity extends BaseActivity {
         }
 
         this.cellphoneOfGetCode = cellphone;
-        AgentManager.requestSMSCode(cellphone, new AgentManager.OnRequestCallback() {
+        NetworkManager.requestSMSCode(cellphone, new NetworkManager.OnRequestCallback() {
             @Override
             public void onSuccess(Response response) {
                 Toast.makeText(LostActivity.this,R.string.string_toast_cellphone_code_send,Toast.LENGTH_SHORT).show();
             }
 
             @Override
-            public void onError(Throwable exception, AgentEntity agentEntity) {
+            public void onError(Throwable exception, Object agentEntity) {
 
             }
         });
@@ -148,7 +148,7 @@ public class LostActivity extends BaseActivity {
         AgentEntityInter agentEntityInter = new AgentEntityInter(agentEntity);
         agentEntityInter.setCellPhoneCode(cellphoneCode);
         System.out.println(agentEntityInter);
-        AgentManager.requestLost(agentEntityInter, new AgentManager.OnRequestCallback() {
+        NetworkManager.requestLost(agentEntityInter, new NetworkManager.OnRequestCallback() {
             @Override
             public void onSuccess(Response response) {
                 if (response.getCode() == IResponse.ResultCode.RC_SUCCESS.getCode()) {
@@ -170,7 +170,7 @@ public class LostActivity extends BaseActivity {
             }
 
             @Override
-            public void onError(Throwable exception, AgentEntity agentEntity) {
+            public void onError(Throwable exception, Object agentEntity) {
                 Toast.makeText(LostActivity.this, R.string.string_toast_network_error, Toast.LENGTH_SHORT).show();
             }
         });

@@ -80,7 +80,7 @@ public class AccessDialog extends Dialog implements View.OnClickListener {
 //        AgentEntity agentEntity = new AgentEntity(cellphone, null, this.getContext().getResources().getInteger(R.integer.type_id));
 //        AgentEntityInter agentEntityInter = new AgentEntityInter(agentEntity);
 //        agentEntityInter.setT(key);
-//        AgentManager.requestAccessCode(agentEntityInter, new AgentManager.OnRequestCallback() {
+//        NetworkManager.requestAccessCode(agentEntityInter, new NetworkManager.OnRequestCallback() {
 //            @Override
 //            public void onSuccess(Response response) {
 //                Toast.makeText(AccessDialog.this.getContext(),R.string.string_access_success,Toast.LENGTH_SHORT).show();

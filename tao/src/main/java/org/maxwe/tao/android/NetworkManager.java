@@ -1,12 +1,11 @@
-package org.maxwe.tao.android.agent;
-
-import android.telecom.Call;
+package org.maxwe.tao.android;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 
-import org.maxwe.tao.android.Constants;
+import org.maxwe.tao.android.agent.AgentEntityInter;
 import org.maxwe.tao.android.response.Response;
+import org.maxwe.tao.android.version.VersionEntity;
 import org.xutils.common.Callback;
 import org.xutils.http.RequestParams;
 import org.xutils.x;
@@ -16,7 +15,7 @@ import org.xutils.x;
  * Email: www.dingpengwei@foxmail.com www.dingpegnwei@gmail.com
  * Description: TODO
  */
-public class AgentManager {
+public class NetworkManager {
 
     private static final String URL_EXIST = Constants.DOMAIN + "/agent/exist";
     private static final String URL_SMS = Constants.DOMAIN + "/agent/smsCode";
@@ -26,20 +25,24 @@ public class AgentManager {
     private static final String URL_LOGIN = Constants.DOMAIN + "/agent/login";
     private static final String URL_LOGOUT = Constants.DOMAIN + "/agent/logout";
     private static final String URL_AGENT = Constants.DOMAIN + "/agent/agent";//获取自己的信息
+
     private static final String URL_GRANT = Constants.DOMAIN + "/bus/grant";//授权
     private static final String URL_AGENT_BUS = Constants.DOMAIN + "/bus/agent";//授权码交易前的检索
     private static final String URL_TRADE = Constants.DOMAIN + "/bus/trade";//授权码交易
     private static final String URL_AGENTS = Constants.DOMAIN + "/bus/agents";//获取下属代理
 
+    private static final String URL_VERSION = Constants.DOMAIN + "/version/version";
+
     public interface OnRequestCallback {
+
         void onSuccess(Response response);
 
-        void onError(Throwable exception, AgentEntity agentEntity);
+        void onError(Throwable exception, Object object);
     }
 
-    private static Callback.Cancelable request(String url, final AgentEntity agentEntity, final OnRequestCallback onCreateCallback) {
+    private static Callback.Cancelable request(String url, final Object object, final OnRequestCallback onCreateCallback) {
         RequestParams requestParams = new RequestParams(url);
-        requestParams.addParameter(Constants.PARAMS, JSON.toJSONString(agentEntity));
+        requestParams.addParameter(Constants.PARAMS, JSON.toJSONString(object));
         Callback.Cancelable cancelable = x.http().post(requestParams, new Callback.CommonCallback<String>() {
             @Override
             public void onSuccess(String result) {
@@ -49,7 +52,7 @@ public class AgentManager {
             @Override
             public void onError(Throwable ex, boolean isOnCallback) {
                 ex.printStackTrace();
-                onCreateCallback.onError(ex, agentEntity);
+                onCreateCallback.onError(ex, object);
             }
 
             @Override
@@ -97,11 +100,11 @@ public class AgentManager {
         return request(URL_MODIFY, agentEntity, onCreateCallback);
     }
 
-    public static Callback.Cancelable requestAgent(AgentEntityInter agentEntity, OnRequestCallback onCreateCallback){
+    public static Callback.Cancelable requestAgent(AgentEntityInter agentEntity, OnRequestCallback onCreateCallback) {
         return request(URL_AGENT, agentEntity, onCreateCallback);
     }
 
-    public static Callback.Cancelable requestGrant(AgentEntityInter agentEntity, OnRequestCallback onCreateCallback){
+    public static Callback.Cancelable requestGrant(AgentEntityInter agentEntity, OnRequestCallback onCreateCallback) {
         return request(URL_GRANT, agentEntity, onCreateCallback);
     }
 
@@ -113,7 +116,11 @@ public class AgentManager {
         return request(URL_TRADE, agentEntity, onCreateCallback);
     }
 
-    public static Callback.Cancelable requestAgents(SubAgentModel agentEntity, OnRequestCallback onCreateCallback) {
+    public static Callback.Cancelable requestAgents(AgentEntityInter agentEntity, OnRequestCallback onCreateCallback) {
         return request(URL_AGENTS, agentEntity, onCreateCallback);
+    }
+
+    public static Callback.Cancelable requestNewVersion(VersionEntity versionEntity, OnRequestCallback onCreateCallback) {
+        return request(URL_VERSION, versionEntity, onCreateCallback);
     }
 }

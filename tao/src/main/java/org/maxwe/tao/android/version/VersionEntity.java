@@ -1,15 +1,17 @@
 package org.maxwe.tao.android.version;
 
+import java.io.Serializable;
+
 /**
  * Created by Pengwei Ding on 2017-01-06 18:11.
  * Email: www.dingpengwei@foxmail.com www.dingpegnwei@gmail.com
  * Description: TODO
  */
-public class VersionEntity {
+public class VersionEntity implements Serializable {
 
     private String versionId;
-    private String platform;
-    private int type;
+    private String platform; // ios or android
+    private int type; // 1 or 2
     private int versionCode;
     private String versionName;
     private String information;

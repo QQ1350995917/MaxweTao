@@ -10,13 +10,11 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.alibaba.fastjson.JSON;
-
 import org.maxwe.tao.android.Constants;
 import org.maxwe.tao.android.R;
 import org.maxwe.tao.android.agent.AgentEntity;
 import org.maxwe.tao.android.agent.AgentEntityInter;
-import org.maxwe.tao.android.agent.AgentManager;
+import org.maxwe.tao.android.NetworkManager;
 import org.maxwe.tao.android.main.MainActivity;
 import org.maxwe.tao.android.response.IResponse;
 import org.maxwe.tao.android.response.Response;
@@ -84,7 +82,7 @@ public class LoginActivity extends BaseActivity {
 
         AgentEntity agentEntity = new AgentEntity(cellphone,password,this.getResources().getInteger(R.integer.type_id));
         AgentEntityInter agentEntityInter = new AgentEntityInter(agentEntity);
-        AgentManager.requestLogin(agentEntityInter, new AgentManager.OnRequestCallback() {
+        NetworkManager.requestLogin(agentEntityInter, new NetworkManager.OnRequestCallback() {
             @Override
             public void onSuccess(Response response) {
                 if (response.getCode() == IResponse.ResultCode.RC_SUCCESS.getCode()) {
@@ -95,7 +93,7 @@ public class LoginActivity extends BaseActivity {
             }
 
             @Override
-            public void onError(Throwable exception, AgentEntity agentEntity) {
+            public void onError(Throwable exception, Object agentEntity) {
                 Toast.makeText(LoginActivity.this, R.string.string_toast_network_error, Toast.LENGTH_SHORT).show();
             }
         });

@@ -26,7 +26,7 @@ import org.maxwe.tao.android.activity.BaseActivity;
 import org.maxwe.tao.android.R;
 import org.maxwe.tao.android.agent.AgentEntity;
 import org.maxwe.tao.android.agent.AgentEntityInter;
-import org.maxwe.tao.android.agent.AgentManager;
+import org.maxwe.tao.android.NetworkManager;
 import org.maxwe.tao.android.agent.SubAgentModel;
 import org.maxwe.tao.android.response.IResponse;
 import org.maxwe.tao.android.response.Response;
@@ -172,7 +172,7 @@ public class GrantActivity extends BaseActivity implements SwipeRefreshLayout.On
         SubAgentModel subAgentModel = new SubAgentModel(agentEntityInter);
         subAgentModel.setPageIndex(pageIndex);
         subAgentModel.setCounter(counter);
-        AgentManager.requestAgents(subAgentModel, new AgentManager.OnRequestCallback() {
+        NetworkManager.requestAgents(subAgentModel, new NetworkManager.OnRequestCallback() {
             @Override
             public void onSuccess(Response response) {
                 if (response.getCode() == IResponse.ResultCode.RC_SUCCESS.getCode()){
@@ -195,7 +195,7 @@ public class GrantActivity extends BaseActivity implements SwipeRefreshLayout.On
             }
 
             @Override
-            public void onError(Throwable exception, AgentEntity agentEntity) {
+            public void onError(Throwable exception, Object agentEntity) {
                 exception.printStackTrace();
             }
         });
