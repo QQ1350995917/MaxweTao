@@ -1,18 +1,38 @@
 package org.maxwe.tao.android.main;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
+import android.support.v4.widget.SwipeRefreshLayout;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
+import android.view.TextureView;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.BaseAdapter;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.alibaba.fastjson.JSON;
+
+import org.json.JSONObject;
+import org.maxwe.tao.android.Constants;
 import org.maxwe.tao.android.activity.BaseActivity;
 import org.maxwe.tao.android.R;
 import org.maxwe.tao.android.agent.AgentEntity;
+import org.maxwe.tao.android.agent.AgentEntityInter;
+import org.maxwe.tao.android.agent.AgentManager;
+import org.maxwe.tao.android.agent.SubAgentModel;
+import org.maxwe.tao.android.response.IResponse;
+import org.maxwe.tao.android.response.Response;
+import org.maxwe.tao.android.utils.CellPhoneUtils;
 import org.xutils.view.annotation.ContentView;
 import org.xutils.view.annotation.Event;
 import org.xutils.view.annotation.ViewInject;
@@ -26,30 +46,23 @@ import java.util.List;
  * Description: TODO
  */
 @ContentView(R.layout.activity_agent)
-public class AgentActivity extends BaseActivity {
-
-    @ViewInject(R.id.lv_act_agent_agents)
-    private ListView lv_act_agent_agents;
-
-    private List<AgentEntity> list = new LinkedList<>();
+public class AgentActivity extends BaseActivity implements SwipeRefreshLayout.OnRefreshListener,AbsListView.OnScrollListener {
 
     private class AgentItemAdapter extends BaseAdapter {
         private LayoutInflater layoutInflater;
-        private List<AgentEntity> list = null;
 
-        public AgentItemAdapter(Context context, List<AgentEntity> list) {
+        public AgentItemAdapter(Context context) {
             this.layoutInflater = LayoutInflater.from(context);
-            this.list = list;
         }
 
         @Override
         public int getCount() {
-            return this.list.size();
+            return list.size();
         }
 
         @Override
         public Object getItem(int position) {
-            return this.list.get(position);
+            return list.get(position);
         }
 
         @Override
@@ -64,7 +77,7 @@ public class AgentActivity extends BaseActivity {
             TextView tv_act_agent_item_cellphone = (TextView) inflate.findViewById(R.id.tv_act_agent_item_cellphone);
             TextView tv_act_agent_item_access_code = (TextView) inflate.findViewById(R.id.tv_act_agent_item_access_code);
 
-            AgentEntity agentEntity = this.list.get(position);
+            AgentEntity agentEntity = list.get(position);
             tv_act_agent_item_agents.setText("累计授权：" + agentEntity.getType());
             tv_act_agent_item_cellphone.setText("电话号码：" + agentEntity.getCellphone());
             tv_act_agent_item_access_code.setText("授权号码：" + agentEntity.getCellphone());
@@ -73,15 +86,122 @@ public class AgentActivity extends BaseActivity {
         }
     }
 
+    @ViewInject(R.id.et_act_agent_search_content)
+    private EditText et_act_agent_search_content;
+    @ViewInject(R.id.bt_act_agent_search_action)
+    private Button bt_act_agent_search_action;
+
+    @ViewInject(R.id.srl_act_agent_list_container)
+    private SwipeRefreshLayout srl_act_agent_list_container;
+    @ViewInject(R.id.lv_act_agent_agents)
+    private ListView lv_act_agent_agents;
+
+    private List<AgentEntity> list = new LinkedList<>();
+    private AgentItemAdapter agentItemAdapter;
+
+    private int currentPageIndex = 0;
+    private int counter = 20;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        this.srl_act_agent_list_container.setOnRefreshListener(this);
+        this.srl_act_agent_list_container.setColorSchemeResources(
+                android.R.color.holo_orange_dark,
+                android.R.color.holo_green_light,
+                android.R.color.holo_orange_light,
+                android.R.color.holo_red_light);
+
         this.list.clear();
-        for (int i = 0; i < 100; i++) {
-            AgentEntity agentEntity = new AgentEntity("cellphone = " + i, null, i);
-            list.add(agentEntity);
+//        for (int i = 0; i < 100; i++) {
+//            AgentEntity agentEntity = new AgentEntity("cellphone = " + i, null, i);
+//            list.add(agentEntity);
+//        }
+        onLoadMySubAgents(currentPageIndex,counter);
+        lv_act_agent_agents.setOnScrollListener(this);
+        this.agentItemAdapter = new AgentItemAdapter(this);
+        this.lv_act_agent_agents.setAdapter(agentItemAdapter);
+    }
+
+
+    @Event(value = R.id.bt_act_agent_search_action, type = View.OnClickListener.class)
+    private void onGrantAction(View view) {
+        String cellphone = this.et_act_agent_search_content.getText().toString();
+        if (!CellPhoneUtils.isCellphone(cellphone)) {
+            Toast.makeText(this, R.string.string_grant_cellphone, Toast.LENGTH_SHORT).show();
+            return;
         }
-        this.lv_act_agent_agents.setAdapter(new AgentItemAdapter(this, this.list));
+
+        SharedPreferences sharedPreferences = this.getSharedPreferences(Constants.KEY_SHARD_NAME, Activity.MODE_PRIVATE);
+        String lastAccount = sharedPreferences.getString(Constants.KEY_SHARD_T_ACCOUNT, null);
+        if (TextUtils.equals(cellphone, lastAccount)) {
+            Toast.makeText(this, R.string.string_grant_self, Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        AgentDialog agentDialog = new AgentDialog(this);
+        agentDialog.setCellphone(cellphone);
+        agentDialog.show();
+    }
+
+
+    @Override
+    public void onRefresh() {
+        this.list.clear();
+        this.currentPageIndex = 0;
+        this.onLoadMySubAgents(this.currentPageIndex,counter);
+    }
+
+    @Override
+    public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+
+    }
+
+    @Override
+    public void onScrollStateChanged(AbsListView view, int scrollState) {
+        if (scrollState == AbsListView.OnScrollListener.SCROLL_STATE_IDLE) {
+            // 判断是否滚动到底部
+            if (view.getLastVisiblePosition() == view.getCount() - 1) {
+                //加载更多功能的代码
+                srl_act_agent_list_container.setRefreshing(true);
+                currentPageIndex ++;
+                onLoadMySubAgents(currentPageIndex, counter);
+            }
+        }
+    }
+
+    private void onLoadMySubAgents(int pageIndex, int counter) {
+        SharedPreferences sharedPreferences = getSharedPreferences(Constants.KEY_SHARD_NAME, Activity.MODE_PRIVATE);
+        String cellphone = sharedPreferences.getString(Constants.KEY_SHARD_T_ACCOUNT, null);
+        String key = sharedPreferences.getString(Constants.KEY_SHARD_T_CONTENT, null);
+        AgentEntity agentEntity = new AgentEntity(cellphone, null, this.getResources().getInteger(R.integer.type_id));
+        AgentEntityInter agentEntityInter = new AgentEntityInter(agentEntity);
+        agentEntityInter.setT(key);
+        SubAgentModel subAgentModel = new SubAgentModel(agentEntityInter);
+        subAgentModel.setPageIndex(pageIndex);
+        subAgentModel.setCounter(counter);
+        AgentManager.requestAgents(subAgentModel, new AgentManager.OnRequestCallback() {
+            @Override
+            public void onSuccess(Response response) {
+                if (response.getCode() == IResponse.ResultCode.RC_SUCCESS.getCode()){
+                    SubAgentModel responseSubAgentModel = JSON.parseObject(response.getData(), SubAgentModel.class);
+                    LinkedList<AgentEntity> subAgents = responseSubAgentModel.getSubAgents();
+                    list.addAll(subAgents);
+                    agentItemAdapter.notifyDataSetChanged();
+                    srl_act_agent_list_container.setRefreshing(false);
+                    return;
+                }
+                if (response.getCode() == IResponse.ResultCode.RC_SUCCESS_EMPTY.getCode()){
+                    Toast.makeText(AgentActivity.this,R.string.string_agents_no_data,Toast.LENGTH_SHORT).show();
+                    srl_act_agent_list_container.setRefreshing(false);
+                }
+            }
+
+            @Override
+            public void onError(Throwable exception, AgentEntity agentEntity) {
+                System.out.println();
+            }
+        });
     }
 
     @Event(value = R.id.bt_act_agent_back, type = View.OnClickListener.class)

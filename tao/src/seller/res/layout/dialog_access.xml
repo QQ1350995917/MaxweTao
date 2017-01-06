@@ -4,23 +4,33 @@
     android:layout_height="match_parent"
     android:padding="10dp">
 
+    <TextView
+        android:layout_width="300dp"
+        android:layout_height="150dp"
+        android:padding="10dp"
+        android:text="@string/string_accessing"
+        />
+
     <EditText
         android:id="@+id/et_dia_access_code"
         style="@style/editor"
-        android:layout_width="300dp" />
+        android:layout_width="300dp"
+        android:visibility="gone"/>
 
     <Button
         android:id="@+id/bt_dia_access_get_access"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/et_dia_access_code"
-        android:text="@string/string_get_access" />
+        android:text="@string/string_get_access"
+        android:visibility="gone"/>
 
     <ProgressBar
         android:id="@+id/pb_dia_access_progress"
         style="?android:attr/progressBarStyleInverse"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerInParent="true" />
+        android:layout_centerInParent="true"
+        android:visibility="gone"/>
 
 </RelativeLayout>

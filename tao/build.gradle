@@ -40,11 +40,11 @@ android {
             versionCode 2
             versionName "snapshot-1.0.1"
         }
-        seller {
-            applicationId "org.maxwe.tao.seler.android"
-            versionCode 2
-            versionName "snapshot-1.0.1"
-        }
+//        seller {
+//            applicationId "org.maxwe.tao.seler.android"
+//            versionCode 2
+//            versionName "snapshot-1.0.1"
+//        }
     }
 }
 

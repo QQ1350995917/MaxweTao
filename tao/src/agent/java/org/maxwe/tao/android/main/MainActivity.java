@@ -61,6 +61,12 @@ public class MainActivity extends BaseActivity {
             @Override
             public void onError(Throwable exception, AgentEntity agentEntity) {
                 Toast.makeText(MainActivity.this, R.string.string_toast_network_error, Toast.LENGTH_SHORT).show();
+                SharedPreferences.Editor edit = sharedPreferences.edit();
+                SharedPreferences.Editor remove = edit.remove(Constants.KEY_SHARD_T_CONTENT);
+                remove.commit();
+                Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+                MainActivity.this.startActivity(intent);
+                MainActivity.this.finish();
             }
         });
     }

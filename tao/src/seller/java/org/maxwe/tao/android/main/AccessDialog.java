@@ -1,23 +1,15 @@
 package org.maxwe.tao.android.main;
 
-import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.SharedPreferences;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
-import android.widget.Toast;
 
-import org.maxwe.tao.android.Constants;
 import org.maxwe.tao.android.R;
-import org.maxwe.tao.android.agent.AgentEntity;
-import org.maxwe.tao.android.agent.AgentEntityInter;
-import org.maxwe.tao.android.agent.AgentManager;
-import org.maxwe.tao.android.response.Response;
 
 /**
  * Created by Pengwei Ding on 2017-01-03 20:50.
@@ -58,7 +50,7 @@ public class AccessDialog extends Dialog implements View.OnClickListener {
     private void init() {
         this.setContentView(R.layout.dialog_access);
         this.setOnKeyListener(this.onKeyListener);
-        this.setCanceledOnTouchOutside(false);
+//        this.setCanceledOnTouchOutside(false);
         this.et_dia_access_code = (EditText) this.findViewById(R.id.et_dia_access_code);
         this.bt_dia_access_get_access = (Button) this.findViewById(R.id.bt_dia_access_get_access);
         this.pb_dia_access_progress = (ProgressBar) this.findViewById(R.id.pb_dia_access_progress);
@@ -67,40 +59,39 @@ public class AccessDialog extends Dialog implements View.OnClickListener {
     }
 
     private void setInitView() {
-        this.setTitle(R.string.string_input_access_code);
-        this.et_dia_access_code.setVisibility(View.VISIBLE);
-        this.bt_dia_access_get_access.setVisibility(View.VISIBLE);
-        this.pb_dia_access_progress.setVisibility(View.INVISIBLE);
+        this.setTitle(R.string.string_access_status);
+        this.et_dia_access_code.setVisibility(View.GONE);
+        this.bt_dia_access_get_access.setVisibility(View.GONE);
+        this.pb_dia_access_progress.setVisibility(View.GONE);
     }
 
     private void setAccessingView() {
-        this.setTitle(R.string.string_accessing);
-        this.et_dia_access_code.setVisibility(View.INVISIBLE);
-        this.bt_dia_access_get_access.setVisibility(View.INVISIBLE);
-        this.pb_dia_access_progress.setVisibility(View.VISIBLE);
+//        this.setTitle(R.string.string_accessing);
+//        this.et_dia_access_code.setVisibility(View.INVISIBLE);
+//        this.bt_dia_access_get_access.setVisibility(View.INVISIBLE);
     }
 
     @Override
     public void onClick(View v) {
         this.setAccessingView();
-        SharedPreferences sharedPreferences = this.getContext().getSharedPreferences(Constants.KEY_SHARD_NAME, Activity.MODE_PRIVATE);
-        String cellphone = sharedPreferences.getString(Constants.KEY_SHARD_T_ACCOUNT, null);
-        String key = sharedPreferences.getString(Constants.KEY_SHARD_T_CONTENT, null);
-        AgentEntity agentEntity = new AgentEntity(cellphone, null, this.getContext().getResources().getInteger(R.integer.type_id));
-        AgentEntityInter agentEntityInter = new AgentEntityInter(agentEntity);
-        agentEntityInter.setT(key);
-        AgentManager.requestAccessCode(agentEntityInter, new AgentManager.OnRequestCallback() {
-            @Override
-            public void onSuccess(Response response) {
-                Toast.makeText(AccessDialog.this.getContext(),R.string.string_access_success,Toast.LENGTH_SHORT).show();
-                AccessDialog.this.hide();
-            }
-
-            @Override
-            public void onError(Throwable exception, AgentEntity agentEntity) {
-                Toast.makeText(AccessDialog.this.getContext(),R.string.string_access_success,Toast.LENGTH_SHORT).show();
-                AccessDialog.this.hide();
-            }
-        });
+//        SharedPreferences sharedPreferences = this.getContext().getSharedPreferences(Constants.KEY_SHARD_NAME, Activity.MODE_PRIVATE);
+//        String cellphone = sharedPreferences.getString(Constants.KEY_SHARD_T_ACCOUNT, null);
+//        String key = sharedPreferences.getString(Constants.KEY_SHARD_T_CONTENT, null);
+//        AgentEntity agentEntity = new AgentEntity(cellphone, null, this.getContext().getResources().getInteger(R.integer.type_id));
+//        AgentEntityInter agentEntityInter = new AgentEntityInter(agentEntity);
+//        agentEntityInter.setT(key);
+//        AgentManager.requestAccessCode(agentEntityInter, new AgentManager.OnRequestCallback() {
+//            @Override
+//            public void onSuccess(Response response) {
+//                Toast.makeText(AccessDialog.this.getContext(),R.string.string_access_success,Toast.LENGTH_SHORT).show();
+//                AccessDialog.this.hide();
+//            }
+//
+//            @Override
+//            public void onError(Throwable exception, AgentEntity agentEntity) {
+//                Toast.makeText(AccessDialog.this.getContext(),R.string.string_access_success,Toast.LENGTH_SHORT).show();
+//                AccessDialog.this.hide();
+//            }
+//        });
     }
 }

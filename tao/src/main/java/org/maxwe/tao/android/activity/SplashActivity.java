@@ -24,7 +24,7 @@ import org.xutils.view.annotation.ViewInject;
  */
 @ContentView(R.layout.activity_splash)
 public class SplashActivity extends BaseActivity {
-    private static final int DELAY = 1000;
+    private static final int DELAY = 2000;
     private static final int WHAT_0 = 0;
     private static final int WHAT_1 = 1;
     private static final int WHAT_2 = 2;
