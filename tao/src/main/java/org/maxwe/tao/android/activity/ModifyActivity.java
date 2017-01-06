@@ -95,6 +95,11 @@ public class ModifyActivity extends BaseActivity {
                     return;
                 }
 
+                if (response.getCode() == IResponse.ResultCode.RC_ACCESS_TIMEOUT.getCode()){
+                    Toast.makeText(ModifyActivity.this,R.string.string_toast_timeout,Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
                 Toast.makeText(ModifyActivity.this, R.string.string_toast_reset_password_error, Toast.LENGTH_SHORT).show();
             }
 

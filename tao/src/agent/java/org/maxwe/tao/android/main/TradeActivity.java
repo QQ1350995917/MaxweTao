@@ -187,6 +187,11 @@ public class TradeActivity extends BaseActivity {
                     return;
                 }
 
+                if (response.getCode() == IResponse.ResultCode.RC_ACCESS_TIMEOUT.getCode()){
+                    Toast.makeText(TradeActivity.this,R.string.string_toast_timeout,Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
                 Toast.makeText(TradeActivity.this, R.string.string_agents_no_data, Toast.LENGTH_SHORT).show();
                 onSearchErrorResult(TradeActivity.this.getString(R.string.string_toast_network_error));
             }
@@ -247,6 +252,11 @@ public class TradeActivity extends BaseActivity {
                     TradeAgentModel responseAgentModel = JSON.parseObject(response.getData(), TradeAgentModel.class);
                     AgentEntity authorizedAgent = responseAgentModel.getAuthorizedAgent();
                     onTradeSuccess(authorizedAgent);
+                    return;
+                }
+
+                if (response.getCode() == IResponse.ResultCode.RC_ACCESS_TIMEOUT.getCode()){
+                    Toast.makeText(TradeActivity.this,R.string.string_toast_timeout,Toast.LENGTH_SHORT).show();
                     return;
                 }
 

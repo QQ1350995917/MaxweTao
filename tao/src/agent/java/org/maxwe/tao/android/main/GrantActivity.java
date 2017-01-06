@@ -108,12 +108,7 @@ public class GrantActivity extends BaseActivity implements SwipeRefreshLayout.On
                 android.R.color.holo_green_light,
                 android.R.color.holo_orange_light,
                 android.R.color.holo_red_light);
-
         this.list.clear();
-//        for (int i = 0; i < 100; i++) {
-//            AgentEntity agentEntity = new AgentEntity("cellphone = " + i, null, i);
-//            list.add(agentEntity);
-//        }
         onLoadMySubAgents(currentPageIndex,counter);
         lv_act_agent_agents.setOnScrollListener(this);
         this.agentItemAdapter = new AgentItemAdapter(this);
@@ -191,12 +186,17 @@ public class GrantActivity extends BaseActivity implements SwipeRefreshLayout.On
                 if (response.getCode() == IResponse.ResultCode.RC_SUCCESS_EMPTY.getCode()){
                     Toast.makeText(GrantActivity.this,R.string.string_agents_no_data,Toast.LENGTH_SHORT).show();
                     srl_act_agent_list_container.setRefreshing(false);
+                    return;
+                }
+
+                if (response.getCode() == IResponse.ResultCode.RC_ACCESS_TIMEOUT.getCode()){
+                    Toast.makeText(GrantActivity.this,R.string.string_toast_timeout,Toast.LENGTH_SHORT).show();
                 }
             }
 
             @Override
             public void onError(Throwable exception, AgentEntity agentEntity) {
-                System.out.println();
+                exception.printStackTrace();
             }
         });
     }

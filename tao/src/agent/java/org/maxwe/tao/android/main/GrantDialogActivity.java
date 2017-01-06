@@ -155,6 +155,11 @@ public class GrantDialogActivity extends BaseActivity {
                     return;
                 }
 
+                if (response.getCode() == IResponse.ResultCode.RC_ACCESS_TIMEOUT.getCode()){
+                    Toast.makeText(GrantDialogActivity.this,R.string.string_toast_timeout,Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
                 Toast.makeText(GrantDialogActivity.this, R.string.string_grant_cellphone_fail, Toast.LENGTH_SHORT).show();
                 showResultStatus(GrantDialogActivity.this.getString(R.string.string_grant_cellphone_fail));
             }

@@ -33,4 +33,5 @@
     <string name="string_toast_account_login_error">手机号码或密码错误</string>
     <string name="string_toast_cellphone_repeat">手机号码已经注册,请直接登录</string>
     <string name="string_toast_cellphone_no">手机号码没有注册,请直接注册</string>
+    <string name="string_toast_timeout">登录超时，请重新登录</string>
 </resources>
