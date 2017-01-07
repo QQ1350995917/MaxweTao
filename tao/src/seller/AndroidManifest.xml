@@ -18,8 +18,10 @@
         <activity android:name=".activity.LoginActivity"></activity>
         <activity android:name=".activity.RegisterActivity"></activity>
         <activity android:name=".activity.LostActivity"></activity>
+        <activity android:name=".activity.VersionActivity" android:theme="@style/AppTheme_activity_dialog"></activity>
         <activity android:name=".activity.ModifyActivity"></activity>
         <activity android:name=".main.MainActivity"></activity>
+        <activity android:name=".main.AccessActivity" android:theme="@style/AppTheme_activity_dialog"></activity>
         <activity android:name=".mine.LinkActivity"></activity>
 
         <receiver android:name=".main.TaoReceiver">

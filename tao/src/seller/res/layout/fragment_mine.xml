@@ -36,17 +36,10 @@
         android:text="@string/string_newbie" />
 
     <Button
-        android:id="@+id/bt_frg_mine_version_upgrade"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/bt_frg_mine_newbie"
-        android:text="@string/string_version_upgrade" />
-
-    <Button
         android:id="@+id/bt_frg_mine_about_us"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/bt_frg_mine_version_upgrade"
+        android:layout_below="@+id/bt_frg_mine_newbie"
         android:text="@string/string_about_us" />
 
     <Button

@@ -8,11 +8,11 @@
     <string name="string_version_upgrade">版本升级</string>
     <string name="string_about_us">关于我们</string>
     <string name="string_toast_last_version">已经是最新版本了</string>
-    <string name="string_access_status">授权状态</string>
-    <string name="string_get_access">获取授权</string>
+    <string name="string_waiting">请稍后...</string>
+    <string name="string_come_back_later">稍后再来</string>
     <string name="string_accessing">您处于等待授权状态，请联系您的上级获取授权。</string>
-    <string name="string_access_success">授权成功</string>
-    <string name="string_access_fail">授权失败，请重试</string>
+    <string name="string_sorry">很抱歉...</string>
+    <string name="string_request_error">获取信息失败</string>
 
     <integer name="type_id">1</integer>
 </resources>

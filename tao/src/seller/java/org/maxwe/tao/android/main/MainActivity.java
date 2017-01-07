@@ -1,7 +1,6 @@
 package org.maxwe.tao.android.main;
 
 import android.app.Activity;
-import android.app.Dialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -12,11 +11,19 @@ import android.view.View;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 
+import com.alibaba.fastjson.JSON;
+
 import org.maxwe.tao.android.Constants;
+import org.maxwe.tao.android.NetworkManager;
 import org.maxwe.tao.android.R;
 import org.maxwe.tao.android.activity.LoginActivity;
+import org.maxwe.tao.android.activity.VersionActivity;
+import org.maxwe.tao.android.agent.AgentEntity;
 import org.maxwe.tao.android.index.IndexFragment;
 import org.maxwe.tao.android.mine.MineFragment;
+import org.maxwe.tao.android.response.IResponse;
+import org.maxwe.tao.android.response.Response;
+import org.maxwe.tao.android.version.VersionEntity;
 import org.xutils.view.annotation.ContentView;
 import org.xutils.view.annotation.ViewInject;
 import org.xutils.x;
@@ -27,12 +34,15 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     public static final int REQUEST_CODE_PROXY = 0;
     public static final int REQUEST_CODE_CONVERT_LINK = 1;
     public static final int REQUEST_CODE_MODIFY_PASSWORD = 3;
+    public static final int REQUEST_CODE_ACCESS_CHECK = 4;
 
     private Fragment indexFragment;
     private Fragment mineFragment;
 
     @ViewInject(R.id.rg_act_navigate)
     private RadioGroup rg_act_navigate;
+
+    public static AgentEntity currentAgentEntity;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,10 +53,8 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         }
         this.setCurrentFragment(R.id.rb_act_main_index);
 
-        Dialog dialog = new AccessDialog(this);
-        dialog.show();
-
-
+        Intent intent = new Intent(this, AccessActivity.class);
+        this.startActivityForResult(intent, REQUEST_CODE_ACCESS_CHECK);
     }
 
     @Override
@@ -54,7 +62,6 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         if (v instanceof RadioButton) {
             this.setCurrentFragment(v.getId());
         }
-
     }
 
     private void setCurrentFragment(int index) {
@@ -126,12 +133,20 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
                     onModifyPasswordSuccessCallback(data.getStringExtra(Constants.T));
                 }
                 break;
+            case REQUEST_CODE_ACCESS_CHECK:
+                if (resultCode == LoginActivity.RESPONSE_CODE_SUCCESS) {
+                    onRequestMyInfoCallback((AgentEntity) data.getExtras().get(Constants.KEY_SHARD_T_ACCOUNT));
+                    this.onCheckNewVersion();
+                } else {
+                    this.finish();
+                }
+                break;
             default:
                 break;
         }
     }
 
-    private void onConvertLinkSuccessCallback(){
+    private void onConvertLinkSuccessCallback() {
 
     }
 
@@ -141,4 +156,52 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         edit.putString(Constants.KEY_SHARD_T_CONTENT, token);
         edit.commit();
     }
+
+    private void onRequestMyInfoCallback(AgentEntity agentEntity) {
+        this.currentAgentEntity = agentEntity;
+    }
+
+
+    private void onCheckNewVersion() {
+        VersionEntity currentVersionEntity = new VersionEntity(this.getString(R.string.platform), this.getResources().getInteger(R.integer.type_id), this.getVersionCode());
+        NetworkManager.requestNewVersion(currentVersionEntity, new NetworkManager.OnRequestCallback() {
+            @Override
+            public void onSuccess(Response response) {
+                if (response.getCode() == IResponse.ResultCode.RC_SUCCESS.getCode()) {
+                    VersionEntity versionEntity = JSON.parseObject(response.getData(), VersionEntity.class);
+                    versionCompare(versionEntity);
+                }
+            }
+
+            @Override
+            public void onError(Throwable exception, Object object) {
+                exception.printStackTrace();
+            }
+        });
+    }
+
+    private void versionCompare(VersionEntity versionEntityFromServer) {
+        if (versionEntityFromServer == null) {
+            return;
+        }
+
+        VersionEntity currentVersionEntity = new VersionEntity(this.getString(R.string.platform), this.getResources().getInteger(R.integer.type_id), this.getVersionCode());
+        if (currentVersionEntity.equals(versionEntityFromServer) && versionEntityFromServer.getVersionCode() > currentVersionEntity.getVersionCode()) {
+            Intent intent = new Intent(MainActivity.this, VersionActivity.class);
+            intent.putExtra(VersionActivity.KEY_VERSION, versionEntityFromServer);
+            MainActivity.this.startActivity(intent);
+        }
+    }
+
+    protected int getVersionCode() {
+        try {
+            String packageName = this.getPackageName();
+            int versionCode = this.getPackageManager().getPackageInfo(packageName, 0).versionCode;
+            return versionCode;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return 0;
+    }
+
 }

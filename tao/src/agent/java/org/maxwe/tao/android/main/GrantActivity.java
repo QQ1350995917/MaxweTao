@@ -71,14 +71,11 @@ public class GrantActivity extends BaseActivity implements SwipeRefreshLayout.On
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
             View inflate = this.layoutInflater.inflate(R.layout.activity_grant_item, null);
-            TextView tv_act_agent_item_agents = (TextView) inflate.findViewById(R.id.tv_act_agent_item_agents);
             TextView tv_act_agent_item_cellphone = (TextView) inflate.findViewById(R.id.tv_act_agent_item_cellphone);
-            TextView tv_act_agent_item_access_code = (TextView) inflate.findViewById(R.id.tv_act_agent_item_access_code);
-
+            TextView tv_act_agent_item_agents = (TextView) inflate.findViewById(R.id.tv_act_agent_item_codes_status);
             AgentEntity agentEntity = list.get(position);
-            tv_act_agent_item_agents.setText("累计授权：" + agentEntity.getType());
-            tv_act_agent_item_cellphone.setText("电话号码：" + agentEntity.getCellphone());
-            tv_act_agent_item_access_code.setText("授权号码：" + agentEntity.getGrantCode());
+            tv_act_agent_item_cellphone.setText("电话:" + agentEntity.getCellphone());
+            tv_act_agent_item_agents.setText("码量(转让/剩余/共有):" + agentEntity.getSpendCodes() + "/" + agentEntity.getLeftCodes() + "/" + agentEntity.getHaveCodes());
             return inflate;
         }
     }

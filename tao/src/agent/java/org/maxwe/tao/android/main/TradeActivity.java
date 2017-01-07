@@ -120,8 +120,8 @@ public class TradeActivity extends BaseActivity {
         this.bt_act_trade_search_action.setClickable(true);
         this.tv_act_trade_trade_result.setVisibility(View.GONE);
         this.pb_act_trade_progress.setVisibility(View.GONE);
-        this.tv_act_trade_search_result_cellphone.setText("电话号码：" + authorizedAgent.getCellphone());
-        this.tv_act_trade_search_result_grant_status.setText("授权状态：" + authorizedAgent.getSpendCodes() + "/" + authorizedAgent.getLeftCodes() + "/" + authorizedAgent.getHaveCodes());
+        this.tv_act_trade_search_result_cellphone.setText("电话:" + authorizedAgent.getCellphone());
+        this.tv_act_trade_search_result_grant_status.setText("码量(转让/剩余/共有):" + authorizedAgent.getSpendCodes() + "/" + authorizedAgent.getLeftCodes() + "/" + authorizedAgent.getHaveCodes());
 
         this.et_act_trade_code_number.setVisibility(View.GONE);
         this.tv_act_trade_code_action.setVisibility(View.GONE);

@@ -47,11 +47,6 @@ public class MineFragment extends BaseFragment {
         Toast.makeText(MineFragment.this.getActivity(), "教程开发中，敬请关注...", Toast.LENGTH_SHORT).show();
     }
 
-    @Event(value = R.id.bt_frg_mine_version_upgrade, type = View.OnClickListener.class)
-    private void onVersionUpgradeAction(View view) {
-        Toast.makeText(MineFragment.this.getActivity(), R.string.string_toast_last_version, Toast.LENGTH_SHORT).show();
-    }
-
     @Event(value = R.id.bt_frg_mine_about_us, type = View.OnClickListener.class)
     private void onAboutUsAction(View view) {
         Toast.makeText(MineFragment.this.getActivity(), "开发中，敬请关注...", Toast.LENGTH_SHORT).show();
