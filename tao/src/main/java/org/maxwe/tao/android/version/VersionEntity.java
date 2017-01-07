@@ -1,5 +1,7 @@
 package org.maxwe.tao.android.version;
 
+import android.text.TextUtils;
+
 import java.io.Serializable;
 
 /**
@@ -8,12 +10,11 @@ import java.io.Serializable;
  * Description: TODO
  */
 public class VersionEntity implements Serializable {
-
-    private String versionId;
     private String platform; // ios or android
     private int type; // 1 or 2
     private int versionCode;
     private String versionName;
+    private String appName;
     private String information;
     private String url;
     private int upgrade; // 1强制升级 其他不强制
@@ -24,13 +25,21 @@ public class VersionEntity implements Serializable {
         super();
     }
 
-    public String getVersionId() {
-        return versionId;
+    public VersionEntity(String platform,int type) {
+        this.platform = platform;
+        this.type = type;
     }
 
-    public void setVersionId(String versionId) {
-        this.versionId = versionId;
+    public VersionEntity(String platform,int type,int versionCode) {
+        this(platform,type);
+        this.versionCode = versionCode;
     }
+
+    public VersionEntity(String platform,int type,int versionCode,String versionName) {
+        this(platform,type,versionCode);
+        this.versionName = versionName;
+    }
+
 
     public String getPlatform() {
         return platform;
@@ -62,6 +71,14 @@ public class VersionEntity implements Serializable {
 
     public void setVersionName(String versionName) {
         this.versionName = versionName;
+    }
+
+    public String getAppName() {
+        return appName;
+    }
+
+    public void setAppName(String appName) {
+        this.appName = appName;
     }
 
     public String getInformation() {
@@ -102,5 +119,28 @@ public class VersionEntity implements Serializable {
 
     public void setUpdateTime(String updateTime) {
         this.updateTime = updateTime;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof VersionEntity) {
+            VersionEntity other = (VersionEntity) obj;
+            if (TextUtils.equals(this.getPlatform(), other.getPlatform()) &&
+                    this.getType() != 0 &&
+                    other.getType() != 0 &&
+                    this.getType() == other.getType()) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+        return false;
+    }
+
+    @Override
+    public String toString() {
+        return "platform = " + platform + " , type = " + type + " , versionCode = " + versionCode + " , versionName = " +
+                versionName + " , information = " + information + " , url = " + url + " , upgrade = " + upgrade +
+                " , createTime = " + createTime + " , updateTime = " + updateTime;
     }
 }

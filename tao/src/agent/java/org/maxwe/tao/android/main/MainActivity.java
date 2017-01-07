@@ -8,17 +8,25 @@ import android.support.annotation.Nullable;
 import android.view.View;
 import android.widget.Toast;
 
+import com.alibaba.fastjson.JSON;
+
 import org.maxwe.tao.android.Constants;
 import org.maxwe.tao.android.activity.BaseActivity;
 import org.maxwe.tao.android.activity.LoginActivity;
 import org.maxwe.tao.android.activity.ModifyActivity;
 import org.maxwe.tao.android.R;
+import org.maxwe.tao.android.activity.VersionActivity;
 import org.maxwe.tao.android.agent.AgentEntity;
 import org.maxwe.tao.android.agent.AgentEntityInter;
 import org.maxwe.tao.android.NetworkManager;
+import org.maxwe.tao.android.agent.SubAgentModel;
+import org.maxwe.tao.android.response.IResponse;
 import org.maxwe.tao.android.response.Response;
+import org.maxwe.tao.android.version.VersionEntity;
 import org.xutils.view.annotation.ContentView;
 import org.xutils.view.annotation.Event;
+
+import java.util.LinkedList;
 
 @ContentView(R.layout.activity_main)
 public class MainActivity extends BaseActivity {
@@ -35,26 +43,26 @@ public class MainActivity extends BaseActivity {
     @Event(value = R.id.bt_act_main_my_proxy, type = View.OnClickListener.class)
     private void onMyProxyAction(View view) {
         Intent intent = new Intent(this, GrantActivity.class);
-        this.startActivityForResult(intent,REQUEST_CODE_PROXY);
+        this.startActivityForResult(intent, REQUEST_CODE_PROXY);
     }
 
     @Event(value = R.id.bt_act_main_proxy_code_trade, type = View.OnClickListener.class)
     private void onAccessCodeTradeAction(View view) {
         Intent intent = new Intent(this, org.maxwe.tao.android.main.TradeActivity.class);
-        this.startActivityForResult(intent,REQUEST_CODE_TRADE);
+        this.startActivityForResult(intent, REQUEST_CODE_TRADE);
     }
 
     @Event(value = R.id.bt_act_main_modify_password, type = View.OnClickListener.class)
     private void onModifyPasswordAction(View view) {
         Intent intent = new Intent(this, ModifyActivity.class);
-        this.startActivityForResult(intent,REQUEST_CODE_MODIFY_PASSWORD);
+        this.startActivityForResult(intent, REQUEST_CODE_MODIFY_PASSWORD);
     }
 
     @Event(value = R.id.bt_act_main_exit, type = View.OnClickListener.class)
     private void onExitAction(View view) {
         final SharedPreferences sharedPreferences = getSharedPreferences(Constants.KEY_SHARD_NAME, Activity.MODE_PRIVATE);
         AgentEntityInter agentEntityInter = new AgentEntityInter();
-        agentEntityInter.setT(sharedPreferences.getString(Constants.KEY_SHARD_T_CONTENT,null));
+        agentEntityInter.setT(sharedPreferences.getString(Constants.KEY_SHARD_T_CONTENT, null));
         NetworkManager.requestLogout(agentEntityInter, new NetworkManager.OnRequestCallback() {
             @Override
             public void onSuccess(Response response) {
@@ -79,18 +87,35 @@ public class MainActivity extends BaseActivity {
         });
     }
 
-    private void onCheckNewVersion(){
-        NetworkManager.requestNewVersion(null, new NetworkManager.OnRequestCallback() {
+    private void onCheckNewVersion() {
+        VersionEntity currentVersionEntity = new VersionEntity(this.getString(R.string.platform), this.getResources().getInteger(R.integer.type_id), this.getVersionCode());
+        NetworkManager.requestNewVersion(currentVersionEntity, new NetworkManager.OnRequestCallback() {
             @Override
             public void onSuccess(Response response) {
-
+                if (response.getCode() == IResponse.ResultCode.RC_SUCCESS.getCode()) {
+                    VersionEntity versionEntity = JSON.parseObject(response.getData(), VersionEntity.class);
+                    versionCompare(versionEntity);
+                }
             }
 
             @Override
             public void onError(Throwable exception, Object object) {
-
+                exception.printStackTrace();
             }
         });
+    }
+
+    private void versionCompare(VersionEntity versionEntityFromServer) {
+        if (versionEntityFromServer == null) {
+            return;
+        }
+
+        VersionEntity currentVersionEntity = new VersionEntity(this.getString(R.string.platform), this.getResources().getInteger(R.integer.type_id), this.getVersionCode());
+        if (currentVersionEntity.equals(versionEntityFromServer) && versionEntityFromServer.getVersionCode() > currentVersionEntity.getVersionCode()) {
+            Intent intent = new Intent(MainActivity.this, VersionActivity.class);
+            intent.putExtra(VersionActivity.KEY_VERSION, versionEntityFromServer);
+            MainActivity.this.startActivity(intent);
+        }
     }
 
     @Override
@@ -120,7 +145,7 @@ public class MainActivity extends BaseActivity {
         }
     }
 
-    private void onModifyPasswordSuccessCallback(String token){
+    private void onModifyPasswordSuccessCallback(String token) {
         SharedPreferences sharedPreferences = getSharedPreferences(Constants.KEY_SHARD_NAME, Activity.MODE_PRIVATE);
         SharedPreferences.Editor edit = sharedPreferences.edit();
         edit.putString(Constants.KEY_SHARD_T_CONTENT, token);

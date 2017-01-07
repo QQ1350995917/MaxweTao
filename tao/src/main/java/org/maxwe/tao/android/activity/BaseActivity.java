@@ -17,4 +17,28 @@ public class BaseActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         x.view().inject(this);
     }
+
+    protected int getVersionCode() {
+        try {
+            String packageName = this.getPackageName();
+            int versionCode = this.getPackageManager().getPackageInfo(packageName, 0).versionCode;
+            return versionCode;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return 0;
+    }
+
+    protected String getVersionName() {
+        try {
+            String packageName = this.getPackageName();
+            String versionName = this.getPackageManager().getPackageInfo(packageName, 0).versionName;
+            return versionName;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+
 }

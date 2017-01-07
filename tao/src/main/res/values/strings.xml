@@ -34,4 +34,8 @@
     <string name="string_toast_cellphone_repeat">手机号码已经注册,请直接登录</string>
     <string name="string_toast_cellphone_no">手机号码没有注册,请直接注册</string>
     <string name="string_toast_timeout">登录超时，请重新登录</string>
+    <string name="string_new_version">发现新版本</string>
+    <string name="string_new_version_upgrade">请您务必更新</string>
+
+    <string name="platform" >Android</string>
 </resources>

@@ -77,17 +77,4 @@ public class SplashActivity extends BaseActivity {
         super.onResume();
         this.tv_act_splash_version.setText(this.getVersionName());
     }
-
-    private String getVersionName() {
-        try {
-            String packageName = this.getPackageName();
-            String versionName = this.getPackageManager().getPackageInfo(packageName, 0).versionName;
-            //int versionCode = this.getPackageManager().getPackageInfo(packageName, 0).versionCode;
-//            return packageName + "   " + versionName + "  " + versionCode;
-            return versionName;
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
 }
