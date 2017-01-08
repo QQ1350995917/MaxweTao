@@ -12,6 +12,7 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 
 import com.alibaba.fastjson.JSON;
+import com.umeng.socialize.UMShareAPI;
 
 import org.maxwe.tao.android.Constants;
 import org.maxwe.tao.android.NetworkManager;

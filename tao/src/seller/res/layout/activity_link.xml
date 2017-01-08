@@ -42,6 +42,7 @@
             android:textAlignment="center" />
 
         <Button
+            android:id="@+id/bt_act_link_action"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="立即获取淘口令" />

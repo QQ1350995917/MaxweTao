@@ -1,14 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="org.maxwe.tao.android">
 
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+
     <application
+        android:name=".SellerApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
+        android:theme="@style/AppTheme"
+        tools:replace="android:name">
+
+        <meta-data
+            android:name="UMENG_APPKEY"
+            android:value="5870b05f8f4a9d378a000958"></meta-data>
+
         <activity android:name=".activity.SplashActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -18,17 +27,23 @@
         <activity android:name=".activity.LoginActivity"></activity>
         <activity android:name=".activity.RegisterActivity"></activity>
         <activity android:name=".activity.LostActivity"></activity>
-        <activity android:name=".activity.VersionActivity" android:theme="@style/AppTheme_activity_dialog"></activity>
+        <activity
+            android:name=".activity.VersionActivity"
+            android:theme="@style/AppTheme_activity_dialog"></activity>
         <activity android:name=".activity.ModifyActivity"></activity>
         <activity android:name=".main.MainActivity"></activity>
-        <activity android:name=".main.AccessActivity" android:theme="@style/AppTheme_activity_dialog"></activity>
+        <activity
+            android:name=".main.AccessActivity"
+            android:theme="@style/AppTheme_activity_dialog"></activity>
         <activity android:name=".mine.LinkActivity"></activity>
 
         <receiver android:name=".main.TaoReceiver">
             <intent-filter>
-                <action android:name="android.net.conn.CONNECTIVITY_CHANGE"/>
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
             </intent-filter>
         </receiver>
+
+
     </application>
 
 </manifest>
