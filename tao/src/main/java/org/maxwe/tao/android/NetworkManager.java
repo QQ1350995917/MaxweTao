@@ -123,4 +123,6 @@ public class NetworkManager {
     public static Callback.Cancelable requestNewVersion(VersionEntity versionEntity, OnRequestCallback onCreateCallback) {
         return request(URL_VERSION, versionEntity, onCreateCallback);
     }
+
+
 }
