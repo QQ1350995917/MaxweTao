@@ -18,6 +18,8 @@ import org.xutils.x;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * Created by Pengwei Ding on 2017-01-08 11:36.
@@ -34,10 +36,13 @@ public class GoodsManager {
         void onError(Throwable ex,Object object);
     }
 
-    private static Callback.Cancelable request(String url, final Object object, final OnRequestCallback onRequestCallback) {
+    private static Callback.Cancelable request(String url, final GoodsEntity goodsEntity, final OnRequestCallback onRequestCallback) {
         RequestParams requestParams = new RequestParams(url);
-        String s = JSON.toJSONString(object);
-        requestParams.addParameter(Constants.PARAMS, s);
+        HashMap<String,String> hashMap = (HashMap<String,String>)JSON.parseObject(JSON.toJSONString(goodsEntity), HashMap.class);
+        Set<Map.Entry<String, String>> entries = hashMap.entrySet();
+        for (Map.Entry<String, String> entry:entries){
+            requestParams.addParameter(entry.getKey(),entry.getValue());
+        }
         Callback.Cancelable cancelable = x.http().post(requestParams, new Callback.CommonCallback<String>() {
             @Override
             public void onSuccess(String result) {
@@ -47,7 +52,7 @@ public class GoodsManager {
             @Override
             public void onError(Throwable ex, boolean isOnCallback) {
                 ex.printStackTrace();
-                onRequestCallback.onError(ex, object);
+                onRequestCallback.onError(ex, goodsEntity);
             }
 
             @Override
@@ -69,10 +74,11 @@ public class GoodsManager {
         goodsEntity.setMethod(METHOD_NAME);
         goodsEntity.setApp_key(Constants.TAO_APP_KEY);
         goodsEntity.setTimestamp(DateTimeUtils.getCurrentFullTime());
-        goodsEntity.setFields("num_iid,title,pict_url,small_images,reserve_price,zk_final_price,user_type,provcity,item_url,seller_id,volume,nick");
+//        goodsEntity.setFields("num_iid,title,pict_url,small_images,reserve_price,zk_final_price,user_type,provcity,item_url,seller_id,volume,nick");
+        goodsEntity.setFields("nick");
 
         goodsEntity.setQ(goodsQueryEntity.getQ());
-        goodsEntity.setSort(goodsQueryEntity.getSort());
+//        goodsEntity.setSort(goodsQueryEntity.getSort());
         goodsEntity.setPage_no(goodsQueryEntity.getPage_no());
         goodsEntity.setPage_size(goodsQueryEntity.getPage_size());
 

@@ -42,7 +42,7 @@ public class IndexFragment extends BaseFragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        GoodsQueryEntity goodsQueryEntity = new GoodsQueryEntity("裤子",GoodsQueryEntity.TOTAL_SALES_DES,0,20);
+        GoodsQueryEntity goodsQueryEntity = new GoodsQueryEntity("女装",GoodsQueryEntity.TOTAL_SALES_DES,0,20);
         onRequestGoodsList(goodsQueryEntity);
     }
 
