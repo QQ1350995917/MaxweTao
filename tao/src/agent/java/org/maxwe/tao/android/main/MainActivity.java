@@ -1,98 +1,114 @@
 package org.maxwe.tao.android.main;
 
-import android.app.Activity;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentTransaction;
 import android.view.View;
-import android.widget.Toast;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 
-import com.alibaba.fastjson.JSON;
-
-import org.maxwe.tao.android.Constants;
-import org.maxwe.tao.android.INetWorkManager;
-import org.maxwe.tao.android.account.model.LoginModel;
-import org.maxwe.tao.android.account.model.SessionModel;
-import org.maxwe.tao.android.activity.BaseActivity;
-import org.maxwe.tao.android.activity.LoginActivity;
-import org.maxwe.tao.android.activity.ModifyActivity;
 import org.maxwe.tao.android.R;
-import org.maxwe.tao.android.activity.VersionActivity;
-import org.maxwe.tao.android.NetworkManager;
-import org.maxwe.tao.android.response.IResponse;
-import org.maxwe.tao.android.response.Response;
-import org.maxwe.tao.android.utils.SharedPreferencesUtils;
+import org.maxwe.tao.android.account.agent.AgentEntity;
+import org.maxwe.tao.android.activity.LoginActivity;
+import org.maxwe.tao.android.agent.AgentFragment;
+import org.maxwe.tao.android.code.ActCodeFragment;
+import org.maxwe.tao.android.mine.MineFragment;
 import org.maxwe.tao.android.version.VersionEntity;
 import org.xutils.view.annotation.ContentView;
-import org.xutils.view.annotation.Event;
+import org.xutils.view.annotation.ViewInject;
+import org.xutils.x;
 
+/**
+ * 默认显示已经被激活的状态，在访问状态下进行校验
+ */
 @ContentView(R.layout.activity_main)
-public class MainActivity extends BaseActivity {
+public class MainActivity extends FragmentActivity implements View.OnClickListener {
     private static final int REQUEST_CODE_PROXY = 0;
     private static final int REQUEST_CODE_TRADE = 1;
-    private static final int REQUEST_CODE_MODIFY_PASSWORD = 3;
+
+
+    private Fragment codeFragment;
+    private Fragment agentFragment;
+    private Fragment mineFragment;
+
+    @ViewInject(R.id.rg_act_navigate)
+    private RadioGroup rg_act_navigate;
+
+    public static AgentEntity currentAgentEntity;
+
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        x.view().inject(this);
+        for (int index = 0; index < this.rg_act_navigate.getChildCount(); index++) {
+            this.rg_act_navigate.getChildAt(index).setOnClickListener(this);
+        }
+        this.setCurrentFragment(R.id.rb_act_main_active_code);
+
+
 //        this.onCheckNewVersion();
     }
 
-    @Event(value = R.id.bt_act_main_my_proxy, type = View.OnClickListener.class)
-    private void onMyProxyAction(View view) {
-        Intent intent = new Intent(this, GrantActivity.class);
-        this.startActivityForResult(intent, REQUEST_CODE_PROXY);
-    }
-
-    @Event(value = R.id.bt_act_main_proxy_code_trade, type = View.OnClickListener.class)
-    private void onAccessCodeTradeAction(View view) {
-        Intent intent = new Intent(this, org.maxwe.tao.android.main.TradeActivity.class);
-        this.startActivityForResult(intent, REQUEST_CODE_TRADE);
-    }
-
-    @Event(value = R.id.bt_act_main_modify_password, type = View.OnClickListener.class)
-    private void onModifyPasswordAction(View view) {
-        Intent intent = new Intent(this, ModifyActivity.class);
-        this.startActivityForResult(intent, REQUEST_CODE_MODIFY_PASSWORD);
-    }
-
-    @Event(value = R.id.bt_act_main_exit, type = View.OnClickListener.class)
-    private void onExitAction(View view) {
-        SessionModel sessionModel = SharedPreferencesUtils.getSession(this);
-        try {
-            sessionModel.setSign(sessionModel.getEncryptSing());
-            String url = this.getString(R.string.string_url_domain) + this.getString(R.string.string_url_account_logout);
-            NetworkManager.requestByPost(url, sessionModel, new INetWorkManager.OnNetworkCallback() {
-                @Override
-                public void onSuccess(String result) {
-                    SharedPreferencesUtils.clearSession(MainActivity.this);
-                    Intent intent = new Intent(MainActivity.this, LoginActivity.class);
-                    MainActivity.this.startActivity(intent);
-                    MainActivity.this.finish();
-                }
-
-                @Override
-                public void onLoginTimeout(String result) {
-                    SharedPreferencesUtils.clearSession(MainActivity.this);
-                    Intent intent = new Intent(MainActivity.this, LoginActivity.class);
-                    MainActivity.this.startActivity(intent);
-                    MainActivity.this.finish();
-                }
-
-                @Override
-                public void onError(Throwable ex, boolean isOnCallback) {
-                    SharedPreferencesUtils.clearSession(MainActivity.this);
-                    Intent intent = new Intent(MainActivity.this, LoginActivity.class);
-                    MainActivity.this.startActivity(intent);
-                    MainActivity.this.finish();
-                }
-            });
-        } catch (Exception e) {
-            e.printStackTrace();
-            Toast.makeText(this,"请求失败",Toast.LENGTH_SHORT).show();
+    @Override
+    public void onClick(View v) {
+        if (v instanceof RadioButton) {
+            this.setCurrentFragment(v.getId());
         }
     }
+
+    private void setCurrentFragment(int index) {
+        FragmentTransaction fragmentTransaction = this.getSupportFragmentManager().beginTransaction();
+        this.hideAllFragments(fragmentTransaction);
+        switch (index) {
+            case R.id.rb_act_main_active_code:
+                if (this.codeFragment == null) {
+                    this.codeFragment = new ActCodeFragment();
+                    fragmentTransaction.add(R.id.fl_act_content, this.codeFragment);
+                } else {
+                    fragmentTransaction.show(this.codeFragment);
+                }
+                break;
+            case R.id.rb_act_main_agent:
+                if (this.agentFragment == null) {
+                    this.agentFragment = new AgentFragment();
+                    fragmentTransaction.add(R.id.fl_act_content, this.agentFragment);
+                } else {
+                    fragmentTransaction.show(this.agentFragment);
+                }
+                break;
+            case R.id.rb_act_main_mine:
+                if (this.mineFragment == null) {
+                    this.mineFragment = new MineFragment();
+                    fragmentTransaction.add(R.id.fl_act_content, this.mineFragment);
+                } else {
+                    fragmentTransaction.show(this.mineFragment);
+                }
+                break;
+            default:
+                break;
+        }
+        fragmentTransaction.commit();
+    }
+
+    private void hideAllFragments(FragmentTransaction fragmentTransaction) {
+        if (this.codeFragment != null) {
+            fragmentTransaction.hide(this.codeFragment);
+        }
+        if (this.agentFragment != null) {
+            fragmentTransaction.hide(this.agentFragment);
+        }
+        if (this.mineFragment != null) {
+            fragmentTransaction.hide(this.mineFragment);
+        }
+    }
+
+
+
+
 
 //    private void onCheckNewVersion() {
 //        VersionEntity currentVersionEntity = new VersionEntity(this.getString(R.string.platform), this.getResources().getInteger(R.integer.type_id), this.getVersionCode());
@@ -142,17 +158,10 @@ public class MainActivity extends BaseActivity {
                 if (resultCode == LoginActivity.RESPONSE_CODE_SUCCESS) {
                 }
                 break;
-            case REQUEST_CODE_MODIFY_PASSWORD:
-                if (resultCode == LoginActivity.RESPONSE_CODE_SUCCESS) {
-                    onModifyPasswordSuccessCallback((SessionModel)data.getSerializableExtra(Constants.KEY_INTENT_SESSION));
-                }
-                break;
             default:
                 break;
         }
     }
 
-    private void onModifyPasswordSuccessCallback(SessionModel sessionModel) {
-        SharedPreferencesUtils.saveSession(this,sessionModel);
-    }
+
 }

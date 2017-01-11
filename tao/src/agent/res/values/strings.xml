@@ -1,10 +1,39 @@
 <resources>
     <string name="app_name">agent</string>
+    <string name="string_active_code">授权码</string>
+    <string name="string_agent">代理</string>
+    <string name="string_mine">我的</string>
+    <string name="string_code_history">历史记录</string>
+    <string name="string_code_of_your_gen">您生成的激活码为</string>
+    <string name="string_click_copy">点击复制</string>
+    <string name="string_click_gen_code">一键生成授权码</string>
+    <string name="string_active_your_account">你的账号需要激活，去激活</string>
+    <string name="string_your_account_need_active">你的账号需要激活</string>
+    <string name="string_gen_code_alert">⚠️您正在生成一个授权码，该操作将会消耗掉您的一个授权数量。该操作完成后不可撤销。</string>
+    <string name="string_copy_success">复制成功</string>
+    <string name="string_code_trade_history">转码记录</string>
     <string name="string_my_agent">我的代理</string>
+    <string name="string_my_agent_leader">上级代理</string>
+    <string name="string_input_ID">请输入ID</string>
     <string name="string_access_code_trade">授权转让</string>
     <string name="string_search">搜索</string>
+    <string name="string_you_at">您于</string>
+    <string name="string_trade_to">向该账号转让</string>
+    <string name="string_trade_number">个码量</string>
+    <string name="string_trade_detail">转码细则</string>
+    <string name="string_trade_level1">总代（500码起）</string>
+    <string name="string_trade_level2">一级（50码起）</string>
+    <string name="string_trade_level3">分销（5码起）</string>
+    <string name="string_alert">⚠️</string>
+    <string name="string_doing_trade_alert1">您正在向</string>
+    <string name="string_doing_trade_alert2">转让</string>
+    <string name="string_doing_trade_alert3">个授权码，</string>
+    <string name="string_doing_trade_alert4">该操作将会消耗掉您的授权码量。该操作完成后不可撤销。</string>
     <string name="string_access">授权</string>
+    <string name="string_input_trade_number">请输入转码数量</string>
     <string name="string_access_trade">授权转让</string>
+    <string name="string_trade_confirm_action">确认转让</string>
+
     <string name="string_grant_cellphone">请您正确输入要授权的手机号码</string>
     <string name="string_right_cellphone">请您输入正确的手机号码</string>
     <string name="string_grant_self">不能输入自己手机号码</string>
@@ -42,5 +71,7 @@
     <string name="string_url_account_bank">/agent/bank</string>
     <string name="string_url_mate_query">/agent/query</string>
     <string name="string_url_meta_smsCode">/meta/smsCode</string>
+    <string name="string_url_trade_grant">/trade/grant</string>
+    <string name="string_url_trade_trade">/trade/trade</string>
 
 </resources>

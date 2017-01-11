@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <Button
+        android:id="@+id/bt_frg_code_history"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/string_code_history"
+        android:layout_alignParentRight="true"
+        android:background="#00000000"/>
+
+    <LinearLayout
+        android:id="@+id/ll_frg_code_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:background="@drawable/shape_circle"
+        android:orientation="vertical"
+        android:layout_marginTop="40dp">
+
+        <TextView
+            android:id="@+id/tv_frg_code_level_name"
+            android:layout_width="120dp"
+            android:layout_height="60dp"
+            android:gravity="center_horizontal|bottom"
+            android:textColor="#000000"
+            android:textSize="18dp" />
+
+        <TextView
+            android:id="@+id/tv_frg_code_number"
+            android:layout_width="120dp"
+            android:layout_height="60dp"
+            android:gravity="center_horizontal"
+            android:text="0/0/0"
+            android:textColor="#000000" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/ll_frg_code_gen"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="10dp"
+        android:visibility="invisible"
+        android:layout_below="@+id/ll_frg_code_title">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="#000000"
+            android:textSize="16dp"
+            android:visibility="gone"
+            android:text="@string/string_code_of_your_gen"/>
+        <TextView
+            android:id="@+id/ll_frg_code_gen_display"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:textColor="#000000"
+            android:textSize="18dp"
+            android:layout_marginTop="5dp" />
+        <Button
+            android:id="@+id/bt_frg_code_click_copy"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:text="@string/string_click_copy"
+            android:background="#00000000"
+            />
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/bt_frg_code_click_gen_code"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:text="@string/string_click_gen_code"
+        android:layout_below="@+id/ll_frg_code_gen"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="20dp"/>
+
+    <Button
+        android:id="@+id/bt_frg_code_active_action"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:text="@string/string_active_your_account"
+        android:layout_marginTop="20dp"
+        android:layout_below="@+id/bt_frg_code_click_gen_code"
+        android:layout_centerHorizontal="true"
+        android:background="#00000000"
+        android:visibility="invisible"/>
+
+</RelativeLayout>

@@ -23,6 +23,144 @@
             android:text="@string/string_back" />
     </RelativeLayout>
 
+    <TableLayout
+        android:id="@+id/tl_act_trade_to_agent_info"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/rl_act_trade_nav"
+        android:layout_margin="20dp">
+
+        <TableRow>
+
+            <TextView
+                style="@style/table_cell_of_agent"
+                android:text="ID: 西门吹雪" />
+
+            <TextView
+                style="@style/table_cell_of_agent"
+                android:text="分销" />
+
+            <TextView style="@style/table_cell_of_agent" />
+        </TableRow>
+
+        <TableRow>
+
+            <TextView
+                style="@style/table_cell_of_agent"
+                android:text="历史总量" />
+
+            <TextView
+                style="@style/table_cell_of_agent"
+                android:text="剩余数量" />
+
+            <TextView
+                style="@style/table_cell_of_agent"
+                android:text="转让数量" />
+        </TableRow>
+
+        <TableRow>
+
+            <TextView
+                style="@style/table_cell_of_agent"
+                android:text="30" />
+
+            <TextView
+                style="@style/table_cell_of_agent"
+                android:text="20" />
+
+            <TextView
+                style="@style/table_cell_of_agent"
+                android:text="10" />
+        </TableRow>
+    </TableLayout>
+
+    <TextView
+        android:id="@+id/tv_act_trade_result_tip"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tl_act_trade_to_agent_info"
+        android:layout_centerInParent="true"
+        android:gravity="center"
+        android:text="您于2017-01-08:21:39向该账号转让10个码量" />
+
+
+    <LinearLayout
+        android:id="@+id/ll_act_trade_detail_alert"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tv_act_trade_result_tip"
+        android:layout_marginTop="20dp"
+        android:orientation="horizontal"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                style="@style/trade_detail"
+                android:text="@string/string_trade_detail" />
+
+            <TextView
+                style="@style/trade_detail"
+                android:text="@string/string_trade_level1" />
+
+            <TextView
+                style="@style/trade_detail"
+                android:text="@string/string_trade_level2" />
+
+            <TextView
+                style="@style/trade_detail"
+                android:text="@string/string_trade_level3" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/tv_act_trade_alert"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:visibility="gone" />
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <EditText
+        android:id="@+id/et_act_trade_number"
+        style="@style/editor"
+        android:hint="@string/string_input_trade_number"
+        android:inputType="number"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_below="@+id/ll_act_trade_detail_alert"
+        android:maxLength="4" />
+
+    <EditText
+        android:id="@+id/et_act_trade_password"
+        style="@style/editor"
+        android:layout_below="@+id/et_act_trade_number"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:hint="@string/string_input_password"
+        android:maxLength="12" />
+
+    <Button
+        android:id="@+id/bt_act_trade_search_action"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/et_act_trade_password"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:text="@string/string_trade_confirm_action" />
+
     <ProgressBar
         android:id="@+id/pb_act_trade_progress"
         style="?android:attr/progressBarStyleInverse"
@@ -31,88 +169,4 @@
         android:layout_centerInParent="true"
         android:visibility="gone" />
 
-    <TextView
-        android:id="@+id/tv_act_trade_search_result"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:gravity="center"
-        android:text="22dp"
-        android:visibility="gone" />
-
-    <RelativeLayout
-        android:id="@+id/rl_act_trade_search_container"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/rl_act_trade_nav"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp">
-
-        <EditText
-            android:id="@+id/et_act_trade_search_content"
-            style="@style/editor"
-            android:hint="@string/string_input_cellphone"
-            android:inputType="number"
-            android:maxLength="11" />
-
-        <Button
-            android:id="@+id/bt_act_trade_search_action"
-            android:layout_width="100dp"
-            android:layout_height="wrap_content"
-            android:layout_alignBaseline="@+id/et_act_trade_search_content"
-            android:layout_alignRight="@+id/et_act_trade_search_content"
-            android:layout_marginBottom="10dp"
-            android:text="@string/string_search" />
-    </RelativeLayout>
-
-    <LinearLayout
-        android:id="@+id/ll_act_trade_search_result_list"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/rl_act_trade_search_container"
-        android:orientation="vertical"
-        android:padding="15dp"
-        android:visibility="gone">
-
-        <TextView
-            android:id="@+id/tv_act_trade_search_result_cellphone"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:textColor="#000000"
-            android:textSize="18dp" />
-
-        <TextView
-            android:id="@+id/tv_act_trade_search_result_grant_status"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:textColor="#000000"
-            android:textSize="18dp" />
-
-        <EditText
-            android:id="@+id/et_act_trade_code_number"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:hint="请输入转让数量"
-            android:inputType="number"
-            android:maxLength="4"
-            android:layout_marginTop="20dp"/>
-
-        <Button
-            android:id="@+id/tv_act_trade_code_action"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="确认转让" />
-
-        <TextView
-            android:id="@+id/tv_act_trade_trade_result"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:visibility="gone"
-            android:gravity="center"
-            android:layout_marginTop="20dp"/>
-    </LinearLayout>
 </RelativeLayout>

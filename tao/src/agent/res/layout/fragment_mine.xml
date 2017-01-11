@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#FFFFFF"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:id="@+id/ll_frg_mine_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/bt_frg_code_history"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="40dp"
+        android:background="@drawable/shape_circle"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/tv_frg_mine_level_name"
+            android:layout_width="120dp"
+            android:layout_height="60dp"
+            android:gravity="center_horizontal|bottom"
+            android:text="分销"
+            android:textColor="#000000"
+            android:textSize="18dp" />
+
+        <TextView
+            android:id="@+id/tv_frg_mine_number"
+            android:layout_width="120dp"
+            android:layout_height="60dp"
+            android:gravity="center_horizontal"
+            android:text="300/200/500"
+            android:textColor="#000000" />
+    </LinearLayout>
+
+    <TableLayout
+        android:id="@+id/tl_frg_mine_sale_chart"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/ll_frg_mine_title"
+        android:layout_centerHorizontal="true">
+
+        <TableRow>
+
+            <TextView
+                style="@style/table_cell"
+                android:text="历史总量" />
+
+            <TextView
+                style="@style/table_cell"
+                android:text="本月零售" />
+
+            <TextView
+                style="@style/table_cell"
+                android:text="上月零售" />
+        </TableRow>
+
+        <TableRow>
+
+            <TextView
+                style="@style/table_cell"
+                android:text="3000" />
+
+            <TextView
+                style="@style/table_cell"
+                android:text="200" />
+
+            <TextView
+                style="@style/table_cell"
+                android:text="200" />
+        </TableRow>
+
+        <TableRow>
+
+            <TextView
+                style="@style/table_cell"
+                android:text="1000" />
+
+            <TextView
+                style="@style/table_cell"
+                android:text="200" />
+
+            <TextView
+                style="@style/table_cell"
+                android:text="200" />
+        </TableRow>
+
+        <TableRow>
+
+            <TextView
+                style="@style/table_cell"
+                android:text="1000" />
+
+            <TextView
+                style="@style/table_cell"
+                android:text="200" />
+
+            <TextView
+                style="@style/table_cell"
+                android:text="200" />
+        </TableRow>
+    </TableLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:layout_below="@+id/tl_frg_mine_sale_chart">
+
+        <LinearLayout
+            android:id="@+id/tl_frg_mine_function_list"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp">
+
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="当月获得50系统返点（查看返点细则）" />
+
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="绑定返点账号" />
+
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="关于我们" />
+
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="新手教程" />
+
+            <Button
+                android:id="@+id/bt_frg_mine_modify_password"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/string_modify_password" />
+
+            <Button
+                android:id="@+id/bt_frg_mine_exit"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/string_exit" />
+
+        </LinearLayout>
+    </ScrollView>
+</RelativeLayout>

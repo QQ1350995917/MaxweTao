@@ -24,6 +24,14 @@ public class AgentEntity extends AccountEntity {
         super();
     }
 
+    /**
+     * 测试后构建使用
+     */
+    public AgentEntity(String mark,String levelId){
+        this.setMark(mark);
+        this.setLevelId(levelId);
+    }
+
     public int getReach() {
         return reach;
     }
