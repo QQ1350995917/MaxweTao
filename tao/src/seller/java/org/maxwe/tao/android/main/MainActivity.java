@@ -12,14 +12,12 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 
 import com.alibaba.fastjson.JSON;
-import com.umeng.socialize.UMShareAPI;
 
 import org.maxwe.tao.android.Constants;
 import org.maxwe.tao.android.NetworkManager;
 import org.maxwe.tao.android.R;
 import org.maxwe.tao.android.activity.LoginActivity;
 import org.maxwe.tao.android.activity.VersionActivity;
-import org.maxwe.tao.android.agent.AgentEntity;
 import org.maxwe.tao.android.index.IndexFragment;
 import org.maxwe.tao.android.mine.MineFragment;
 import org.maxwe.tao.android.response.IResponse;

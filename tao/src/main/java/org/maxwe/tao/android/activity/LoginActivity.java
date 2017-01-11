@@ -10,15 +10,19 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.alibaba.fastjson.JSON;
+
 import org.maxwe.tao.android.Constants;
+import org.maxwe.tao.android.INetWorkManager;
 import org.maxwe.tao.android.R;
-import org.maxwe.tao.android.agent.AgentEntity;
-import org.maxwe.tao.android.agent.AgentEntityInter;
 import org.maxwe.tao.android.NetworkManager;
+import org.maxwe.tao.android.account.model.LoginModel;
+import org.maxwe.tao.android.account.model.SessionModel;
 import org.maxwe.tao.android.main.MainActivity;
 import org.maxwe.tao.android.response.IResponse;
 import org.maxwe.tao.android.response.Response;
 import org.maxwe.tao.android.utils.CellPhoneUtils;
+import org.maxwe.tao.android.utils.SharedPreferencesUtils;
 import org.xutils.view.annotation.ContentView;
 import org.xutils.view.annotation.Event;
 import org.xutils.view.annotation.ViewInject;
@@ -42,11 +46,7 @@ public class LoginActivity extends BaseActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        SharedPreferences sharedPreferences = this.getSharedPreferences(Constants.KEY_SHARD_NAME, Activity.MODE_PRIVATE);
-        String lastAccount = sharedPreferences.getString(Constants.KEY_SHARD_T_ACCOUNT, null);
-        if (lastAccount != null) {
-            this.et_act_login_cellphone.setText(lastAccount);
-        }
+        this.et_act_login_cellphone.setText(SharedPreferencesUtils.getLastLoginCellphone(this));
     }
 
     @Event(value = R.id.bt_act_to_register, type = View.OnClickListener.class)
@@ -74,26 +74,23 @@ public class LoginActivity extends BaseActivity {
             Toast.makeText(this, this.getString(R.string.string_input_account_password), Toast.LENGTH_SHORT).show();
             return;
         }
-
-        SharedPreferences sharedPreferences = this.getSharedPreferences(Constants.KEY_SHARD_NAME, Activity.MODE_PRIVATE);
-        SharedPreferences.Editor edit = sharedPreferences.edit();
-        edit.putString(Constants.KEY_SHARD_T_ACCOUNT, cellphone);
-        edit.commit();
-
-        AgentEntity agentEntity = new AgentEntity(cellphone,password,this.getResources().getInteger(R.integer.type_id));
-        AgentEntityInter agentEntityInter = new AgentEntityInter(agentEntity);
-        NetworkManager.requestLogin(agentEntityInter, new NetworkManager.OnRequestCallback() {
+        SharedPreferencesUtils.saveLastLoginCellphone(this,cellphone);
+        String url = this.getString(R.string.string_url_domain) + this.getString(R.string.string_url_account_login);
+        LoginModel loginModel = new LoginModel(cellphone,password);
+        NetworkManager.requestByPost(url, loginModel, new INetWorkManager.OnNetworkCallback() {
             @Override
-            public void onSuccess(Response response) {
-                if (response.getCode() == IResponse.ResultCode.RC_SUCCESS.getCode()) {
-                    onLoginSuccessCallback(response.getData());
-                    return;
-                }
-                Toast.makeText(LoginActivity.this, R.string.string_toast_account_login_error, Toast.LENGTH_SHORT).show();
+            public void onSuccess(String result) {
+                SessionModel responseModel = JSON.parseObject(result, SessionModel.class);
+                onLoginSuccessCallback(responseModel);
             }
 
             @Override
-            public void onError(Throwable exception, Object agentEntity) {
+            public void onAccessBad(String result) {
+                super.onAccessBad(result);
+            }
+
+            @Override
+            public void onError(Throwable ex, boolean isOnCallback) {
                 Toast.makeText(LoginActivity.this, R.string.string_toast_network_error, Toast.LENGTH_SHORT).show();
             }
         });
@@ -105,12 +102,12 @@ public class LoginActivity extends BaseActivity {
         switch (requestCode) {
             case REQUEST_CODE_REGISTER:
                 if (resultCode == RESPONSE_CODE_SUCCESS) {
-                    onLoginSuccessCallback(data.getStringExtra(Constants.T));
+                    onLoginSuccessCallback((SessionModel)data.getSerializableExtra(Constants.KEY_INTENT_SESSION));
                 }
                 break;
             case REQUEST_CODE_LOST_PASSWORD:
                 if (resultCode == RESPONSE_CODE_SUCCESS) {
-                    onLoginSuccessCallback(data.getStringExtra(Constants.T));
+                    onLoginSuccessCallback((SessionModel)data.getSerializableExtra(Constants.KEY_INTENT_SESSION));
                 }
                 break;
             default:
@@ -118,11 +115,8 @@ public class LoginActivity extends BaseActivity {
         }
     }
 
-    private void onLoginSuccessCallback(String token) {
-        SharedPreferences sharedPreferences = getSharedPreferences(Constants.KEY_SHARD_NAME, Activity.MODE_PRIVATE);
-        SharedPreferences.Editor edit = sharedPreferences.edit();
-        edit.putString(Constants.KEY_SHARD_T_CONTENT, token);
-        edit.commit();
+    private void onLoginSuccessCallback(SessionModel sessionModel) {
+        SharedPreferencesUtils.saveSession(this,sessionModel);
         this.toMainActivity();
     }
 

@@ -10,14 +10,20 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.alibaba.fastjson.JSON;
+
 import org.maxwe.tao.android.Constants;
-import org.maxwe.tao.android.agent.AgentEntity;
-import org.maxwe.tao.android.agent.AgentEntityInter;
+import org.maxwe.tao.android.INetWorkManager;
 import org.maxwe.tao.android.NetworkManager;
+import org.maxwe.tao.android.R;
+import org.maxwe.tao.android.account.model.RegisterModel;
+import org.maxwe.tao.android.account.model.SessionModel;
+import org.maxwe.tao.android.meta.SMSModel;
 import org.maxwe.tao.android.response.IResponse;
 import org.maxwe.tao.android.response.Response;
 import org.maxwe.tao.android.utils.CellPhoneUtils;
-import org.maxwe.tao.android.R;
+import org.maxwe.tao.android.utils.CryptionUtils;
+import org.xutils.common.Callback;
 import org.xutils.view.annotation.ContentView;
 import org.xutils.view.annotation.Event;
 import org.xutils.view.annotation.ViewInject;
@@ -77,17 +83,22 @@ public class RegisterActivity extends BaseActivity {
             Toast.makeText(this, this.getString(R.string.string_toast_cellphone), Toast.LENGTH_SHORT).show();
             return;
         }
+
         this.cellphoneOfGetCode = cellphone;
-        NetworkManager.requestSMSCode(cellphone, new NetworkManager.OnRequestCallback() {
+
+        String url = this.getString(R.string.string_url_domain) + this.getString(R.string.string_url_meta_smsCode);
+        SMSModel smsModel = new SMSModel(this.cellphoneOfGetCode);
+        NetworkManager.requestByPost(url, smsModel, new NetworkManager.OnNetworkCallback() {
             @Override
-            public void onSuccess(Response response) {
+            public void onSuccess(String result) {
                 Toast.makeText(RegisterActivity.this,R.string.string_toast_cellphone_code_send,Toast.LENGTH_SHORT).show();
             }
 
             @Override
-            public void onError(Throwable exception, Object agentEntity) {
-
+            public void onError(Throwable ex, boolean isOnCallback) {
+                Toast.makeText(RegisterActivity.this, R.string.string_toast_network_error, Toast.LENGTH_SHORT).show();
             }
+
         });
         this.bt_act_cellphone_code.setClickable(false);
         final int delay = DELAY;
@@ -142,36 +153,33 @@ public class RegisterActivity extends BaseActivity {
             return;
         }
 
-        AgentEntity agentEntity = new AgentEntity(cellphone, password, this.getResources().getInteger(R.integer.type_id));
-        AgentEntityInter agentEntityInter = new AgentEntityInter(agentEntity);
-        agentEntityInter.setCellPhoneCode(cellphoneCode);
-        NetworkManager.requestCreate(agentEntityInter, new NetworkManager.OnRequestCallback() {
+        String url = this.getString(R.string.string_url_domain) + this.getString(R.string.string_url_account_register);
+        RegisterModel registerModel = new RegisterModel(this.cellphoneOfGetCode,cellphoneCode,password);
+        NetworkManager.requestByPost(url, registerModel, new INetWorkManager.OnNetworkCallback() {
             @Override
-            public void onSuccess(Response response) {
-                if (response.getCode() == IResponse.ResultCode.RC_SUCCESS.getCode()) {
-                    Intent intent = new Intent();
-                    intent.putExtra(Constants.T, response.getData());
-                    RegisterActivity.this.setResult(LoginActivity.RESPONSE_CODE_SUCCESS, intent);
-                    RegisterActivity.this.finish();
-                    return;
-                }
-                if (response.getCode() == IResponse.ResultCode.RC_PARAMS_BAD.getCode()) {
-                    Toast.makeText(RegisterActivity.this, R.string.string_toast_params_cellphone_code_error, Toast.LENGTH_SHORT).show();
-                    return;
-                }
-                if (response.getCode() == IResponse.ResultCode.RC_PARAMS_REPEAT.getCode()) {
-                    Toast.makeText(RegisterActivity.this, R.string.string_toast_cellphone_repeat, Toast.LENGTH_SHORT).show();
-                    return;
-                }
-                Toast.makeText(RegisterActivity.this, R.string.string_toast_register_error, Toast.LENGTH_SHORT).show();
+            public void onSuccess(String result) {
+                SessionModel responseModel = JSON.parseObject(result, SessionModel.class);
+                Intent intent = new Intent();
+                intent.putExtra(Constants.KEY_INTENT_SESSION, responseModel);
+                RegisterActivity.this.setResult(LoginActivity.RESPONSE_CODE_SUCCESS, intent);
+                RegisterActivity.this.finish();
+                return;
             }
 
             @Override
-            public void onError(Throwable exception, Object agentEntity) {
+            public void onRepeat(String result) {
+                Toast.makeText(RegisterActivity.this, R.string.string_toast_cellphone_repeat, Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onError(Throwable ex, boolean isOnCallback) {
                 Toast.makeText(RegisterActivity.this, R.string.string_toast_network_error, Toast.LENGTH_SHORT).show();
             }
+
+            @Override
+            public void onOther(int code, String result) {
+                Toast.makeText(RegisterActivity.this, R.string.string_toast_register_error, Toast.LENGTH_SHORT).show();
+            }
         });
-
-
     }
 }

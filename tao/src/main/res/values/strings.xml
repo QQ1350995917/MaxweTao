@@ -24,6 +24,7 @@
     <string name="string_toast_password_different">密码不一致</string>
     <string name="string_toast_cellphone_different">手机号码发生改变</string>
     <string name="string_toast_network_error">网络错误</string>
+    <string name="string_toast_unknown_error">未知错误</string>
     <string name="string_toast_register_error">注册失败</string>
     <string name="string_toast_reset_password_error">重置密码失败</string>
     <string name="string_toast_old_password_error">原密码错误</string>

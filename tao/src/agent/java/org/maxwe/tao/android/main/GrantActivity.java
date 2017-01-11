@@ -24,10 +24,7 @@ import com.alibaba.fastjson.JSON;
 import org.maxwe.tao.android.Constants;
 import org.maxwe.tao.android.activity.BaseActivity;
 import org.maxwe.tao.android.R;
-import org.maxwe.tao.android.agent.AgentEntity;
-import org.maxwe.tao.android.agent.AgentEntityInter;
 import org.maxwe.tao.android.NetworkManager;
-import org.maxwe.tao.android.agent.SubAgentModel;
 import org.maxwe.tao.android.response.IResponse;
 import org.maxwe.tao.android.response.Response;
 import org.maxwe.tao.android.utils.CellPhoneUtils;
@@ -73,9 +70,9 @@ public class GrantActivity extends BaseActivity implements SwipeRefreshLayout.On
             View inflate = this.layoutInflater.inflate(R.layout.activity_grant_item, null);
             TextView tv_act_agent_item_cellphone = (TextView) inflate.findViewById(R.id.tv_act_agent_item_cellphone);
             TextView tv_act_agent_item_agents = (TextView) inflate.findViewById(R.id.tv_act_agent_item_codes_status);
-            AgentEntity agentEntity = list.get(position);
-            tv_act_agent_item_cellphone.setText("电话:" + agentEntity.getCellphone());
-            tv_act_agent_item_agents.setText("码量(转让/剩余/共有):" + agentEntity.getSpendCodes() + "/" + agentEntity.getLeftCodes() + "/" + agentEntity.getHaveCodes());
+//            AgentEntity agentEntity = list.get(position);
+            tv_act_agent_item_cellphone.setText("电话:123456789000");
+            tv_act_agent_item_agents.setText("码量(转让/剩余/共有):1234567890");
             return inflate;
         }
     }
@@ -90,7 +87,7 @@ public class GrantActivity extends BaseActivity implements SwipeRefreshLayout.On
     @ViewInject(R.id.lv_act_agent_agents)
     private ListView lv_act_agent_agents;
 
-    private List<AgentEntity> list = new LinkedList<>();
+    private List<String> list = new LinkedList<>();
     private AgentItemAdapter agentItemAdapter;
 
     private int currentPageIndex = 0;
@@ -121,12 +118,10 @@ public class GrantActivity extends BaseActivity implements SwipeRefreshLayout.On
             return;
         }
 
-        SharedPreferences sharedPreferences = this.getSharedPreferences(Constants.KEY_SHARD_NAME, Activity.MODE_PRIVATE);
-        String lastAccount = sharedPreferences.getString(Constants.KEY_SHARD_T_ACCOUNT, null);
-        if (TextUtils.equals(cellphone, lastAccount)) {
-            Toast.makeText(this, R.string.string_grant_self, Toast.LENGTH_SHORT).show();
-            return;
-        }
+//        if (TextUtils.equals(cellphone, lastAccount)) {
+//            Toast.makeText(this, R.string.string_grant_self, Toast.LENGTH_SHORT).show();
+//            return;
+//        }
 
         Intent intent = new Intent(this, GrantDialogActivity.class);
         intent.putExtra(GrantDialogActivity.KEY_CELLPHONE,cellphone);
@@ -160,42 +155,39 @@ public class GrantActivity extends BaseActivity implements SwipeRefreshLayout.On
     }
 
     private void onLoadMySubAgents(int pageIndex, int counter) {
-        SharedPreferences sharedPreferences = getSharedPreferences(Constants.KEY_SHARD_NAME, Activity.MODE_PRIVATE);
-        String cellphone = sharedPreferences.getString(Constants.KEY_SHARD_T_ACCOUNT, null);
-        String key = sharedPreferences.getString(Constants.KEY_SHARD_T_CONTENT, null);
-        AgentEntity agentEntity = new AgentEntity(cellphone, null, this.getResources().getInteger(R.integer.type_id));
-        AgentEntityInter agentEntityInter = new AgentEntityInter(agentEntity);
-        agentEntityInter.setT(key);
-        SubAgentModel subAgentModel = new SubAgentModel(agentEntityInter);
-        subAgentModel.setPageIndex(pageIndex);
-        subAgentModel.setCounter(counter);
-        NetworkManager.requestAgents(subAgentModel, new NetworkManager.OnRequestCallback() {
-            @Override
-            public void onSuccess(Response response) {
-                if (response.getCode() == IResponse.ResultCode.RC_SUCCESS.getCode()){
-                    SubAgentModel responseSubAgentModel = JSON.parseObject(response.getData(), SubAgentModel.class);
-                    LinkedList<AgentEntity> subAgents = responseSubAgentModel.getSubAgents();
-                    list.addAll(subAgents);
-                    agentItemAdapter.notifyDataSetChanged();
-                    srl_act_agent_list_container.setRefreshing(false);
-                    return;
-                }
-                if (response.getCode() == IResponse.ResultCode.RC_SUCCESS_EMPTY.getCode()){
-                    Toast.makeText(GrantActivity.this,R.string.string_agents_no_data,Toast.LENGTH_SHORT).show();
-                    srl_act_agent_list_container.setRefreshing(false);
-                    return;
-                }
-
-                if (response.getCode() == IResponse.ResultCode.RC_ACCESS_TIMEOUT.getCode()){
-                    Toast.makeText(GrantActivity.this,R.string.string_toast_timeout,Toast.LENGTH_SHORT).show();
-                }
-            }
-
-            @Override
-            public void onError(Throwable exception, Object agentEntity) {
-                exception.printStackTrace();
-            }
-        });
+//        AgentEntity agentEntity = new AgentEntity(cellphone, null, this.getResources().getInteger(R.integer.type_id));
+//        AgentEntityInter agentEntityInter = new AgentEntityInter(agentEntity);
+//        agentEntityInter.setT(key);
+//        SubAgentModel subAgentModel = new SubAgentModel(agentEntityInter);
+//        subAgentModel.setPageIndex(pageIndex);
+//        subAgentModel.setCounter(counter);
+//        NetworkManager.requestAgents(subAgentModel, new NetworkManager.OnRequestCallback() {
+//            @Override
+//            public void onSuccess(Response response) {
+//                if (response.getCode() == IResponse.ResultCode.RC_SUCCESS.getCode()){
+//                    SubAgentModel responseSubAgentModel = JSON.parseObject(response.getData(), SubAgentModel.class);
+//                    LinkedList<AgentEntity> subAgents = responseSubAgentModel.getSubAgents();
+//                    list.addAll(subAgents);
+//                    agentItemAdapter.notifyDataSetChanged();
+//                    srl_act_agent_list_container.setRefreshing(false);
+//                    return;
+//                }
+//                if (response.getCode() == IResponse.ResultCode.RC_SUCCESS_EMPTY.getCode()){
+//                    Toast.makeText(GrantActivity.this,R.string.string_agents_no_data,Toast.LENGTH_SHORT).show();
+//                    srl_act_agent_list_container.setRefreshing(false);
+//                    return;
+//                }
+//
+//                if (response.getCode() == IResponse.ResultCode.RC_ACCESS_TIMEOUT.getCode()){
+//                    Toast.makeText(GrantActivity.this,R.string.string_toast_timeout,Toast.LENGTH_SHORT).show();
+//                }
+//            }
+//
+//            @Override
+//            public void onError(Throwable exception, Object agentEntity) {
+//                exception.printStackTrace();
+//            }
+//        });
     }
 
     @Event(value = R.id.bt_act_agent_back, type = View.OnClickListener.class)

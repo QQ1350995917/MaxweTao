@@ -12,7 +12,6 @@ import org.maxwe.tao.android.NetworkManager;
 import org.maxwe.tao.android.R;
 import org.maxwe.tao.android.activity.LoginActivity;
 import org.maxwe.tao.android.activity.ModifyActivity;
-import org.maxwe.tao.android.agent.AgentEntityInter;
 import org.maxwe.tao.android.main.MainActivity;
 import org.maxwe.tao.android.response.Response;
 import org.xutils.view.annotation.ContentView;

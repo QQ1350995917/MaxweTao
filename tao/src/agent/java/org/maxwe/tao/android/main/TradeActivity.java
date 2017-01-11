@@ -17,10 +17,7 @@ import com.alibaba.fastjson.JSON;
 import org.maxwe.tao.android.Constants;
 import org.maxwe.tao.android.R;
 import org.maxwe.tao.android.activity.BaseActivity;
-import org.maxwe.tao.android.agent.AgentEntity;
-import org.maxwe.tao.android.agent.AgentEntityInter;
 import org.maxwe.tao.android.NetworkManager;
-import org.maxwe.tao.android.agent.TradeAgentModel;
 import org.maxwe.tao.android.response.IResponse;
 import org.maxwe.tao.android.response.Response;
 import org.maxwe.tao.android.utils.CellPhoneUtils;
@@ -63,7 +60,6 @@ public class TradeActivity extends BaseActivity {
     @ViewInject(R.id.tv_act_trade_trade_result)
     private TextView tv_act_trade_trade_result;
 
-    private AgentEntity currentAuthorizedAgent = null;
 
     @Event(value = R.id.bt_act_trade_back, type = View.OnClickListener.class)
     private void onBackToMainAction(View view) {
@@ -83,25 +79,24 @@ public class TradeActivity extends BaseActivity {
         this.tv_act_trade_trade_result.setVisibility(View.GONE);
     }
 
-    private void onSearchSuccessResult(AgentEntity authorizedAgent) {
-        this.bt_act_trade_search_action.setClickable(true);
-        this.currentAuthorizedAgent = authorizedAgent;
-        this.pb_act_trade_progress.setVisibility(View.GONE);
-        this.tv_act_trade_search_result.setVisibility(View.GONE);
-        this.ll_act_trade_search_result_list.setVisibility(View.VISIBLE);
-        this.tv_act_trade_trade_result.setVisibility(View.GONE);
-
-        this.et_act_trade_code_number.setText(null);
-        this.et_act_trade_code_number.setVisibility(View.VISIBLE);
-        this.tv_act_trade_code_action.setVisibility(View.VISIBLE);
-
-        this.tv_act_trade_search_result_cellphone.setText("电话号码：" + authorizedAgent.getCellphone());
-        this.tv_act_trade_search_result_grant_status.setText("授权状态：" + authorizedAgent.getSpendCodes() + "/" + authorizedAgent.getLeftCodes() + "/" + authorizedAgent.getHaveCodes());
+    private void onSearchSuccessResult() {
+//        this.bt_act_trade_search_action.setClickable(true);
+//        this.currentAuthorizedAgent = authorizedAgent;
+//        this.pb_act_trade_progress.setVisibility(View.GONE);
+//        this.tv_act_trade_search_result.setVisibility(View.GONE);
+//        this.ll_act_trade_search_result_list.setVisibility(View.VISIBLE);
+//        this.tv_act_trade_trade_result.setVisibility(View.GONE);
+//
+//        this.et_act_trade_code_number.setText(null);
+//        this.et_act_trade_code_number.setVisibility(View.VISIBLE);
+//        this.tv_act_trade_code_action.setVisibility(View.VISIBLE);
+//
+//        this.tv_act_trade_search_result_cellphone.setText("电话号码：" + authorizedAgent.getCellphone());
+//        this.tv_act_trade_search_result_grant_status.setText("授权状态：" + authorizedAgent.getSpendCodes() + "/" + authorizedAgent.getLeftCodes() + "/" + authorizedAgent.getHaveCodes());
     }
 
     private void onSearchErrorResult(String result) {
         this.bt_act_trade_search_action.setClickable(true);
-        this.currentAuthorizedAgent = null;
         this.ll_act_trade_search_result_list.setVisibility(View.GONE);
         this.pb_act_trade_progress.setVisibility(View.GONE);
         this.tv_act_trade_search_result.setVisibility(View.VISIBLE);
@@ -116,15 +111,15 @@ public class TradeActivity extends BaseActivity {
         this.pb_act_trade_progress.setVisibility(View.VISIBLE);
     }
 
-    private void onTradeSuccess(AgentEntity authorizedAgent) {
-        this.bt_act_trade_search_action.setClickable(true);
-        this.tv_act_trade_trade_result.setVisibility(View.GONE);
-        this.pb_act_trade_progress.setVisibility(View.GONE);
-        this.tv_act_trade_search_result_cellphone.setText("电话:" + authorizedAgent.getCellphone());
-        this.tv_act_trade_search_result_grant_status.setText("码量(转让/剩余/共有):" + authorizedAgent.getSpendCodes() + "/" + authorizedAgent.getLeftCodes() + "/" + authorizedAgent.getHaveCodes());
-
-        this.et_act_trade_code_number.setVisibility(View.GONE);
-        this.tv_act_trade_code_action.setVisibility(View.GONE);
+    private void onTradeSuccess() {
+//        this.bt_act_trade_search_action.setClickable(true);
+//        this.tv_act_trade_trade_result.setVisibility(View.GONE);
+//        this.pb_act_trade_progress.setVisibility(View.GONE);
+//        this.tv_act_trade_search_result_cellphone.setText("电话:" + authorizedAgent.getCellphone());
+//        this.tv_act_trade_search_result_grant_status.setText("码量(转让/剩余/共有):" + authorizedAgent.getSpendCodes() + "/" + authorizedAgent.getLeftCodes() + "/" + authorizedAgent.getHaveCodes());
+//
+//        this.et_act_trade_code_number.setVisibility(View.GONE);
+//        this.tv_act_trade_code_action.setVisibility(View.GONE);
     }
 
     private void onTradeFail(String result) {
@@ -143,65 +138,62 @@ public class TradeActivity extends BaseActivity {
             return;
         }
 
-        SharedPreferences sharedPreferences = this.getSharedPreferences(Constants.KEY_SHARD_NAME, Activity.MODE_PRIVATE);
-        String grantAccount = sharedPreferences.getString(Constants.KEY_SHARD_T_ACCOUNT, null);
-        if (TextUtils.equals(cellphone, grantAccount)) {
-            Toast.makeText(this, R.string.string_grant_self, Toast.LENGTH_SHORT).show();
-            return;
-        }
+//        if (TextUtils.equals(cellphone, grantAccount)) {
+//            Toast.makeText(this, R.string.string_grant_self, Toast.LENGTH_SHORT).show();
+//            return;
+//        }
 
         this.onSearchGoing();
 
-        String key = sharedPreferences.getString(Constants.KEY_SHARD_T_CONTENT, null);
-        AgentEntity agentEntity = new AgentEntity(grantAccount, null, this.getResources().getInteger(R.integer.type_id));
-        AgentEntityInter agentEntityInter = new AgentEntityInter(agentEntity);
-        agentEntityInter.setT(key);
-        TradeAgentModel tradeAgentModel = new TradeAgentModel(agentEntityInter);
-        AgentEntity authorizedAgent = new AgentEntity(cellphone, null, -1);
-        tradeAgentModel.setAuthorizedAgent(authorizedAgent);
-        NetworkManager.requestAgentBus(tradeAgentModel, new NetworkManager.OnRequestCallback() {
-            @Override
-            public void onSuccess(Response response) {
-                if (response.getCode() == IResponse.ResultCode.RC_PARAMS_BAD.getCode()) {
-                    Toast.makeText(TradeActivity.this, R.string.string_params_error, Toast.LENGTH_SHORT).show();
-                    onSearchErrorResult(TradeActivity.this.getString(R.string.string_params_error));
-                    return;
-                }
-
-                if (response.getCode() == IResponse.ResultCode.RC_SUCCESS_EMPTY.getCode()) {
-                    Toast.makeText(TradeActivity.this, R.string.string_result_empty, Toast.LENGTH_SHORT).show();
-                    onSearchErrorResult(TradeActivity.this.getString(R.string.string_result_empty));
-                    return;
-                }
-
-                if (response.getCode() == IResponse.ResultCode.RC_ACCESS_BAD.getCode()) {
-                    Toast.makeText(TradeActivity.this, R.string.string_agent_other, Toast.LENGTH_SHORT).show();
-                    onSearchErrorResult(TradeActivity.this.getString(R.string.string_agent_other));
-                    return;
-                }
-
-                if (response.getCode() == IResponse.ResultCode.RC_SUCCESS.getCode()) {
-                    TradeAgentModel responseAgentModel = JSON.parseObject(response.getData(), TradeAgentModel.class);
-                    AgentEntity authorizedAgent = responseAgentModel.getAuthorizedAgent();
-                    onSearchSuccessResult(authorizedAgent);
-                    return;
-                }
-
-                if (response.getCode() == IResponse.ResultCode.RC_ACCESS_TIMEOUT.getCode()){
-                    Toast.makeText(TradeActivity.this,R.string.string_toast_timeout,Toast.LENGTH_SHORT).show();
-                    return;
-                }
-
-                Toast.makeText(TradeActivity.this, R.string.string_agents_no_data, Toast.LENGTH_SHORT).show();
-                onSearchErrorResult(TradeActivity.this.getString(R.string.string_toast_network_error));
-            }
-
-            @Override
-            public void onError(Throwable exception, Object agentEntity) {
-                Toast.makeText(TradeActivity.this, R.string.string_toast_network_error, Toast.LENGTH_SHORT).show();
-                onSearchErrorResult(TradeActivity.this.getString(R.string.string_toast_network_error));
-            }
-        });
+//        AgentEntity agentEntity = new AgentEntity(grantAccount, null, this.getResources().getInteger(R.integer.type_id));
+//        AgentEntityInter agentEntityInter = new AgentEntityInter(agentEntity);
+//        agentEntityInter.setT(key);
+//        TradeAgentModel tradeAgentModel = new TradeAgentModel(agentEntityInter);
+//        AgentEntity authorizedAgent = new AgentEntity(cellphone, null, -1);
+//        tradeAgentModel.setAuthorizedAgent(authorizedAgent);
+//        NetworkManager.requestAgentBus(tradeAgentModel, new NetworkManager.OnRequestCallback() {
+//            @Override
+//            public void onSuccess(Response response) {
+//                if (response.getCode() == IResponse.ResultCode.RC_PARAMS_BAD.getCode()) {
+//                    Toast.makeText(TradeActivity.this, R.string.string_params_error, Toast.LENGTH_SHORT).show();
+//                    onSearchErrorResult(TradeActivity.this.getString(R.string.string_params_error));
+//                    return;
+//                }
+//
+//                if (response.getCode() == IResponse.ResultCode.RC_SUCCESS_EMPTY.getCode()) {
+//                    Toast.makeText(TradeActivity.this, R.string.string_result_empty, Toast.LENGTH_SHORT).show();
+//                    onSearchErrorResult(TradeActivity.this.getString(R.string.string_result_empty));
+//                    return;
+//                }
+//
+//                if (response.getCode() == IResponse.ResultCode.RC_ACCESS_BAD.getCode()) {
+//                    Toast.makeText(TradeActivity.this, R.string.string_agent_other, Toast.LENGTH_SHORT).show();
+//                    onSearchErrorResult(TradeActivity.this.getString(R.string.string_agent_other));
+//                    return;
+//                }
+//
+//                if (response.getCode() == IResponse.ResultCode.RC_SUCCESS.getCode()) {
+//                    TradeAgentModel responseAgentModel = JSON.parseObject(response.getData(), TradeAgentModel.class);
+//                    AgentEntity authorizedAgent = responseAgentModel.getAuthorizedAgent();
+//                    onSearchSuccessResult(authorizedAgent);
+//                    return;
+//                }
+//
+//                if (response.getCode() == IResponse.ResultCode.RC_ACCESS_TIMEOUT.getCode()){
+//                    Toast.makeText(TradeActivity.this,R.string.string_toast_timeout,Toast.LENGTH_SHORT).show();
+//                    return;
+//                }
+//
+//                Toast.makeText(TradeActivity.this, R.string.string_agents_no_data, Toast.LENGTH_SHORT).show();
+//                onSearchErrorResult(TradeActivity.this.getString(R.string.string_toast_network_error));
+//            }
+//
+//            @Override
+//            public void onError(Throwable exception, Object agentEntity) {
+//                Toast.makeText(TradeActivity.this, R.string.string_toast_network_error, Toast.LENGTH_SHORT).show();
+//                onSearchErrorResult(TradeActivity.this.getString(R.string.string_toast_network_error));
+//            }
+//        });
     }
 
     @Event(value = R.id.tv_act_trade_code_action, type = View.OnClickListener.class)
@@ -217,58 +209,55 @@ public class TradeActivity extends BaseActivity {
             return;
         }
 
-        if (this.currentAuthorizedAgent == null) {
-            Toast.makeText(this, R.string.string_input_grant_data_error, Toast.LENGTH_SHORT).show();
-        }
+//        if (this.currentAuthorizedAgent == null) {
+//            Toast.makeText(this, R.string.string_input_grant_data_error, Toast.LENGTH_SHORT).show();
+//        }
 
         this.onTradeGoing();
 
-        SharedPreferences sharedPreferences = this.getSharedPreferences(Constants.KEY_SHARD_NAME, Activity.MODE_PRIVATE);
-        String accountCellphone = sharedPreferences.getString(Constants.KEY_SHARD_T_ACCOUNT, null);
-        String key = sharedPreferences.getString(Constants.KEY_SHARD_T_CONTENT, null);
-        AgentEntity agentEntity = new AgentEntity(accountCellphone, null, this.getResources().getInteger(R.integer.type_id));
-        AgentEntityInter agentEntityInter = new AgentEntityInter(agentEntity);
-        agentEntityInter.setT(key);
-        TradeAgentModel tradeAgentModel = new TradeAgentModel(agentEntityInter);
-        tradeAgentModel.setTradeCode(Integer.parseInt(number));
-        tradeAgentModel.setAuthorizedAgent(this.currentAuthorizedAgent);
-
-        NetworkManager.requestTrade(tradeAgentModel, new NetworkManager.OnRequestCallback() {
-            @Override
-            public void onSuccess(Response response) {
-                if (response.getCode() == IResponse.ResultCode.RC_PARAMS_BAD.getCode()) {
-                    Toast.makeText(TradeActivity.this, R.string.string_params_error, Toast.LENGTH_SHORT).show();
-                    onTradeFail(TradeActivity.this.getString(R.string.string_params_error));
-                    return;
-                }
-
-                if (response.getCode() == IResponse.ResultCode.RC_ACCESS_BAD.getCode()) {
-                    Toast.makeText(TradeActivity.this, R.string.string_agent_code_no_enough, Toast.LENGTH_SHORT).show();
-                    onTradeFail(TradeActivity.this.getString(R.string.string_agent_code_no_enough));
-                    return;
-                }
-
-                if (response.getCode() == IResponse.ResultCode.RC_SUCCESS.getCode()) {
-                    TradeAgentModel responseAgentModel = JSON.parseObject(response.getData(), TradeAgentModel.class);
-                    AgentEntity authorizedAgent = responseAgentModel.getAuthorizedAgent();
-                    onTradeSuccess(authorizedAgent);
-                    return;
-                }
-
-                if (response.getCode() == IResponse.ResultCode.RC_ACCESS_TIMEOUT.getCode()){
-                    Toast.makeText(TradeActivity.this,R.string.string_toast_timeout,Toast.LENGTH_SHORT).show();
-                    return;
-                }
-
-                Toast.makeText(TradeActivity.this, R.string.string_input_trade_fail, Toast.LENGTH_SHORT).show();
-                onTradeFail(TradeActivity.this.getString(R.string.string_input_trade_fail));
-            }
-
-            @Override
-            public void onError(Throwable exception, Object agentEntity) {
-                Toast.makeText(TradeActivity.this, R.string.string_toast_network_error, Toast.LENGTH_SHORT).show();
-                onTradeFail(TradeActivity.this.getString(R.string.string_toast_network_error));
-            }
-        });
+//        AgentEntity agentEntity = new AgentEntity(accountCellphone, null, this.getResources().getInteger(R.integer.type_id));
+//        AgentEntityInter agentEntityInter = new AgentEntityInter(agentEntity);
+//        agentEntityInter.setT(key);
+//        TradeAgentModel tradeAgentModel = new TradeAgentModel(agentEntityInter);
+//        tradeAgentModel.setTradeCode(Integer.parseInt(number));
+//        tradeAgentModel.setAuthorizedAgent(this.currentAuthorizedAgent);
+//
+//        NetworkManager.requestTrade(tradeAgentModel, new NetworkManager.OnRequestCallback() {
+//            @Override
+//            public void onSuccess(Response response) {
+//                if (response.getCode() == IResponse.ResultCode.RC_PARAMS_BAD.getCode()) {
+//                    Toast.makeText(TradeActivity.this, R.string.string_params_error, Toast.LENGTH_SHORT).show();
+//                    onTradeFail(TradeActivity.this.getString(R.string.string_params_error));
+//                    return;
+//                }
+//
+//                if (response.getCode() == IResponse.ResultCode.RC_ACCESS_BAD.getCode()) {
+//                    Toast.makeText(TradeActivity.this, R.string.string_agent_code_no_enough, Toast.LENGTH_SHORT).show();
+//                    onTradeFail(TradeActivity.this.getString(R.string.string_agent_code_no_enough));
+//                    return;
+//                }
+//
+//                if (response.getCode() == IResponse.ResultCode.RC_SUCCESS.getCode()) {
+//                    TradeAgentModel responseAgentModel = JSON.parseObject(response.getData(), TradeAgentModel.class);
+//                    AgentEntity authorizedAgent = responseAgentModel.getAuthorizedAgent();
+//                    onTradeSuccess(authorizedAgent);
+//                    return;
+//                }
+//
+//                if (response.getCode() == IResponse.ResultCode.RC_ACCESS_TIMEOUT.getCode()){
+//                    Toast.makeText(TradeActivity.this,R.string.string_toast_timeout,Toast.LENGTH_SHORT).show();
+//                    return;
+//                }
+//
+//                Toast.makeText(TradeActivity.this, R.string.string_input_trade_fail, Toast.LENGTH_SHORT).show();
+//                onTradeFail(TradeActivity.this.getString(R.string.string_input_trade_fail));
+//            }
+//
+//            @Override
+//            public void onError(Throwable exception, Object agentEntity) {
+//                Toast.makeText(TradeActivity.this, R.string.string_toast_network_error, Toast.LENGTH_SHORT).show();
+//                onTradeFail(TradeActivity.this.getString(R.string.string_toast_network_error));
+//            }
+//        });
     }
 }

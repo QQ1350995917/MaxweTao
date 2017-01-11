@@ -10,10 +10,14 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.alibaba.fastjson.JSON;
+
 import org.maxwe.tao.android.Constants;
-import org.maxwe.tao.android.agent.AgentEntity;
-import org.maxwe.tao.android.agent.AgentEntityInter;
+import org.maxwe.tao.android.INetWorkManager;
 import org.maxwe.tao.android.NetworkManager;
+import org.maxwe.tao.android.account.model.RegisterModel;
+import org.maxwe.tao.android.account.model.SessionModel;
+import org.maxwe.tao.android.meta.SMSModel;
 import org.maxwe.tao.android.response.IResponse;
 import org.maxwe.tao.android.response.Response;
 import org.maxwe.tao.android.utils.CellPhoneUtils;
@@ -79,15 +83,17 @@ public class LostActivity extends BaseActivity {
         }
 
         this.cellphoneOfGetCode = cellphone;
-        NetworkManager.requestSMSCode(cellphone, new NetworkManager.OnRequestCallback() {
+        String url = this.getString(R.string.string_url_domain) + this.getString(R.string.string_url_meta_smsCode);
+        SMSModel smsModel = new SMSModel(this.cellphoneOfGetCode);
+        NetworkManager.requestByPost(url, smsModel, new NetworkManager.OnNetworkCallback() {
             @Override
-            public void onSuccess(Response response) {
+            public void onSuccess(String result) {
                 Toast.makeText(LostActivity.this,R.string.string_toast_cellphone_code_send,Toast.LENGTH_SHORT).show();
             }
 
             @Override
-            public void onError(Throwable exception, Object agentEntity) {
-
+            public void onError(Throwable ex, boolean isOnCallback) {
+                Toast.makeText(LostActivity.this, R.string.string_toast_network_error, Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -144,34 +150,33 @@ public class LostActivity extends BaseActivity {
             return;
         }
 
-        AgentEntity agentEntity = new AgentEntity(cellphone, password, this.getResources().getInteger(R.integer.type_id));
-        AgentEntityInter agentEntityInter = new AgentEntityInter(agentEntity);
-        agentEntityInter.setCellPhoneCode(cellphoneCode);
-        System.out.println(agentEntityInter);
-        NetworkManager.requestLost(agentEntityInter, new NetworkManager.OnRequestCallback() {
+
+        String url = this.getString(R.string.string_url_domain) + this.getString(R.string.string_url_account_lost);
+        RegisterModel registerModel = new RegisterModel(this.cellphoneOfGetCode,cellphoneCode,password);
+        NetworkManager.requestByPost(url, registerModel, new INetWorkManager.OnNetworkCallback() {
             @Override
-            public void onSuccess(Response response) {
-                if (response.getCode() == IResponse.ResultCode.RC_SUCCESS.getCode()) {
-                    Intent intent = new Intent();
-                    intent.putExtra(Constants.T, response.getData());
-                    LostActivity.this.setResult(LoginActivity.RESPONSE_CODE_SUCCESS, intent);
-                    LostActivity.this.finish();
-                    return;
-                }
-                if (response.getCode() == IResponse.ResultCode.RC_PARAMS_BAD.getCode()) {
-                    Toast.makeText(LostActivity.this, R.string.string_toast_params_cellphone_code_error, Toast.LENGTH_SHORT).show();
-                    return;
-                }
-                if (response.getCode() == IResponse.ResultCode.RC_ACCESS_BAD_2.getCode()) {
-                    Toast.makeText(LostActivity.this, R.string.string_toast_cellphone_no, Toast.LENGTH_SHORT).show();
-                    return;
-                }
-                Toast.makeText(LostActivity.this, R.string.string_toast_reset_password_error, Toast.LENGTH_SHORT).show();
+            public void onSuccess(String result) {
+                SessionModel responseModel = JSON.parseObject(result, SessionModel.class);
+                Intent intent = new Intent();
+                intent.putExtra(Constants.KEY_INTENT_SESSION, responseModel);
+                LostActivity.this.setResult(LoginActivity.RESPONSE_CODE_SUCCESS, intent);
+                LostActivity.this.finish();
+                return;
             }
 
             @Override
-            public void onError(Throwable exception, Object agentEntity) {
+            public void onAccessBad(String result) {
+                Toast.makeText(LostActivity.this, R.string.string_toast_cellphone_no, Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onError(Throwable ex, boolean isOnCallback) {
                 Toast.makeText(LostActivity.this, R.string.string_toast_network_error, Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onOther(int code, String result) {
+                Toast.makeText(LostActivity.this, R.string.string_toast_reset_password_error, Toast.LENGTH_SHORT).show();
             }
         });
     }

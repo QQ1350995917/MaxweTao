@@ -11,22 +11,21 @@ import android.widget.Toast;
 import com.alibaba.fastjson.JSON;
 
 import org.maxwe.tao.android.Constants;
+import org.maxwe.tao.android.INetWorkManager;
+import org.maxwe.tao.android.account.model.LoginModel;
+import org.maxwe.tao.android.account.model.SessionModel;
 import org.maxwe.tao.android.activity.BaseActivity;
 import org.maxwe.tao.android.activity.LoginActivity;
 import org.maxwe.tao.android.activity.ModifyActivity;
 import org.maxwe.tao.android.R;
 import org.maxwe.tao.android.activity.VersionActivity;
-import org.maxwe.tao.android.agent.AgentEntity;
-import org.maxwe.tao.android.agent.AgentEntityInter;
 import org.maxwe.tao.android.NetworkManager;
-import org.maxwe.tao.android.agent.SubAgentModel;
 import org.maxwe.tao.android.response.IResponse;
 import org.maxwe.tao.android.response.Response;
+import org.maxwe.tao.android.utils.SharedPreferencesUtils;
 import org.maxwe.tao.android.version.VersionEntity;
 import org.xutils.view.annotation.ContentView;
 import org.xutils.view.annotation.Event;
-
-import java.util.LinkedList;
 
 @ContentView(R.layout.activity_main)
 public class MainActivity extends BaseActivity {
@@ -37,7 +36,7 @@ public class MainActivity extends BaseActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        this.onCheckNewVersion();
+//        this.onCheckNewVersion();
     }
 
     @Event(value = R.id.bt_act_main_my_proxy, type = View.OnClickListener.class)
@@ -60,26 +59,34 @@ public class MainActivity extends BaseActivity {
 
     @Event(value = R.id.bt_act_main_exit, type = View.OnClickListener.class)
     private void onExitAction(View view) {
-        final SharedPreferences sharedPreferences = getSharedPreferences(Constants.KEY_SHARD_NAME, Activity.MODE_PRIVATE);
-        AgentEntityInter agentEntityInter = new AgentEntityInter();
-        agentEntityInter.setT(sharedPreferences.getString(Constants.KEY_SHARD_T_CONTENT, null));
-        NetworkManager.requestLogout(agentEntityInter, new NetworkManager.OnRequestCallback() {
+        SessionModel sessionModel = SharedPreferencesUtils.getSession(this);
+        try {
+            sessionModel.setSign(sessionModel.getEncryptSing());
+        } catch (Exception e) {
+            e.printStackTrace();
+            Toast.makeText(this,"加密错误",Toast.LENGTH_SHORT).show();
+        }
+        String url = this.getString(R.string.string_url_domain) + this.getString(R.string.string_url_account_logout);
+        NetworkManager.requestByPost(url, sessionModel, new INetWorkManager.OnNetworkCallback() {
             @Override
-            public void onSuccess(Response response) {
-                SharedPreferences.Editor edit = sharedPreferences.edit();
-                SharedPreferences.Editor remove = edit.remove(Constants.KEY_SHARD_T_CONTENT);
-                remove.commit();
+            public void onSuccess(String result) {
+                SharedPreferencesUtils.clearSession(MainActivity.this);
                 Intent intent = new Intent(MainActivity.this, LoginActivity.class);
                 MainActivity.this.startActivity(intent);
                 MainActivity.this.finish();
             }
 
             @Override
-            public void onError(Throwable exception, Object agentEntity) {
-                Toast.makeText(MainActivity.this, R.string.string_toast_network_error, Toast.LENGTH_SHORT).show();
-                SharedPreferences.Editor edit = sharedPreferences.edit();
-                SharedPreferences.Editor remove = edit.remove(Constants.KEY_SHARD_T_CONTENT);
-                remove.commit();
+            public void onLoginTimeout(String result) {
+                SharedPreferencesUtils.clearSession(MainActivity.this);
+                Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+                MainActivity.this.startActivity(intent);
+                MainActivity.this.finish();
+            }
+
+            @Override
+            public void onError(Throwable ex, boolean isOnCallback) {
+                SharedPreferencesUtils.clearSession(MainActivity.this);
                 Intent intent = new Intent(MainActivity.this, LoginActivity.class);
                 MainActivity.this.startActivity(intent);
                 MainActivity.this.finish();
@@ -87,35 +94,35 @@ public class MainActivity extends BaseActivity {
         });
     }
 
-    private void onCheckNewVersion() {
-        VersionEntity currentVersionEntity = new VersionEntity(this.getString(R.string.platform), this.getResources().getInteger(R.integer.type_id), this.getVersionCode());
-        NetworkManager.requestNewVersion(currentVersionEntity, new NetworkManager.OnRequestCallback() {
-            @Override
-            public void onSuccess(Response response) {
-                if (response.getCode() == IResponse.ResultCode.RC_SUCCESS.getCode()) {
-                    VersionEntity versionEntity = JSON.parseObject(response.getData(), VersionEntity.class);
-                    versionCompare(versionEntity);
-                }
-            }
-
-            @Override
-            public void onError(Throwable exception, Object object) {
-                exception.printStackTrace();
-            }
-        });
-    }
+//    private void onCheckNewVersion() {
+//        VersionEntity currentVersionEntity = new VersionEntity(this.getString(R.string.platform), this.getResources().getInteger(R.integer.type_id), this.getVersionCode());
+//        NetworkManager.requestNewVersion(currentVersionEntity, new NetworkManager.OnRequestCallback() {
+//            @Override
+//            public void onSuccess(Response response) {
+//                if (response.getCode() == IResponse.ResultCode.RC_SUCCESS.getCode()) {
+//                    VersionEntity versionEntity = JSON.parseObject(response.getData(), VersionEntity.class);
+//                    versionCompare(versionEntity);
+//                }
+//            }
+//
+//            @Override
+//            public void onError(Throwable exception, Object object) {
+//                exception.printStackTrace();
+//            }
+//        });
+//    }
 
     private void versionCompare(VersionEntity versionEntityFromServer) {
         if (versionEntityFromServer == null) {
             return;
         }
 
-        VersionEntity currentVersionEntity = new VersionEntity(this.getString(R.string.platform), this.getResources().getInteger(R.integer.type_id), this.getVersionCode());
-        if (currentVersionEntity.equals(versionEntityFromServer) && versionEntityFromServer.getVersionCode() > currentVersionEntity.getVersionCode()) {
-            Intent intent = new Intent(MainActivity.this, VersionActivity.class);
-            intent.putExtra(VersionActivity.KEY_VERSION, versionEntityFromServer);
-            MainActivity.this.startActivity(intent);
-        }
+//        VersionEntity currentVersionEntity = new VersionEntity(this.getString(R.string.platform), this.getResources().getInteger(R.integer.type_id), this.getVersionCode());
+//        if (currentVersionEntity.equals(versionEntityFromServer) && versionEntityFromServer.getVersionCode() > currentVersionEntity.getVersionCode()) {
+//            Intent intent = new Intent(MainActivity.this, VersionActivity.class);
+//            intent.putExtra(VersionActivity.KEY_VERSION, versionEntityFromServer);
+//            MainActivity.this.startActivity(intent);
+//        }
     }
 
     @Override
@@ -137,7 +144,7 @@ public class MainActivity extends BaseActivity {
                 break;
             case REQUEST_CODE_MODIFY_PASSWORD:
                 if (resultCode == LoginActivity.RESPONSE_CODE_SUCCESS) {
-                    onModifyPasswordSuccessCallback(data.getStringExtra(Constants.T));
+                    onModifyPasswordSuccessCallback((SessionModel)data.getSerializableExtra(Constants.KEY_INTENT_SESSION));
                 }
                 break;
             default:
@@ -145,10 +152,7 @@ public class MainActivity extends BaseActivity {
         }
     }
 
-    private void onModifyPasswordSuccessCallback(String token) {
-        SharedPreferences sharedPreferences = getSharedPreferences(Constants.KEY_SHARD_NAME, Activity.MODE_PRIVATE);
-        SharedPreferences.Editor edit = sharedPreferences.edit();
-        edit.putString(Constants.KEY_SHARD_T_CONTENT, token);
-        edit.commit();
+    private void onModifyPasswordSuccessCallback(SessionModel sessionModel) {
+        SharedPreferencesUtils.saveSession(this,sessionModel);
     }
 }

@@ -13,7 +13,9 @@ import android.widget.TextView;
 
 import org.maxwe.tao.android.Constants;
 import org.maxwe.tao.android.R;
+import org.maxwe.tao.android.account.model.SessionModel;
 import org.maxwe.tao.android.main.MainActivity;
+import org.maxwe.tao.android.utils.SharedPreferencesUtils;
 import org.xutils.view.annotation.ContentView;
 import org.xutils.view.annotation.ViewInject;
 
@@ -58,9 +60,8 @@ public class SplashActivity extends BaseActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        SharedPreferences sharedPreferences = getSharedPreferences(Constants.KEY_SHARD_NAME, Activity.MODE_PRIVATE);
-        String key = sharedPreferences.getString(Constants.KEY_SHARD_T_CONTENT, null);
-        if (TextUtils.isEmpty(key)) {
+        SessionModel session = SharedPreferencesUtils.getSession(this);
+        if (session == null) {
             this.handler.sendEmptyMessageDelayed(WHAT_0, DELAY);
         } else {
             this.handler.sendEmptyMessageDelayed(WHAT_1, DELAY);

@@ -15,10 +15,7 @@ import android.widget.Toast;
 import org.maxwe.tao.android.Constants;
 import org.maxwe.tao.android.R;
 import org.maxwe.tao.android.activity.BaseActivity;
-import org.maxwe.tao.android.agent.AgentEntity;
-import org.maxwe.tao.android.agent.AgentEntityInter;
 import org.maxwe.tao.android.NetworkManager;
-import org.maxwe.tao.android.agent.TradeAgentModel;
 import org.maxwe.tao.android.response.IResponse;
 import org.maxwe.tao.android.response.Response;
 import org.xutils.view.annotation.ContentView;
@@ -118,58 +115,55 @@ public class GrantDialogActivity extends BaseActivity {
 
 
     private void onGrantConfirmAction() {
-        SharedPreferences sharedPreferences = this.getSharedPreferences(Constants.KEY_SHARD_NAME, Activity.MODE_PRIVATE);
-        String accountCellphone = sharedPreferences.getString(Constants.KEY_SHARD_T_ACCOUNT, null);
-        String key = sharedPreferences.getString(Constants.KEY_SHARD_T_CONTENT, null);
-        AgentEntity agentEntity = new AgentEntity(accountCellphone, null, this.getResources().getInteger(R.integer.type_id));
-        AgentEntityInter agentEntityInter = new AgentEntityInter(agentEntity);
-        agentEntityInter.setT(key);
-        TradeAgentModel tradeAgentModel = new TradeAgentModel(agentEntityInter);
-        tradeAgentModel.setTradeCode(1);
-        AgentEntity authorizedAgent = new AgentEntity(cellphone, null, -1);
-        tradeAgentModel.setAuthorizedAgent(authorizedAgent);
-        NetworkManager.requestGrant(tradeAgentModel, new NetworkManager.OnRequestCallback() {
-            @Override
-            public void onSuccess(Response response) {
-                if (response.getCode() == IResponse.ResultCode.RC_SUCCESS_EMPTY.getCode()) {
-                    Toast.makeText(GrantDialogActivity.this, R.string.string_grant_cellphone_no_exist, Toast.LENGTH_SHORT).show();
-                    showResultStatus(GrantDialogActivity.this.getString(R.string.string_grant_cellphone_no_exist));
-                    return;
-                }
-
-                if (response.getCode() == IResponse.ResultCode.RC_PARAMS_REPEAT.getCode()) {
-                    Toast.makeText(GrantDialogActivity.this, R.string.string_grant_cellphone_repeat, Toast.LENGTH_SHORT).show();
-                    showResultStatus(GrantDialogActivity.this.getString(R.string.string_grant_cellphone_repeat));
-                    return;
-                }
-
-                if (response.getCode() == IResponse.ResultCode.RC_ACCESS_BAD.getCode()) {
-                    Toast.makeText(GrantDialogActivity.this, R.string.string_agents_no_code, Toast.LENGTH_SHORT).show();
-                    showResultStatus(GrantDialogActivity.this.getString(R.string.string_agents_no_code));
-                    return;
-                }
-
-                if (response.getCode() == IResponse.ResultCode.RC_SUCCESS.getCode()) {
-                    Toast.makeText(GrantDialogActivity.this, R.string.string_grant_cellphone_success, Toast.LENGTH_SHORT).show();
-                    onGrantActionSuccess();
-                    return;
-                }
-
-                if (response.getCode() == IResponse.ResultCode.RC_ACCESS_TIMEOUT.getCode()){
-                    Toast.makeText(GrantDialogActivity.this,R.string.string_toast_timeout,Toast.LENGTH_SHORT).show();
-                    return;
-                }
-
-                Toast.makeText(GrantDialogActivity.this, R.string.string_grant_cellphone_fail, Toast.LENGTH_SHORT).show();
-                showResultStatus(GrantDialogActivity.this.getString(R.string.string_grant_cellphone_fail));
-            }
-
-            @Override
-            public void onError(Throwable exception, Object agentEntity) {
-                Toast.makeText(GrantDialogActivity.this, R.string.string_toast_network_error, Toast.LENGTH_SHORT).show();
-                showResultStatus(GrantDialogActivity.this.getString(R.string.string_toast_network_error));
-            }
-        });
+//        AgentEntity agentEntity = new AgentEntity(accountCellphone, null, this.getResources().getInteger(R.integer.type_id));
+//        AgentEntityInter agentEntityInter = new AgentEntityInter(agentEntity);
+//        agentEntityInter.setT(key);
+//        TradeAgentModel tradeAgentModel = new TradeAgentModel(agentEntityInter);
+//        tradeAgentModel.setTradeCode(1);
+//        AgentEntity authorizedAgent = new AgentEntity(cellphone, null, -1);
+//        tradeAgentModel.setAuthorizedAgent(authorizedAgent);
+//        NetworkManager.requestGrant(tradeAgentModel, new NetworkManager.OnRequestCallback() {
+//            @Override
+//            public void onSuccess(Response response) {
+//                if (response.getCode() == IResponse.ResultCode.RC_SUCCESS_EMPTY.getCode()) {
+//                    Toast.makeText(GrantDialogActivity.this, R.string.string_grant_cellphone_no_exist, Toast.LENGTH_SHORT).show();
+//                    showResultStatus(GrantDialogActivity.this.getString(R.string.string_grant_cellphone_no_exist));
+//                    return;
+//                }
+//
+//                if (response.getCode() == IResponse.ResultCode.RC_PARAMS_REPEAT.getCode()) {
+//                    Toast.makeText(GrantDialogActivity.this, R.string.string_grant_cellphone_repeat, Toast.LENGTH_SHORT).show();
+//                    showResultStatus(GrantDialogActivity.this.getString(R.string.string_grant_cellphone_repeat));
+//                    return;
+//                }
+//
+//                if (response.getCode() == IResponse.ResultCode.RC_ACCESS_BAD.getCode()) {
+//                    Toast.makeText(GrantDialogActivity.this, R.string.string_agents_no_code, Toast.LENGTH_SHORT).show();
+//                    showResultStatus(GrantDialogActivity.this.getString(R.string.string_agents_no_code));
+//                    return;
+//                }
+//
+//                if (response.getCode() == IResponse.ResultCode.RC_SUCCESS.getCode()) {
+//                    Toast.makeText(GrantDialogActivity.this, R.string.string_grant_cellphone_success, Toast.LENGTH_SHORT).show();
+//                    onGrantActionSuccess();
+//                    return;
+//                }
+//
+//                if (response.getCode() == IResponse.ResultCode.RC_ACCESS_TIMEOUT.getCode()){
+//                    Toast.makeText(GrantDialogActivity.this,R.string.string_toast_timeout,Toast.LENGTH_SHORT).show();
+//                    return;
+//                }
+//
+//                Toast.makeText(GrantDialogActivity.this, R.string.string_grant_cellphone_fail, Toast.LENGTH_SHORT).show();
+//                showResultStatus(GrantDialogActivity.this.getString(R.string.string_grant_cellphone_fail));
+//            }
+//
+//            @Override
+//            public void onError(Throwable exception, Object agentEntity) {
+//                Toast.makeText(GrantDialogActivity.this, R.string.string_toast_network_error, Toast.LENGTH_SHORT).show();
+//                showResultStatus(GrantDialogActivity.this.getString(R.string.string_toast_network_error));
+//            }
+//        });
     }
 
     @Override

@@ -8,13 +8,17 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.alibaba.fastjson.JSON;
+
 import org.maxwe.tao.android.Constants;
+import org.maxwe.tao.android.INetWorkManager;
 import org.maxwe.tao.android.R;
-import org.maxwe.tao.android.agent.AgentEntity;
-import org.maxwe.tao.android.agent.AgentEntityInter;
 import org.maxwe.tao.android.NetworkManager;
+import org.maxwe.tao.android.account.model.ModifyModel;
+import org.maxwe.tao.android.account.model.SessionModel;
 import org.maxwe.tao.android.response.IResponse;
 import org.maxwe.tao.android.response.Response;
+import org.maxwe.tao.android.utils.SharedPreferencesUtils;
 import org.xutils.view.annotation.ContentView;
 import org.xutils.view.annotation.Event;
 import org.xutils.view.annotation.ViewInject;
@@ -34,7 +38,7 @@ public class ModifyActivity extends BaseActivity {
     private EditText et_act_modify_new_password_confirm;
 
     @Event(value = R.id.bt_act_modify_back, type = View.OnClickListener.class)
-    private void onModifyBackAction(View view){
+    private void onModifyBackAction(View view) {
         this.onBackPressed();
     }
 
@@ -71,40 +75,44 @@ public class ModifyActivity extends BaseActivity {
             return;
         }
 
-        SharedPreferences sharedPreferences = getSharedPreferences(Constants.KEY_SHARD_NAME, Activity.MODE_PRIVATE);
-        String cellphone = sharedPreferences.getString(Constants.KEY_SHARD_T_ACCOUNT, null);
-        String key = sharedPreferences.getString(Constants.KEY_SHARD_T_CONTENT, null);
-        AgentEntity agentEntity = new AgentEntity(cellphone, null, this.getResources().getInteger(R.integer.type_id));
-        AgentEntityInter agentEntityInter = new AgentEntityInter(agentEntity);
-        agentEntityInter.setT(key);
-        agentEntityInter.setOrdPassword(oldPassword);
-        agentEntityInter.setNewPassword(newPassword);
-        NetworkManager.requestModifyPassword(agentEntityInter, new NetworkManager.OnRequestCallback() {
+        String url = this.getString(R.string.string_url_domain) + this.getString(R.string.string_url_account_password);
+        SessionModel sessionModel = SharedPreferencesUtils.getSession(this);
+        ModifyModel modifyModel = new ModifyModel(sessionModel, oldPassword, newPassword);
+        try {
+            modifyModel.setSign(sessionModel.getEncryptSing());
+        } catch (Exception e) {
+            e.printStackTrace();
+            Toast.makeText(this, "加密错误", Toast.LENGTH_SHORT).show();
+        }
+
+        NetworkManager.requestByPost(url, modifyModel, new INetWorkManager.OnNetworkCallback() {
             @Override
-            public void onSuccess(Response response) {
-                if (response.getCode() == IResponse.ResultCode.RC_SUCCESS.getCode()) {
-                    Intent intent = new Intent();
-                    intent.putExtra(Constants.T, response.getData());
-                    ModifyActivity.this.setResult(LoginActivity.RESPONSE_CODE_SUCCESS, intent);
-                    ModifyActivity.this.finish();
-                    return;
-                }
-                if (response.getCode() == IResponse.ResultCode.RC_ACCESS_BAD.getCode()){
-                    Toast.makeText(ModifyActivity.this, R.string.string_toast_old_password_error, Toast.LENGTH_SHORT).show();
-                    return;
-                }
-
-                if (response.getCode() == IResponse.ResultCode.RC_ACCESS_TIMEOUT.getCode()){
-                    Toast.makeText(ModifyActivity.this,R.string.string_toast_timeout,Toast.LENGTH_SHORT).show();
-                    return;
-                }
-
-                Toast.makeText(ModifyActivity.this, R.string.string_toast_reset_password_error, Toast.LENGTH_SHORT).show();
+            public void onSuccess(String result) {
+                SessionModel responseModel = JSON.parseObject(result, SessionModel.class);
+                Intent intent = new Intent();
+                intent.putExtra(Constants.KEY_INTENT_SESSION, responseModel);
+                ModifyActivity.this.setResult(LoginActivity.RESPONSE_CODE_SUCCESS, intent);
+                ModifyActivity.this.finish();
             }
 
             @Override
-            public void onError(Throwable exception, Object agentEntity) {
+            public void onAccessBad(String result) {
+                Toast.makeText(ModifyActivity.this, R.string.string_toast_old_password_error, Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onLoginTimeout(String result) {
+                Toast.makeText(ModifyActivity.this, R.string.string_toast_timeout, Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onError(Throwable ex, boolean isOnCallback) {
                 Toast.makeText(ModifyActivity.this, R.string.string_toast_network_error, Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onOther(int code, String result) {
+                Toast.makeText(ModifyActivity.this, R.string.string_toast_reset_password_error, Toast.LENGTH_SHORT).show();
             }
         });
     }
