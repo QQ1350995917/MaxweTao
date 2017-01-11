@@ -80,41 +80,40 @@ public class ModifyActivity extends BaseActivity {
         ModifyModel modifyModel = new ModifyModel(sessionModel, oldPassword, newPassword);
         try {
             modifyModel.setSign(sessionModel.getEncryptSing());
+            NetworkManager.requestByPost(url, modifyModel, new INetWorkManager.OnNetworkCallback() {
+                @Override
+                public void onSuccess(String result) {
+                    SessionModel responseModel = JSON.parseObject(result, SessionModel.class);
+                    Intent intent = new Intent();
+                    intent.putExtra(Constants.KEY_INTENT_SESSION, responseModel);
+                    ModifyActivity.this.setResult(LoginActivity.RESPONSE_CODE_SUCCESS, intent);
+                    ModifyActivity.this.finish();
+                }
+
+                @Override
+                public void onAccessBad(String result) {
+                    Toast.makeText(ModifyActivity.this, R.string.string_toast_old_password_error, Toast.LENGTH_SHORT).show();
+                }
+
+                @Override
+                public void onLoginTimeout(String result) {
+                    Toast.makeText(ModifyActivity.this, R.string.string_toast_timeout, Toast.LENGTH_SHORT).show();
+                }
+
+                @Override
+                public void onError(Throwable ex, boolean isOnCallback) {
+                    Toast.makeText(ModifyActivity.this, R.string.string_toast_network_error, Toast.LENGTH_SHORT).show();
+                }
+
+                @Override
+                public void onOther(int code, String result) {
+                    Toast.makeText(ModifyActivity.this, R.string.string_toast_reset_password_error, Toast.LENGTH_SHORT).show();
+                }
+            });
         } catch (Exception e) {
             e.printStackTrace();
-            Toast.makeText(this, "加密错误", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "请求失败", Toast.LENGTH_SHORT).show();
         }
-
-        NetworkManager.requestByPost(url, modifyModel, new INetWorkManager.OnNetworkCallback() {
-            @Override
-            public void onSuccess(String result) {
-                SessionModel responseModel = JSON.parseObject(result, SessionModel.class);
-                Intent intent = new Intent();
-                intent.putExtra(Constants.KEY_INTENT_SESSION, responseModel);
-                ModifyActivity.this.setResult(LoginActivity.RESPONSE_CODE_SUCCESS, intent);
-                ModifyActivity.this.finish();
-            }
-
-            @Override
-            public void onAccessBad(String result) {
-                Toast.makeText(ModifyActivity.this, R.string.string_toast_old_password_error, Toast.LENGTH_SHORT).show();
-            }
-
-            @Override
-            public void onLoginTimeout(String result) {
-                Toast.makeText(ModifyActivity.this, R.string.string_toast_timeout, Toast.LENGTH_SHORT).show();
-            }
-
-            @Override
-            public void onError(Throwable ex, boolean isOnCallback) {
-                Toast.makeText(ModifyActivity.this, R.string.string_toast_network_error, Toast.LENGTH_SHORT).show();
-            }
-
-            @Override
-            public void onOther(int code, String result) {
-                Toast.makeText(ModifyActivity.this, R.string.string_toast_reset_password_error, Toast.LENGTH_SHORT).show();
-            }
-        });
     }
 
 }

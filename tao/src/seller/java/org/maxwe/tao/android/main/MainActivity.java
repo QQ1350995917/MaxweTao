@@ -16,12 +16,15 @@ import com.alibaba.fastjson.JSON;
 import org.maxwe.tao.android.Constants;
 import org.maxwe.tao.android.NetworkManager;
 import org.maxwe.tao.android.R;
+import org.maxwe.tao.android.account.model.SessionModel;
+import org.maxwe.tao.android.account.user.UserEntity;
 import org.maxwe.tao.android.activity.LoginActivity;
 import org.maxwe.tao.android.activity.VersionActivity;
 import org.maxwe.tao.android.index.IndexFragment;
 import org.maxwe.tao.android.mine.MineFragment;
 import org.maxwe.tao.android.response.IResponse;
 import org.maxwe.tao.android.response.Response;
+import org.maxwe.tao.android.utils.SharedPreferencesUtils;
 import org.maxwe.tao.android.version.VersionEntity;
 import org.xutils.view.annotation.ContentView;
 import org.xutils.view.annotation.ViewInject;
@@ -41,7 +44,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     @ViewInject(R.id.rg_act_navigate)
     private RadioGroup rg_act_navigate;
 
-    public static AgentEntity currentAgentEntity;
+    public static UserEntity currentUserEntity;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,8 +55,8 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         }
         this.setCurrentFragment(R.id.rb_act_main_index);
 
-        Intent intent = new Intent(this, AccessActivity.class);
-        this.startActivityForResult(intent, REQUEST_CODE_ACCESS_CHECK);
+//        Intent intent = new Intent(this, AccessActivity.class);
+//        this.startActivityForResult(intent, REQUEST_CODE_ACCESS_CHECK);
     }
 
     @Override
@@ -129,12 +132,12 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
                 break;
             case REQUEST_CODE_MODIFY_PASSWORD:
                 if (resultCode == LoginActivity.RESPONSE_CODE_SUCCESS) {
-                    onModifyPasswordSuccessCallback(data.getStringExtra(Constants.T));
+                    onModifyPasswordSuccessCallback((SessionModel)data.getSerializableExtra(Constants.KEY_INTENT_SESSION));
                 }
                 break;
             case REQUEST_CODE_ACCESS_CHECK:
                 if (resultCode == LoginActivity.RESPONSE_CODE_SUCCESS) {
-                    onRequestMyInfoCallback((AgentEntity) data.getExtras().get(Constants.KEY_SHARD_T_ACCOUNT));
+                    //onRequestMyInfoCallback((AgentEntity) data.getExtras().get(Constants.KEY_SHARD_T_ACCOUNT));
                     this.onCheckNewVersion();
                 } else {
                     this.finish();
@@ -149,34 +152,30 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 
     }
 
-    private void onModifyPasswordSuccessCallback(String token) {
-        SharedPreferences sharedPreferences = this.getSharedPreferences(Constants.KEY_SHARD_NAME, Activity.MODE_PRIVATE);
-        SharedPreferences.Editor edit = sharedPreferences.edit();
-        edit.putString(Constants.KEY_SHARD_T_CONTENT, token);
-        edit.commit();
+    private void onModifyPasswordSuccessCallback(SessionModel sessionModel) {
+        SharedPreferencesUtils.saveSession(this,sessionModel);
     }
 
-    private void onRequestMyInfoCallback(AgentEntity agentEntity) {
-        this.currentAgentEntity = agentEntity;
+    private void onRequestMyInfoCallback(UserEntity userEntity) {
     }
 
 
     private void onCheckNewVersion() {
-        VersionEntity currentVersionEntity = new VersionEntity(this.getString(R.string.platform), this.getResources().getInteger(R.integer.type_id), this.getVersionCode());
-        NetworkManager.requestNewVersion(currentVersionEntity, new NetworkManager.OnRequestCallback() {
-            @Override
-            public void onSuccess(Response response) {
-                if (response.getCode() == IResponse.ResultCode.RC_SUCCESS.getCode()) {
-                    VersionEntity versionEntity = JSON.parseObject(response.getData(), VersionEntity.class);
-                    versionCompare(versionEntity);
-                }
-            }
-
-            @Override
-            public void onError(Throwable exception, Object object) {
-                exception.printStackTrace();
-            }
-        });
+//        VersionEntity currentVersionEntity = new VersionEntity(this.getString(R.string.platform), this.getResources().getInteger(R.integer.type_id), this.getVersionCode());
+//        NetworkManager.requestNewVersion(currentVersionEntity, new NetworkManager.OnRequestCallback() {
+//            @Override
+//            public void onSuccess(Response response) {
+//                if (response.getCode() == IResponse.ResultCode.RC_SUCCESS.getCode()) {
+//                    VersionEntity versionEntity = JSON.parseObject(response.getData(), VersionEntity.class);
+//                    versionCompare(versionEntity);
+//                }
+//            }
+//
+//            @Override
+//            public void onError(Throwable exception, Object object) {
+//                exception.printStackTrace();
+//            }
+//        });
     }
 
     private void versionCompare(VersionEntity versionEntityFromServer) {
@@ -184,12 +183,12 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
             return;
         }
 
-        VersionEntity currentVersionEntity = new VersionEntity(this.getString(R.string.platform), this.getResources().getInteger(R.integer.type_id), this.getVersionCode());
-        if (currentVersionEntity.equals(versionEntityFromServer) && versionEntityFromServer.getVersionCode() > currentVersionEntity.getVersionCode()) {
-            Intent intent = new Intent(MainActivity.this, VersionActivity.class);
-            intent.putExtra(VersionActivity.KEY_VERSION, versionEntityFromServer);
-            MainActivity.this.startActivity(intent);
-        }
+//        VersionEntity currentVersionEntity = new VersionEntity(this.getString(R.string.platform), this.getResources().getInteger(R.integer.type_id), this.getVersionCode());
+//        if (currentVersionEntity.equals(versionEntityFromServer) && versionEntityFromServer.getVersionCode() > currentVersionEntity.getVersionCode()) {
+//            Intent intent = new Intent(MainActivity.this, VersionActivity.class);
+//            intent.putExtra(VersionActivity.KEY_VERSION, versionEntityFromServer);
+//            MainActivity.this.startActivity(intent);
+//        }
     }
 
     protected int getVersionCode() {

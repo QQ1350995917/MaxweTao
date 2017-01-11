@@ -62,36 +62,36 @@ public class MainActivity extends BaseActivity {
         SessionModel sessionModel = SharedPreferencesUtils.getSession(this);
         try {
             sessionModel.setSign(sessionModel.getEncryptSing());
+            String url = this.getString(R.string.string_url_domain) + this.getString(R.string.string_url_account_logout);
+            NetworkManager.requestByPost(url, sessionModel, new INetWorkManager.OnNetworkCallback() {
+                @Override
+                public void onSuccess(String result) {
+                    SharedPreferencesUtils.clearSession(MainActivity.this);
+                    Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+                    MainActivity.this.startActivity(intent);
+                    MainActivity.this.finish();
+                }
+
+                @Override
+                public void onLoginTimeout(String result) {
+                    SharedPreferencesUtils.clearSession(MainActivity.this);
+                    Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+                    MainActivity.this.startActivity(intent);
+                    MainActivity.this.finish();
+                }
+
+                @Override
+                public void onError(Throwable ex, boolean isOnCallback) {
+                    SharedPreferencesUtils.clearSession(MainActivity.this);
+                    Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+                    MainActivity.this.startActivity(intent);
+                    MainActivity.this.finish();
+                }
+            });
         } catch (Exception e) {
             e.printStackTrace();
-            Toast.makeText(this,"加密错误",Toast.LENGTH_SHORT).show();
+            Toast.makeText(this,"请求失败",Toast.LENGTH_SHORT).show();
         }
-        String url = this.getString(R.string.string_url_domain) + this.getString(R.string.string_url_account_logout);
-        NetworkManager.requestByPost(url, sessionModel, new INetWorkManager.OnNetworkCallback() {
-            @Override
-            public void onSuccess(String result) {
-                SharedPreferencesUtils.clearSession(MainActivity.this);
-                Intent intent = new Intent(MainActivity.this, LoginActivity.class);
-                MainActivity.this.startActivity(intent);
-                MainActivity.this.finish();
-            }
-
-            @Override
-            public void onLoginTimeout(String result) {
-                SharedPreferencesUtils.clearSession(MainActivity.this);
-                Intent intent = new Intent(MainActivity.this, LoginActivity.class);
-                MainActivity.this.startActivity(intent);
-                MainActivity.this.finish();
-            }
-
-            @Override
-            public void onError(Throwable ex, boolean isOnCallback) {
-                SharedPreferencesUtils.clearSession(MainActivity.this);
-                Intent intent = new Intent(MainActivity.this, LoginActivity.class);
-                MainActivity.this.startActivity(intent);
-                MainActivity.this.finish();
-            }
-        });
     }
 
 //    private void onCheckNewVersion() {

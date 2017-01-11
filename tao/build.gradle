@@ -35,16 +35,16 @@ android {
     }
 
     productFlavors {
-        agent {
-            applicationId "org.maxwe.tao.agent.android"
-            versionCode 4
-            versionName "snapshot-1.0.3"
-        }
-//        seller {
-//            applicationId "org.maxwe.tao.seller.android"
+//        agent {
+//            applicationId "org.maxwe.tao.agent.android"
 //            versionCode 4
 //            versionName "snapshot-1.0.3"
 //        }
+        seller {
+            applicationId "org.maxwe.tao.seller.android"
+            versionCode 4
+            versionName "snapshot-1.0.3"
+        }
     }
 }
 

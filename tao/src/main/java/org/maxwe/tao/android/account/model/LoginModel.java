@@ -2,6 +2,7 @@ package org.maxwe.tao.android.account.model;
 
 import android.text.TextUtils;
 
+import com.alibaba.fastjson.annotation.JSONField;
 import com.alibaba.fastjson.serializer.PropertyFilter;
 
 import org.maxwe.tao.android.utils.CellPhoneUtils;
@@ -43,6 +44,7 @@ public class LoginModel implements Serializable {
         this.password = password;
     }
 
+    @JSONField(serialize=false)
     public boolean isParamsOK() {
         if (CellPhoneUtils.isCellphone(this.getCellphone())
                 && !TextUtils.isEmpty(this.getPassword())

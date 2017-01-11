@@ -1,19 +1,18 @@
 package org.maxwe.tao.android.mine;
 
-import android.app.Activity;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.view.View;
 import android.widget.Toast;
 
 import org.maxwe.tao.android.BaseFragment;
-import org.maxwe.tao.android.Constants;
+import org.maxwe.tao.android.INetWorkManager;
 import org.maxwe.tao.android.NetworkManager;
 import org.maxwe.tao.android.R;
+import org.maxwe.tao.android.account.model.SessionModel;
 import org.maxwe.tao.android.activity.LoginActivity;
 import org.maxwe.tao.android.activity.ModifyActivity;
 import org.maxwe.tao.android.main.MainActivity;
-import org.maxwe.tao.android.response.Response;
+import org.maxwe.tao.android.utils.SharedPreferencesUtils;
 import org.xutils.view.annotation.ContentView;
 import org.xutils.view.annotation.Event;
 
@@ -53,24 +52,38 @@ public class MineFragment extends BaseFragment {
 
     @Event(value = R.id.bt_frg_mine_exit, type = View.OnClickListener.class)
     private void onExitAction(View view) {
-        final SharedPreferences sharedPreferences = this.getActivity().getSharedPreferences(Constants.KEY_SHARD_NAME, Activity.MODE_PRIVATE);
-        AgentEntityInter agentEntityInter = new AgentEntityInter();
-        agentEntityInter.setT(sharedPreferences.getString(Constants.KEY_SHARD_T_CONTENT, null));
-        NetworkManager.requestLogout(agentEntityInter, new NetworkManager.OnRequestCallback() {
-            @Override
-            public void onSuccess(Response response) {
-                SharedPreferences.Editor edit = sharedPreferences.edit();
-                SharedPreferences.Editor remove = edit.remove(Constants.KEY_SHARD_T_CONTENT);
-                remove.commit();
-                Intent intent = new Intent(MineFragment.this.getActivity(), LoginActivity.class);
-                MineFragment.this.getActivity().startActivity(intent);
-                MineFragment.this.getActivity().finish();
-            }
+        SessionModel sessionModel = SharedPreferencesUtils.getSession(this.getContext());
+        try {
+            sessionModel.setSign(sessionModel.getEncryptSing());
+            String url = this.getString(R.string.string_url_domain) + this.getString(R.string.string_url_account_logout);
+            NetworkManager.requestByPost(url, sessionModel, new INetWorkManager.OnNetworkCallback() {
+                @Override
+                public void onSuccess(String result) {
+                    SharedPreferencesUtils.clearSession(MineFragment.this.getContext());
+                    Intent intent = new Intent(MineFragment.this.getContext(), LoginActivity.class);
+                    MineFragment.this.getActivity().startActivity(intent);
+                    MineFragment.this.getActivity().finish();
+                }
 
-            @Override
-            public void onError(Throwable exception, Object agentEntity) {
-                Toast.makeText(MineFragment.this.getActivity(), R.string.string_toast_network_error, Toast.LENGTH_SHORT).show();
-            }
-        });
+                @Override
+                public void onLoginTimeout(String result) {
+                    SharedPreferencesUtils.clearSession(MineFragment.this.getContext());
+                    Intent intent = new Intent(MineFragment.this.getContext(), LoginActivity.class);
+                    MineFragment.this.getActivity().startActivity(intent);
+                    MineFragment.this.getActivity().finish();
+                }
+
+                @Override
+                public void onError(Throwable ex, boolean isOnCallback) {
+                    SharedPreferencesUtils.clearSession(MineFragment.this.getContext());
+                    Intent intent = new Intent(MineFragment.this.getContext(), LoginActivity.class);
+                    MineFragment.this.getActivity().startActivity(intent);
+                    MineFragment.this.getActivity().finish();
+                }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+            Toast.makeText(this.getContext(), "请求失败", Toast.LENGTH_SHORT).show();
+        }
     }
 }

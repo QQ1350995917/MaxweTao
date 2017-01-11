@@ -1,8 +1,6 @@
 package org.maxwe.tao.android.activity;
 
-import android.app.Activity;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
@@ -14,13 +12,11 @@ import com.alibaba.fastjson.JSON;
 
 import org.maxwe.tao.android.Constants;
 import org.maxwe.tao.android.INetWorkManager;
-import org.maxwe.tao.android.R;
 import org.maxwe.tao.android.NetworkManager;
+import org.maxwe.tao.android.R;
 import org.maxwe.tao.android.account.model.LoginModel;
 import org.maxwe.tao.android.account.model.SessionModel;
 import org.maxwe.tao.android.main.MainActivity;
-import org.maxwe.tao.android.response.IResponse;
-import org.maxwe.tao.android.response.Response;
 import org.maxwe.tao.android.utils.CellPhoneUtils;
 import org.maxwe.tao.android.utils.SharedPreferencesUtils;
 import org.xutils.view.annotation.ContentView;
@@ -74,9 +70,9 @@ public class LoginActivity extends BaseActivity {
             Toast.makeText(this, this.getString(R.string.string_input_account_password), Toast.LENGTH_SHORT).show();
             return;
         }
-        SharedPreferencesUtils.saveLastLoginCellphone(this,cellphone);
+        SharedPreferencesUtils.saveLastLoginCellphone(this, cellphone);
         String url = this.getString(R.string.string_url_domain) + this.getString(R.string.string_url_account_login);
-        LoginModel loginModel = new LoginModel(cellphone,password);
+        LoginModel loginModel = new LoginModel(cellphone, password);
         NetworkManager.requestByPost(url, loginModel, new INetWorkManager.OnNetworkCallback() {
             @Override
             public void onSuccess(String result) {
@@ -87,6 +83,7 @@ public class LoginActivity extends BaseActivity {
             @Override
             public void onAccessBad(String result) {
                 super.onAccessBad(result);
+                Toast.makeText(LoginActivity.this, R.string.string_toast_account_login_error, Toast.LENGTH_SHORT).show();
             }
 
             @Override
@@ -102,12 +99,12 @@ public class LoginActivity extends BaseActivity {
         switch (requestCode) {
             case REQUEST_CODE_REGISTER:
                 if (resultCode == RESPONSE_CODE_SUCCESS) {
-                    onLoginSuccessCallback((SessionModel)data.getSerializableExtra(Constants.KEY_INTENT_SESSION));
+                    onLoginSuccessCallback((SessionModel) data.getSerializableExtra(Constants.KEY_INTENT_SESSION));
                 }
                 break;
             case REQUEST_CODE_LOST_PASSWORD:
                 if (resultCode == RESPONSE_CODE_SUCCESS) {
-                    onLoginSuccessCallback((SessionModel)data.getSerializableExtra(Constants.KEY_INTENT_SESSION));
+                    onLoginSuccessCallback((SessionModel) data.getSerializableExtra(Constants.KEY_INTENT_SESSION));
                 }
                 break;
             default:
@@ -116,7 +113,7 @@ public class LoginActivity extends BaseActivity {
     }
 
     private void onLoginSuccessCallback(SessionModel sessionModel) {
-        SharedPreferencesUtils.saveSession(this,sessionModel);
+        SharedPreferencesUtils.saveSession(this, sessionModel);
         this.toMainActivity();
     }
 

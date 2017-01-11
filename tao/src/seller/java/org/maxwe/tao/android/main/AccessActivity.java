@@ -14,12 +14,16 @@ import android.widget.Toast;
 import com.alibaba.fastjson.JSON;
 
 import org.maxwe.tao.android.Constants;
+import org.maxwe.tao.android.INetWorkManager;
 import org.maxwe.tao.android.NetworkManager;
 import org.maxwe.tao.android.R;
+import org.maxwe.tao.android.account.model.SessionModel;
+import org.maxwe.tao.android.account.user.UserEntity;
 import org.maxwe.tao.android.activity.BaseActivity;
 import org.maxwe.tao.android.activity.LoginActivity;
 import org.maxwe.tao.android.response.IResponse;
 import org.maxwe.tao.android.response.Response;
+import org.maxwe.tao.android.utils.SharedPreferencesUtils;
 import org.xutils.view.annotation.ContentView;
 import org.xutils.view.annotation.Event;
 import org.xutils.view.annotation.ViewInject;
@@ -49,42 +53,28 @@ public class AccessActivity extends BaseActivity {
     }
 
     private void onRequestMyInfo() {
-        SharedPreferences sharedPreferences = getSharedPreferences(Constants.KEY_SHARD_NAME, Activity.MODE_PRIVATE);
-        String cellphone = sharedPreferences.getString(Constants.KEY_SHARD_T_ACCOUNT, null);
-        String key = sharedPreferences.getString(Constants.KEY_SHARD_T_CONTENT, null);
-        AgentEntity agentEntity = new AgentEntity(cellphone, null, this.getResources().getInteger(R.integer.type_id));
-        AgentEntityInter agentEntityInter = new AgentEntityInter(agentEntity);
-        agentEntityInter.setT(key);
-        NetworkManager.requestAgent(agentEntityInter, new NetworkManager.OnRequestCallback() {
+        String url = this.getString(R.string.string_url_domain) + this.getString(R.string.string_url_account_mine);
+        SessionModel session = SharedPreferencesUtils.getSession(this);
+        NetworkManager.requestByPost(url, session, new INetWorkManager.OnNetworkCallback() {
             @Override
-            public void onSuccess(Response response) {
-                if (response.getCode() == IResponse.ResultCode.RC_SUCCESS.getCode()) {
-                    onRequestMyInfoSuccess(JSON.parseObject(response.getData(), AgentEntity.class));
-                    return;
-                }
-
-                if (response.getCode() == IResponse.ResultCode.RC_ACCESS_BAD.getCode()) {
-                    Toast.makeText(AccessActivity.this, R.string.string_toast_params, Toast.LENGTH_SHORT).show();
-                    onRequestMyInfoFail(AccessActivity.this.getString(R.string.string_toast_params));
-                    return;
-                }
-
-                if (response.getCode() == IResponse.ResultCode.RC_ACCESS_TIMEOUT.getCode()) {
-                    SharedPreferences sharedPreferences = AccessActivity.this.getSharedPreferences(Constants.KEY_SHARD_NAME, Activity.MODE_PRIVATE);
-                    SharedPreferences.Editor edit = sharedPreferences.edit();
-                    SharedPreferences.Editor remove = edit.remove(Constants.KEY_SHARD_T_CONTENT);
-                    remove.commit();
-                    Toast.makeText(AccessActivity.this, R.string.string_toast_timeout, Toast.LENGTH_SHORT).show();
-                    onRequestMyInfoFail(AccessActivity.this.getString(R.string.string_toast_timeout));
-                    return;
-                }
-
-                Toast.makeText(AccessActivity.this, R.string.string_request_error, Toast.LENGTH_SHORT).show();
-                onRequestMyInfoFail(AccessActivity.this.getString(R.string.string_request_error));
+            public void onSuccess(String result) {
+                onRequestMyInfoSuccess(null);
             }
 
             @Override
-            public void onError(Throwable exception, Object object) {
+            public void onLoginTimeout(String result) {
+                SharedPreferencesUtils.clearSession(AccessActivity.this);
+                Toast.makeText(AccessActivity.this, R.string.string_toast_timeout, Toast.LENGTH_SHORT).show();
+                onRequestMyInfoFail(AccessActivity.this.getString(R.string.string_toast_timeout));
+            }
+
+            @Override
+            public void onAccessBad(String result) {
+                onRequestMyInfoFail(AccessActivity.this.getString(R.string.string_toast_params));
+            }
+
+            @Override
+            public void onError(Throwable ex, boolean isOnCallback) {
                 Toast.makeText(AccessActivity.this, R.string.string_toast_network_error, Toast.LENGTH_SHORT).show();
                 onRequestMyInfoFail(AccessActivity.this.getString(R.string.string_toast_network_error));
             }
@@ -98,18 +88,18 @@ public class AccessActivity extends BaseActivity {
         this.tv_act_access_fail_info.setText(result);
     }
 
-    private void onRequestMyInfoSuccess(AgentEntity agentEntity) {
-        if (agentEntity.getGrantCode() == null) {
-            this.tv_act_access_title.setText(R.string.string_sorry);
-            this.pb_act_access_progress.setVisibility(View.GONE);
-            this.ll_act_access_result.setVisibility(View.VISIBLE);
-            this.tv_act_access_fail_info.setText(R.string.string_accessing);
-        } else {
-            Intent intent = new Intent();
-            intent.putExtra(Constants.KEY_SHARD_T_ACCOUNT, agentEntity);
-            AccessActivity.this.setResult(LoginActivity.RESPONSE_CODE_SUCCESS, intent);
-            AccessActivity.this.finish();
-        }
+    private void onRequestMyInfoSuccess(UserEntity userEntity) {
+//        if (agentEntity.getGrantCode() == null) {
+//            this.tv_act_access_title.setText(R.string.string_sorry);
+//            this.pb_act_access_progress.setVisibility(View.GONE);
+//            this.ll_act_access_result.setVisibility(View.VISIBLE);
+//            this.tv_act_access_fail_info.setText(R.string.string_accessing);
+//        } else {
+//            Intent intent = new Intent();
+//            intent.putExtra(Constants.KEY_SHARD_T_ACCOUNT, agentEntity);
+//            AccessActivity.this.setResult(LoginActivity.RESPONSE_CODE_SUCCESS, intent);
+//            AccessActivity.this.finish();
+//        }
     }
 
     @Event(value = R.id.bt_act_access_result_action, type = View.OnClickListener.class)

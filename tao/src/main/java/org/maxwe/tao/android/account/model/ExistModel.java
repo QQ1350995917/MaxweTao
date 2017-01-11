@@ -2,6 +2,8 @@ package org.maxwe.tao.android.account.model;
 
 import android.text.TextUtils;
 
+import com.alibaba.fastjson.annotation.JSONField;
+
 import java.io.Serializable;
 
 /**
@@ -24,6 +26,7 @@ public class ExistModel implements Serializable {
         this.cellphone = cellphone;
     }
 
+    @JSONField(serialize=false)
     public boolean isParamsOk(){
         if (!TextUtils.isEmpty(this.getCellphone())){
             return true;

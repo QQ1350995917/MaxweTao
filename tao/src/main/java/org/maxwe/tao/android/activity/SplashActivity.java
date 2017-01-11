@@ -1,17 +1,12 @@
 package org.maxwe.tao.android.activity;
 
-import android.app.Activity;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.Nullable;
-import android.support.v4.widget.TextViewCompat;
-import android.text.TextUtils;
 import android.widget.TextView;
 
-import org.maxwe.tao.android.Constants;
 import org.maxwe.tao.android.R;
 import org.maxwe.tao.android.account.model.SessionModel;
 import org.maxwe.tao.android.main.MainActivity;

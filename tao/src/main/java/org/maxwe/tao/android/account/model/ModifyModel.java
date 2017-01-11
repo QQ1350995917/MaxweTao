@@ -2,6 +2,8 @@ package org.maxwe.tao.android.account.model;
 
 import android.text.TextUtils;
 
+import com.alibaba.fastjson.annotation.JSONField;
+
 /**
  * Created by Pengwei Ding on 2017-01-10 17:38.
  * Email: www.dingpengwei@foxmail.com www.dingpegnwei@gmail.com
@@ -49,6 +51,7 @@ public class ModifyModel extends SessionModel {
     }
 
     @Override
+    @JSONField(serialize=false)
     public boolean isParamsOk() {
         boolean paramsOk = super.isParamsOk();
         if (!TextUtils.isEmpty(this.getOldPassword())
