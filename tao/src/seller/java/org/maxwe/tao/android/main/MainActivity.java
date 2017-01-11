@@ -1,8 +1,6 @@
 package org.maxwe.tao.android.main;
 
-import android.app.Activity;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -11,19 +9,14 @@ import android.view.View;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 
-import com.alibaba.fastjson.JSON;
-
 import org.maxwe.tao.android.Constants;
-import org.maxwe.tao.android.NetworkManager;
 import org.maxwe.tao.android.R;
+import org.maxwe.tao.android.SellerApplication;
 import org.maxwe.tao.android.account.model.SessionModel;
 import org.maxwe.tao.android.account.user.UserEntity;
 import org.maxwe.tao.android.activity.LoginActivity;
-import org.maxwe.tao.android.activity.VersionActivity;
 import org.maxwe.tao.android.index.IndexFragment;
 import org.maxwe.tao.android.mine.MineFragment;
-import org.maxwe.tao.android.response.IResponse;
-import org.maxwe.tao.android.response.Response;
 import org.maxwe.tao.android.utils.SharedPreferencesUtils;
 import org.maxwe.tao.android.version.VersionEntity;
 import org.xutils.view.annotation.ContentView;
@@ -37,8 +30,10 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     public static final int REQUEST_CODE_CONVERT_LINK = 1;
     public static final int REQUEST_CODE_MODIFY_PASSWORD = 3;
     public static final int REQUEST_CODE_ACCESS_CHECK = 4;
+    public static final int REQUEST_CODE_LOGIN_TIME_OUT = 5;
 
     private Fragment indexFragment;
+    private Fragment linkFragment;
     private Fragment mineFragment;
 
     @ViewInject(R.id.rg_act_navigate)
@@ -54,9 +49,10 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
             this.rg_act_navigate.getChildAt(index).setOnClickListener(this);
         }
         this.setCurrentFragment(R.id.rb_act_main_index);
-
-//        Intent intent = new Intent(this, AccessActivity.class);
-//        this.startActivityForResult(intent, REQUEST_CODE_ACCESS_CHECK);
+        if (SellerApplication.currentUserEntity == null || SellerApplication.currentUserEntity.getActCode() == null) {
+            Intent intent = new Intent(this, AccessActivity.class);
+            this.startActivityForResult(intent, REQUEST_CODE_ACCESS_CHECK);
+        }
     }
 
     @Override
@@ -78,6 +74,14 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
                     fragmentTransaction.show(this.indexFragment);
                 }
                 break;
+            case R.id.rb_act_main_convert_link:
+                if (this.linkFragment == null) {
+                    this.linkFragment = new LinkFragment();
+                    fragmentTransaction.add(R.id.fl_act_content, this.linkFragment);
+                } else {
+                    fragmentTransaction.show(this.linkFragment);
+                }
+                break;
             case R.id.rb_act_main_mine:
                 if (this.mineFragment == null) {
                     this.mineFragment = new MineFragment();
@@ -95,6 +99,9 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     private void hideAllFragments(FragmentTransaction fragmentTransaction) {
         if (this.indexFragment != null) {
             fragmentTransaction.hide(this.indexFragment);
+        }
+        if (this.linkFragment != null) {
+            fragmentTransaction.hide(this.linkFragment);
         }
         if (this.mineFragment != null) {
             fragmentTransaction.hide(this.mineFragment);
@@ -132,16 +139,20 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
                 break;
             case REQUEST_CODE_MODIFY_PASSWORD:
                 if (resultCode == LoginActivity.RESPONSE_CODE_SUCCESS) {
-                    onModifyPasswordSuccessCallback((SessionModel)data.getSerializableExtra(Constants.KEY_INTENT_SESSION));
+                    onModifyPasswordSuccessCallback((SessionModel) data.getSerializableExtra(Constants.KEY_INTENT_SESSION));
                 }
                 break;
             case REQUEST_CODE_ACCESS_CHECK:
                 if (resultCode == LoginActivity.RESPONSE_CODE_SUCCESS) {
-                    //onRequestMyInfoCallback((AgentEntity) data.getExtras().get(Constants.KEY_SHARD_T_ACCOUNT));
+                    onRequestMyInfoCallback((UserEntity) data.getSerializableExtra(Constants.KEY_INTENT_SESSION));
                     this.onCheckNewVersion();
                 } else {
                     this.finish();
                 }
+                break;
+
+            case REQUEST_CODE_LOGIN_TIME_OUT:
+                this.finish();
                 break;
             default:
                 break;
@@ -153,10 +164,12 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     }
 
     private void onModifyPasswordSuccessCallback(SessionModel sessionModel) {
-        SharedPreferencesUtils.saveSession(this,sessionModel);
+        SharedPreferencesUtils.saveSession(this, sessionModel);
     }
 
     private void onRequestMyInfoCallback(UserEntity userEntity) {
+        SellerApplication.currentUserEntity = userEntity;
+
     }
 
 

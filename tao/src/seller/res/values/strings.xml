@@ -1,5 +1,9 @@
 <resources>
     <string name="app_name">seller</string>
+
+    <string name="string_index">首页</string>
+    <string name="string_convert_link">转链工具</string>
+    <string name="string_mine">我的</string>
     <string name="string_search">搜索</string>
     <string name="string_promotion">推广位</string>
     <string name="string_link_convert">转链工具</string>
@@ -10,9 +14,14 @@
     <string name="string_toast_last_version">已经是最新版本了</string>
     <string name="string_waiting">请稍后...</string>
     <string name="string_come_back_later">稍后再来</string>
+    <string name="string_act_now">立即认证</string>
+    <string name="string_goto_login">去登录</string>
     <string name="string_accessing">您处于等待授权状态，请联系您的上级获取授权。</string>
     <string name="string_sorry">很抱歉...</string>
+    <string name="string_input_your_act_code">请正确输入您的授权码</string>
     <string name="string_request_error">获取信息失败</string>
+    <string name="string_act_error">授权失败</string>
+    <string name="string_act_success">授权成功</string>
 
     <string name="string_url_domain">http://192.168.13.138:8080/tao</string>
     <string name="string_url_account_exist">/user/exist</string>
@@ -22,6 +31,7 @@
     <string name="string_url_account_password">/user/password</string>
     <string name="string_url_account_logout">/user/logout</string>
     <string name="string_url_account_mine">/user/mine</string>
+    <string name="string_url_account_active">/user/active</string>
     <string name="string_url_meta_smsCode">/meta/smsCode</string>
 
 </resources>

@@ -16,6 +16,11 @@ public class ActiveModel extends SessionModel {
         super();
     }
 
+    public ActiveModel(SessionModel sessionModel,String actCode) {
+        super(sessionModel.getT(),sessionModel.getMark(),sessionModel.getCellphone());
+        this.actCode = actCode;
+    }
+
     public String getActCode() {
         return actCode;
     }

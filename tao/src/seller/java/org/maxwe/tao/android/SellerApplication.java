@@ -3,12 +3,15 @@ package org.maxwe.tao.android;
 import com.umeng.socialize.PlatformConfig;
 import com.umeng.socialize.UMShareAPI;
 
+import org.maxwe.tao.android.account.user.UserEntity;
+
 /**
  * Created by Pengwei Ding on 2017-01-07 17:17.
  * Email: www.dingpengwei@foxmail.com www.dingpegnwei@gmail.com
  * Description: TODO
  */
-public class SellerApplication extends TaoApplication{
+public class SellerApplication extends TaoApplication {
+    public static UserEntity currentUserEntity = null;
 
     @Override
     public void onCreate() {

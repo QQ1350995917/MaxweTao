@@ -10,7 +10,7 @@
         android:layout_height="wrap_content"
         android:text="@string/string_waiting"
         android:textColor="#000000"
-        android:textSize="20dp" />
+        android:textSize="18dp" />
 
     <ProgressBar
         android:id="@+id/pb_act_access_progress"
@@ -19,28 +19,47 @@
         android:layout_below="@+id/tv_act_access_title"
         android:layout_centerHorizontal="true" />
 
-    <LinearLayout
-        android:id="@+id/ll_act_access_result"
+    <Button
+        android:id="@+id/bt_act_access_goto_login"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/tv_act_access_title"
-        android:layout_marginTop="10dp"
+        android:text="@string/string_goto_login"
+        android:visibility="gone" />
+
+    <LinearLayout
+        android:id="@+id/ll_act_access_status_accessing"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tv_act_access_title"
         android:orientation="vertical"
         android:visibility="gone">
 
-        <TextView
-            android:id="@+id/tv_act_access_fail_info"
+        <EditText
+            android:id="@+id/et_act_access_act_code"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp" />
+            android:hint="@string/string_input_your_act_code"
+            android:maxLength="8" />
 
-        <Button
-            android:id="@+id/bt_act_access_result_action"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:text="@string/string_come_back_later" />
+            android:orientation="horizontal">
 
+            <Button
+                android:id="@+id/bt_act_access_later"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/string_come_back_later" />
+
+            <Button
+                android:id="@+id/bt_act_access_action"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/string_act_now" />
+        </LinearLayout>
     </LinearLayout>
-
 </RelativeLayout>

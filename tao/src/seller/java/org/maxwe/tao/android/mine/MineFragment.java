@@ -11,6 +11,7 @@ import org.maxwe.tao.android.R;
 import org.maxwe.tao.android.account.model.SessionModel;
 import org.maxwe.tao.android.activity.LoginActivity;
 import org.maxwe.tao.android.activity.ModifyActivity;
+import org.maxwe.tao.android.main.LinkFragment;
 import org.maxwe.tao.android.main.MainActivity;
 import org.maxwe.tao.android.utils.SharedPreferencesUtils;
 import org.xutils.view.annotation.ContentView;
@@ -30,7 +31,7 @@ public class MineFragment extends BaseFragment {
 
     @Event(value = R.id.bt_frg_mine_link_convert, type = View.OnClickListener.class)
     private void onLinkConvertAction(View view) {
-        Intent intent = new Intent(this.getActivity(), LinkActivity.class);
+        Intent intent = new Intent(this.getActivity(), LinkFragment.class);
         this.getActivity().startActivityForResult(intent, MainActivity.REQUEST_CODE_CONVERT_LINK);
     }
 

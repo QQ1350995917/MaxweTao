@@ -35,7 +35,7 @@
         <activity
             android:name=".main.AccessActivity"
             android:theme="@style/AppTheme_activity_dialog"></activity>
-        <activity android:name=".mine.LinkActivity"></activity>
+        <activity android:name=".main.LinkFragment"></activity>
 
         <receiver android:name=".main.TaoReceiver">
             <intent-filter>

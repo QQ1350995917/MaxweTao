@@ -1,7 +1,5 @@
 package org.maxwe.tao.android.account.user;
 
-import android.accounts.Account;
-
 import org.maxwe.tao.android.account.AccountEntity;
 
 /**
