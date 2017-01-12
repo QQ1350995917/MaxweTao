@@ -18,6 +18,7 @@ import org.maxwe.tao.android.BaseFragment;
 import org.maxwe.tao.android.R;
 import org.maxwe.tao.android.account.agent.AgentEntity;
 import org.xutils.view.annotation.ContentView;
+import org.xutils.view.annotation.Event;
 import org.xutils.view.annotation.ViewInject;
 
 import java.util.LinkedList;
@@ -28,7 +29,7 @@ import java.util.LinkedList;
  * Description: TODO
  */
 @ContentView(R.layout.fragment_agent)
-public class AgentFragment extends BaseFragment implements SwipeRefreshLayout.OnRefreshListener, AbsListView.OnScrollListener ,View.OnClickListener{
+public class AgentFragment extends BaseFragment implements SwipeRefreshLayout.OnRefreshListener, AbsListView.OnScrollListener, View.OnClickListener {
     private LinkedList<AgentEntity> historyModelLinkedList = new LinkedList<>();
 
     private class AgentItemAdapter extends BaseAdapter {
@@ -113,4 +114,12 @@ public class AgentFragment extends BaseFragment implements SwipeRefreshLayout.On
         Intent intent = new Intent(this.getContext(), TradeActivity.class);
         this.getActivity().startActivity(intent);
     }
+
+
+    @Event(value = R.id.bt_frg_agent_leader, type = View.OnClickListener.class)
+    private void onFindTrunkAgentAction(View view) {
+        Intent intent = new Intent(this.getContext(), TrunkActivity.class);
+        this.startActivity(intent);
+    }
+
 }

@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.maxwe.tao.android.AgentApplication;
 import org.maxwe.tao.android.BaseFragment;
 import org.maxwe.tao.android.Constants;
 import org.maxwe.tao.android.INetWorkManager;
@@ -15,7 +16,6 @@ import org.maxwe.tao.android.R;
 import org.maxwe.tao.android.account.model.SessionModel;
 import org.maxwe.tao.android.activity.LoginActivity;
 import org.maxwe.tao.android.activity.ModifyActivity;
-import org.maxwe.tao.android.main.MainActivity;
 import org.maxwe.tao.android.utils.SharedPreferencesUtils;
 import org.xutils.view.annotation.ContentView;
 import org.xutils.view.annotation.Event;
@@ -54,11 +54,11 @@ public class MineFragment extends BaseFragment {
     }
 
     public void resetCodesStatus(){
-        if (MainActivity.currentAgentEntity != null) {
+        if (AgentApplication.currentAgentEntity != null) {
             this.tv_frg_mine_number.setText(
-                    MainActivity.currentAgentEntity.getSpendCodes() + "/" +
-                            MainActivity.currentAgentEntity.getLeftCodes() + "/" +
-                            MainActivity.currentAgentEntity.getHaveCodes()
+                    AgentApplication.currentAgentEntity.getSpendCodes() + "/" +
+                            AgentApplication.currentAgentEntity.getLeftCodes() + "/" +
+                            AgentApplication.currentAgentEntity.getHaveCodes()
             );
         } else {
             this.tv_frg_mine_number.setText("0/0/0");

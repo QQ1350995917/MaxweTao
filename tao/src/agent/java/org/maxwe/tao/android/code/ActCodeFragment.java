@@ -14,6 +14,7 @@ import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
 
+import org.maxwe.tao.android.AgentApplication;
 import org.maxwe.tao.android.BaseFragment;
 import org.maxwe.tao.android.Constants;
 import org.maxwe.tao.android.INetWorkManager;
@@ -80,9 +81,9 @@ public class ActCodeFragment extends BaseFragment {
 
     // 成功生成一个激活码回显到界面中
     private void onGenCodeSuccess(TradeModel tradeModel) {
-        if (MainActivity.currentAgentEntity != null) {
-            MainActivity.currentAgentEntity.setSpendCodes(MainActivity.currentAgentEntity.getSpendCodes() + 1);
-            MainActivity.currentAgentEntity.setLeftCodes(MainActivity.currentAgentEntity.getLeftCodes() - 1);
+        if (AgentApplication.currentAgentEntity != null) {
+            AgentApplication.currentAgentEntity.setSpendCodes(AgentApplication.currentAgentEntity.getSpendCodes() + 1);
+            AgentApplication.currentAgentEntity.setLeftCodes(AgentApplication.currentAgentEntity.getLeftCodes() - 1);
         }
         this.ll_frg_code_gen.setVisibility(View.VISIBLE);
         this.tv_frg_code_gen_display.setText(tradeModel.getActCode());
@@ -90,11 +91,11 @@ public class ActCodeFragment extends BaseFragment {
     }
 
     public void resetCodesStatus() {
-        if (MainActivity.currentAgentEntity != null) {
+        if (AgentApplication.currentAgentEntity != null) {
             this.tv_frg_code_number.setText(
-                    MainActivity.currentAgentEntity.getSpendCodes() + "/" +
-                            MainActivity.currentAgentEntity.getLeftCodes() + "/" +
-                            MainActivity.currentAgentEntity.getHaveCodes()
+                    AgentApplication.currentAgentEntity.getSpendCodes() + "/" +
+                            AgentApplication.currentAgentEntity.getLeftCodes() + "/" +
+                            AgentApplication.currentAgentEntity.getHaveCodes()
             );
         } else {
             this.tv_frg_code_number.setText("0/0/0");
@@ -103,14 +104,14 @@ public class ActCodeFragment extends BaseFragment {
 
     // 显示已经激活的显示状态（默认激活）
     private void showReachView(AgentEntity responseModel) {
-        MainActivity.currentAgentEntity = responseModel;
+        AgentApplication.currentAgentEntity = responseModel;
         this.bt_frg_code_active_action.setVisibility(View.INVISIBLE);
         resetCodesStatus();
     }
 
     // 显示未激活的显示状态（默认激活）
     private void showUnReachView(AgentEntity responseModel) {
-        MainActivity.currentAgentEntity = responseModel;
+        AgentApplication.currentAgentEntity = responseModel;
         this.bt_frg_code_active_action.setVisibility(View.VISIBLE);
     }
 
@@ -124,7 +125,7 @@ public class ActCodeFragment extends BaseFragment {
     // 一键生成授权码
     @Event(value = R.id.bt_frg_code_click_gen_code, type = View.OnClickListener.class)
     private void onGenCodeAction(View view) {
-        if (MainActivity.currentAgentEntity == null || MainActivity.currentAgentEntity.getReach() != 1) {
+        if (AgentApplication.currentAgentEntity == null || AgentApplication.currentAgentEntity.getReach() != 1) {
             Toast.makeText(this.getContext(), R.string.string_your_account_need_active, Toast.LENGTH_SHORT).show();
             return;
         }
@@ -148,9 +149,9 @@ public class ActCodeFragment extends BaseFragment {
     }
 
     private void onRequestMineInfo() {
-        String url = this.getString(R.string.string_url_domain) + this.getString(R.string.string_url_account_mine);
-        SessionModel session = SharedPreferencesUtils.getSession(this.getContext());
         try {
+            String url = this.getString(R.string.string_url_domain) + this.getString(R.string.string_url_account_mine);
+            SessionModel session = SharedPreferencesUtils.getSession(this.getContext());
             session.setSign(session.getEncryptSing());
             NetworkManager.requestByPost(url, session, new INetWorkManager.OnNetworkCallback() {
                 @Override

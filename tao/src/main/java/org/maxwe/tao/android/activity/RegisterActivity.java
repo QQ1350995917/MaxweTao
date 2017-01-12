@@ -155,6 +155,7 @@ public class RegisterActivity extends BaseActivity {
 
         String url = this.getString(R.string.string_url_domain) + this.getString(R.string.string_url_account_register);
         RegisterModel registerModel = new RegisterModel(this.cellphoneOfGetCode,cellphoneCode,password);
+        registerModel.setApt(this.getResources().getInteger(R.integer.integer_app_type));
         NetworkManager.requestByPost(url, registerModel, new INetWorkManager.OnNetworkCallback() {
             @Override
             public void onSuccess(String result) {

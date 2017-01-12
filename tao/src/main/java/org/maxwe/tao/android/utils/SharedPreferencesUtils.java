@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 
 import org.maxwe.tao.android.Constants;
+import org.maxwe.tao.android.R;
 import org.maxwe.tao.android.account.agent.AgentEntity;
 import org.maxwe.tao.android.account.model.SessionModel;
 
@@ -39,7 +40,7 @@ public class SharedPreferencesUtils {
         String t = sharedPreferences.getString(KEY_LOGIN_T, null);
         String mark = sharedPreferences.getString(KEY_LOGIN_MARK, null);
         String cellphone = sharedPreferences.getString(KEY_LOGIN_CELLPHONE, null);
-        SessionModel sessionModel = new SessionModel(t,mark,cellphone);
+        SessionModel sessionModel = new SessionModel(t,mark,cellphone,context.getResources().getInteger(R.integer.integer_app_type));
         boolean paramsOk = sessionModel.isParamsOk();
         if (paramsOk){
             return sessionModel;

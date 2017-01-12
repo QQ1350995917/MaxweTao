@@ -23,6 +23,7 @@
     <string name="string_act_error">授权失败</string>
     <string name="string_act_success">授权成功</string>
 
+
     <string name="string_url_domain">http://192.168.13.138:8080/tao</string>
     <string name="string_url_account_exist">/user/exist</string>
     <string name="string_url_account_lost">/user/lost</string>
@@ -33,5 +34,7 @@
     <string name="string_url_account_mine">/user/mine</string>
     <string name="string_url_account_active">/user/active</string>
     <string name="string_url_meta_smsCode">/meta/smsCode</string>
+
+    <integer name="integer_app_type">1</integer>
 
 </resources>

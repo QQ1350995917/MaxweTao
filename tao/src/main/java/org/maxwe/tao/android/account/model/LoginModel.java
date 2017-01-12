@@ -3,18 +3,15 @@ package org.maxwe.tao.android.account.model;
 import android.text.TextUtils;
 
 import com.alibaba.fastjson.annotation.JSONField;
-import com.alibaba.fastjson.serializer.PropertyFilter;
 
 import org.maxwe.tao.android.utils.CellPhoneUtils;
-
-import java.io.Serializable;
 
 /**
  * Created by Pengwei Ding on 2017-01-10 17:37.
  * Email: www.dingpengwei@foxmail.com www.dingpegnwei@gmail.com
  * Description: TODO
  */
-public class LoginModel implements Serializable {
+public class LoginModel extends SessionModel {
 
     private String cellphone;
     private String password;
@@ -44,7 +41,7 @@ public class LoginModel implements Serializable {
         this.password = password;
     }
 
-    @JSONField(serialize=false)
+    @JSONField(serialize = false)
     public boolean isParamsOK() {
         if (CellPhoneUtils.isCellphone(this.getCellphone())
                 && !TextUtils.isEmpty(this.getPassword())

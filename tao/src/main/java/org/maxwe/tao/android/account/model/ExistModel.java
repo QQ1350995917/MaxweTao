@@ -11,7 +11,7 @@ import java.io.Serializable;
  * Email: www.dingpengwei@foxmail.com www.dingpegnwei@gmail.com
  * Description: TODO
  */
-public class ExistModel implements Serializable {
+public class ExistModel extends SessionModel {
     private String cellphone;
 
     public ExistModel() {

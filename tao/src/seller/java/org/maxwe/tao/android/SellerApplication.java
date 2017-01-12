@@ -11,7 +11,11 @@ import org.maxwe.tao.android.account.user.UserEntity;
  * Description: TODO
  */
 public class SellerApplication extends TaoApplication {
+    public static String TAO_APP_KEY = "23595494";
+    public static String TAO_APP_SECRET = "6608da9c96be14e186ff485020892334";
+
     public static UserEntity currentUserEntity = null;
+
 
     @Override
     public void onCreate() {

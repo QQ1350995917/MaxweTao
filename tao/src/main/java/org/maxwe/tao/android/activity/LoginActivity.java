@@ -73,6 +73,7 @@ public class LoginActivity extends BaseActivity {
         SharedPreferencesUtils.saveLastLoginCellphone(this, cellphone);
         String url = this.getString(R.string.string_url_domain) + this.getString(R.string.string_url_account_login);
         LoginModel loginModel = new LoginModel(cellphone, password);
+        loginModel.setApt(this.getResources().getInteger(R.integer.integer_app_type));
         NetworkManager.requestByPost(url, loginModel, new INetWorkManager.OnNetworkCallback() {
             @Override
             public void onSuccess(String result) {

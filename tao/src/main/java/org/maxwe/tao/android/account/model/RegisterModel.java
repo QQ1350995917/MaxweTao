@@ -13,7 +13,7 @@ import java.io.Serializable;
  * Email: www.dingpengwei@foxmail.com www.dingpegnwei@gmail.com
  * Description: TODO
  */
-public class RegisterModel implements Serializable {
+public class RegisterModel  extends SessionModel {
 
     private String cellphone;
     private String smsCode;

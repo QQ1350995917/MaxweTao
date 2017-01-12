@@ -18,18 +18,8 @@ public class ModifyModel extends SessionModel {
         super();
     }
 
-    public ModifyModel(String t, String mark, String cellphone) {
-        super(t, mark, cellphone);
-    }
-
     public ModifyModel(SessionModel sessionModel, String oldPassword, String newPassword) {
-        super(sessionModel.getT(), sessionModel.getMark(), sessionModel.getCellphone());
-        this.oldPassword = oldPassword;
-        this.newPassword = newPassword;
-    }
-
-    public ModifyModel(String t, String mark, String cellphone, String oldPassword, String newPassword) {
-        super(t, mark, cellphone);
+        super(sessionModel.getT(), sessionModel.getMark(), sessionModel.getCellphone(),sessionModel.getApt());
         this.oldPassword = oldPassword;
         this.newPassword = newPassword;
     }

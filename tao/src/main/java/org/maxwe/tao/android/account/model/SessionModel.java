@@ -20,6 +20,7 @@ public class SessionModel implements Serializable {
     private String t;
     private String mark;
     private String cellphone;
+    private int apt; //app 类型
     private String verification;//敏感操作的验证密码
     private String sign;
 
@@ -27,10 +28,11 @@ public class SessionModel implements Serializable {
         super();
     }
 
-    public SessionModel(String t, String mark, String cellphone) {
+    public SessionModel(String t, String mark, String cellphone,int apt) {
         this.t = t;
         this.mark = mark;
         this.cellphone = cellphone;
+        this.apt = apt;
     }
 
     public String getT() {
@@ -55,6 +57,14 @@ public class SessionModel implements Serializable {
 
     public void setCellphone(String cellphone) {
         this.cellphone = cellphone;
+    }
+
+    public int getApt() {
+        return apt;
+    }
+
+    public void setApt(int apt) {
+        this.apt = apt;
     }
 
     public String getVerification() {

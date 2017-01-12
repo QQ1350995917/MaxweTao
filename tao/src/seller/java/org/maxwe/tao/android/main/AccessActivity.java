@@ -31,7 +31,7 @@ import org.xutils.view.annotation.ViewInject;
 /**
  * Created by Pengwei Ding on 2017-01-03 20:50.
  * Email: www.dingpengwei@foxmail.com www.dingpegnwei@gmail.com
- * Description: TODO
+ * Description: 验证激活信息的界面
  */
 @ContentView(R.layout.activity_access)
 public class AccessActivity extends BaseActivity {
@@ -99,10 +99,10 @@ public class AccessActivity extends BaseActivity {
     }
 
     private void onRequestMyInfo() {
-        onRequestingView();
-        String url = this.getString(R.string.string_url_domain) + this.getString(R.string.string_url_account_mine);
-        SessionModel session = SharedPreferencesUtils.getSession(this);
         try {
+            onRequestingView();
+            String url = this.getString(R.string.string_url_domain) + this.getString(R.string.string_url_account_mine);
+            SessionModel session = SharedPreferencesUtils.getSession(this);
             session.setSign(session.getEncryptSing());
             NetworkManager.requestByPost(url, session, new INetWorkManager.OnNetworkCallback() {
                 @Override
@@ -149,36 +149,44 @@ public class AccessActivity extends BaseActivity {
         }
 
         onRequestingView();
-        String url = this.getString(R.string.string_url_domain) + this.getString(R.string.string_url_account_active);
-        SessionModel session = SharedPreferencesUtils.getSession(this);
-        ActiveModel activeModel = new ActiveModel(session, actCode);
-        NetworkManager.requestByPost(url, activeModel, new INetWorkManager.OnNetworkCallback() {
-            @Override
-            public void onSuccess(String result) {
-                ActiveModel responseModel = JSON.parseObject(result, ActiveModel.class);
-                onResponseActSuccess(responseModel.getActCode());
-                Toast.makeText(AccessActivity.this, R.string.string_act_success, Toast.LENGTH_SHORT).show();
-            }
 
-            @Override
-            public void onLoginTimeout(String result) {
-                Toast.makeText(AccessActivity.this, R.string.string_toast_timeout, Toast.LENGTH_SHORT).show();
-                SharedPreferencesUtils.clearSession(AccessActivity.this);
-                onResponseLoginTimeout();
-            }
+        try {
+            String url = this.getString(R.string.string_url_domain) + this.getString(R.string.string_url_account_active);
+            SessionModel session = SharedPreferencesUtils.getSession(this);
+            ActiveModel activeModel = new ActiveModel(session, actCode);
+            activeModel.setSign(session.getEncryptSing());
+            NetworkManager.requestByPost(url, activeModel, new INetWorkManager.OnNetworkCallback() {
+                @Override
+                public void onSuccess(String result) {
+                    ActiveModel responseModel = JSON.parseObject(result, ActiveModel.class);
+                    onResponseActSuccess(responseModel.getActCode());
+                    Toast.makeText(AccessActivity.this, R.string.string_act_success, Toast.LENGTH_SHORT).show();
+                }
 
-            @Override
-            public void onError(Throwable ex, boolean isOnCallback) {
-                Toast.makeText(AccessActivity.this, R.string.string_toast_network_error, Toast.LENGTH_SHORT).show();
-                onResponseReAct(AccessActivity.this.getString(R.string.string_toast_network_error));
-            }
+                @Override
+                public void onLoginTimeout(String result) {
+                    Toast.makeText(AccessActivity.this, R.string.string_toast_timeout, Toast.LENGTH_SHORT).show();
+                    SharedPreferencesUtils.clearSession(AccessActivity.this);
+                    onResponseLoginTimeout();
+                }
 
-            @Override
-            public void onOther(int code, String result) {
-                Toast.makeText(AccessActivity.this, R.string.string_act_error, Toast.LENGTH_SHORT).show();
-                onResponseReAct(AccessActivity.this.getString(R.string.string_act_error));
-            }
-        });
+                @Override
+                public void onError(Throwable ex, boolean isOnCallback) {
+                    Toast.makeText(AccessActivity.this, R.string.string_toast_network_error, Toast.LENGTH_SHORT).show();
+                    onResponseReAct(AccessActivity.this.getString(R.string.string_toast_network_error));
+                }
+
+                @Override
+                public void onOther(int code, String result) {
+                    Toast.makeText(AccessActivity.this, R.string.string_act_error, Toast.LENGTH_SHORT).show();
+                    onResponseReAct(AccessActivity.this.getString(R.string.string_act_error));
+                }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+            Toast.makeText(this, "请求失败", Toast.LENGTH_SHORT).show();
+        }
+
     }
 
     @Event(value = R.id.bt_act_access_goto_login, type = View.OnClickListener.class)

@@ -5,13 +5,20 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.Toast;
+
+import com.alibaba.fastjson.JSON;
 
 import org.maxwe.tao.android.Constants;
+import org.maxwe.tao.android.INetWorkManager;
+import org.maxwe.tao.android.NetworkManager;
 import org.maxwe.tao.android.R;
 import org.maxwe.tao.android.SellerApplication;
+import org.maxwe.tao.android.account.agent.AgentEntity;
 import org.maxwe.tao.android.account.model.SessionModel;
 import org.maxwe.tao.android.account.user.UserEntity;
 import org.maxwe.tao.android.activity.LoginActivity;
@@ -39,8 +46,6 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     @ViewInject(R.id.rg_act_navigate)
     private RadioGroup rg_act_navigate;
 
-    public static UserEntity currentUserEntity;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -49,6 +54,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
             this.rg_act_navigate.getChildAt(index).setOnClickListener(this);
         }
         this.setCurrentFragment(R.id.rb_act_main_index);
+
         if (SellerApplication.currentUserEntity == null || SellerApplication.currentUserEntity.getActCode() == null) {
             Intent intent = new Intent(this, AccessActivity.class);
             this.startActivityForResult(intent, REQUEST_CODE_ACCESS_CHECK);
@@ -109,17 +115,6 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     }
 
     @Override
-    public void onStart() {
-        super.onStart();
-
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-    }
-
-    @Override
     protected void onDestroy() {
         super.onDestroy();
     }
@@ -152,6 +147,8 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
                 break;
 
             case REQUEST_CODE_LOGIN_TIME_OUT:
+                Intent intent = new Intent(this, LoginActivity.class);
+                this.startActivity(intent);
                 this.finish();
                 break;
             default:
@@ -172,6 +169,11 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 
     }
 
+    private void onResponseMineInfo(UserEntity userEntity){
+        if (userEntity == null || TextUtils.isEmpty(userEntity.getActCode())){
+
+        }
+    }
 
     private void onCheckNewVersion() {
 //        VersionEntity currentVersionEntity = new VersionEntity(this.getString(R.string.platform), this.getResources().getInteger(R.integer.type_id), this.getVersionCode());

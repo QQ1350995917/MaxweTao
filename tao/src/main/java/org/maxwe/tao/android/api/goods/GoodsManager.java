@@ -70,26 +70,26 @@ public class GoodsManager {
 
 
     public static void queryGoods(GoodsQueryEntity goodsQueryEntity, GoodsManager.OnRequestCallback onRequestCallback) {
-        GoodsEntity goodsEntity = new GoodsEntity();
-        goodsEntity.setMethod(METHOD_NAME);
-        goodsEntity.setApp_key(Constants.TAO_APP_KEY);
-        goodsEntity.setTimestamp(DateTimeUtils.getCurrentFullTime());
-//        goodsEntity.setFields("num_iid,title,pict_url,small_images,reserve_price,zk_final_price,user_type,provcity,item_url,seller_id,volume,nick");
-        goodsEntity.setFields("nick");
-
-        goodsEntity.setQ(goodsQueryEntity.getQ());
-//        goodsEntity.setSort(goodsQueryEntity.getSort());
-        goodsEntity.setPage_no(goodsQueryEntity.getPage_no());
-        goodsEntity.setPage_size(goodsQueryEntity.getPage_size());
-
-        HashMap<String, String> stringStringHashMap = JSON.parseObject(JSON.toJSONString(goodsEntity, new ParamsSignFiller()), new TypeReference<HashMap<String, String>>() {
-        });
-        try {
-            goodsEntity.setSign(CommonEntity.signTopRequest(stringStringHashMap,Constants.TAO_APP_SECRET,goodsEntity.getSign_method()));
-            request(URL_FOMRAL, goodsEntity, onRequestCallback);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+//        GoodsEntity goodsEntity = new GoodsEntity();
+//        goodsEntity.setMethod(METHOD_NAME);
+//        goodsEntity.setApp_key(Constants.TAO_APP_KEY);
+//        goodsEntity.setTimestamp(DateTimeUtils.getCurrentFullTime());
+////        goodsEntity.setFields("num_iid,title,pict_url,small_images,reserve_price,zk_final_price,user_type,provcity,item_url,seller_id,volume,nick");
+//        goodsEntity.setFields("nick");
+//
+//        goodsEntity.setQ(goodsQueryEntity.getQ());
+////        goodsEntity.setSort(goodsQueryEntity.getSort());
+//        goodsEntity.setPage_no(goodsQueryEntity.getPage_no());
+//        goodsEntity.setPage_size(goodsQueryEntity.getPage_size());
+//
+//        HashMap<String, String> stringStringHashMap = JSON.parseObject(JSON.toJSONString(goodsEntity, new ParamsSignFiller()), new TypeReference<HashMap<String, String>>() {
+//        });
+//        try {
+//            goodsEntity.setSign(CommonEntity.signTopRequest(stringStringHashMap,Constants.TAO_APP_SECRET,goodsEntity.getSign_method()));
+//            request(URL_FOMRAL, goodsEntity, onRequestCallback);
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
 
     }
 }

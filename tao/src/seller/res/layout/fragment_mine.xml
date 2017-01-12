@@ -13,13 +13,6 @@
         android:text="@string/string_promotion" />
 
     <Button
-        android:id="@+id/bt_frg_mine_link_convert"
-        android:layout_width="match_parent"
-        android:layout_height="80dp"
-        android:layout_below="@+id/bt_frg_mine_promotion"
-        android:text="@string/string_link_convert" />
-
-    <Button
         android:id="@+id/bt_frg_mine_password"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

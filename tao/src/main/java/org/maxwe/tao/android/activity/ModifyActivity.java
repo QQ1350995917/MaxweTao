@@ -78,6 +78,7 @@ public class ModifyActivity extends BaseActivity {
         String url = this.getString(R.string.string_url_domain) + this.getString(R.string.string_url_account_password);
         SessionModel sessionModel = SharedPreferencesUtils.getSession(this);
         ModifyModel modifyModel = new ModifyModel(sessionModel, oldPassword, newPassword);
+        modifyModel.setApt(this.getResources().getInteger(R.integer.integer_app_type));
         try {
             modifyModel.setSign(sessionModel.getEncryptSing());
             NetworkManager.requestByPost(url, modifyModel, new INetWorkManager.OnNetworkCallback() {

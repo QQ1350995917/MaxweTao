@@ -20,7 +20,7 @@ public class TradeModel extends SessionModel {
     }
 
     public TradeModel(SessionModel sessionModel,int type,int codeNum) {
-        super(sessionModel.getT(),sessionModel.getMark(),sessionModel.getCellphone());
+        super(sessionModel.getT(),sessionModel.getMark(),sessionModel.getCellphone(),sessionModel.getApt());
         this.type = type;
         this.codeNum = codeNum;
     }

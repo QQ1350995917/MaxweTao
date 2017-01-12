@@ -29,12 +29,6 @@ public class MineFragment extends BaseFragment {
         Toast.makeText(MineFragment.this.getActivity(), "推广位开发中，敬请关注...", Toast.LENGTH_SHORT).show();
     }
 
-    @Event(value = R.id.bt_frg_mine_link_convert, type = View.OnClickListener.class)
-    private void onLinkConvertAction(View view) {
-        Intent intent = new Intent(this.getActivity(), LinkFragment.class);
-        this.getActivity().startActivityForResult(intent, MainActivity.REQUEST_CODE_CONVERT_LINK);
-    }
-
     @Event(value = R.id.bt_frg_mine_password, type = View.OnClickListener.class)
     private void onModifyPasswordAction(View view) {
         Intent intent = new Intent(this.getActivity(), ModifyActivity.class);
@@ -53,8 +47,8 @@ public class MineFragment extends BaseFragment {
 
     @Event(value = R.id.bt_frg_mine_exit, type = View.OnClickListener.class)
     private void onExitAction(View view) {
-        SessionModel sessionModel = SharedPreferencesUtils.getSession(this.getContext());
         try {
+            SessionModel sessionModel = SharedPreferencesUtils.getSession(this.getContext());
             sessionModel.setSign(sessionModel.getEncryptSing());
             String url = this.getString(R.string.string_url_domain) + this.getString(R.string.string_url_account_logout);
             NetworkManager.requestByPost(url, sessionModel, new INetWorkManager.OnNetworkCallback() {

@@ -37,9 +37,6 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     @ViewInject(R.id.rg_act_navigate)
     private RadioGroup rg_act_navigate;
 
-    public static AgentEntity currentAgentEntity;
-
-
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

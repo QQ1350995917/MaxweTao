@@ -42,24 +42,33 @@
     <string name="string_history_trade_number">数量(授权码)</string>
     <string name="string_history_trade_to">转向</string>
     <string name="string_no_more_data">没有更多的数据了</string>
+    <string name="string_my_trunk_agent">我的上级代理</string>
+    <string name="string_leader_mark">请输入您上级代理的ID</string>
+    <string name="string_confirm">确认</string>
+    <string name="string_cancel">取消</string>
 
-    <!--<string name="string_grant_cellphone">请您正确输入要授权的手机号码</string>-->
+    <string name="string_alert_leader">⚠️您正在向上级代理申请授权，该授权一旦申请，将不可变更。</string>
+    <string name="string_leader_myself">不能输入自己的ID</string>
+    <string name="string_your_leader">您的上级代理信息如下：</string>
+    <string name="string_ID">ID：</string>
+    <string name="string_level">级别：</string>
+
     <!--<string name="string_right_cellphone">请您输入正确的手机号码</string>-->
 
     <!--<string name="string_grant_cellphone_dialog_title1">对</string>-->
     <!--<string name="string_grant_cellphone_dialog_title2">授权</string>-->
 
 
-    <!--<string name="string_grant_cellphone_ing2">授权，请稍后</string>-->
+
     <!--<string name="string_grant_cellphone_success">授权成功</string>-->
     <!--<string name="string_grant_cellphone_fail">授权失败</string>-->
     <!--<string name="string_grant_cellphone_no_exist">被授权人不存在</string>-->
     <!--<string name="string_grant_cellphone_repeat">该号码已经被授权</string>-->
 
-    <!--<string name="string_params_error">参数错误</string>-->
+
     <!--<string name="string_agents_no_code">您已经没有授权码了</string>-->
     <!--<string name="string_result_empty">没有数据</string>-->
-    <!--<string name="string_agent_other">该号码不是你的代理</string>-->
+
 
     <!--<string name="string_input_grant_code_number">请输入转让授权码数量</string>-->
     <!--<string name="string_input_grant_code_number_integer">授权码数量必须为整数</string>-->
@@ -77,10 +86,15 @@
     <string name="string_url_account_logout">/agent/logout</string>
     <string name="string_url_account_mine">/agent/mine</string>
     <string name="string_url_account_bank">/agent/bank</string>
-    <string name="string_url_mate_query">/agent/query</string>
     <string name="string_url_meta_smsCode">/meta/smsCode</string>
     <string name="string_url_trade_grant">/trade/grant</string>
     <string name="string_url_trade_trade">/trade/trade</string>
     <string name="string_url_history_history">/history/history</string>
+    <string name="string_url_mate_query">/mate/query</string>
+    <string name="string_url_mate_grant">/mate/grant</string>
+    <string name="string_url_mate_reject">/mate/reject</string>
+    <string name="string_url_mate_mates">/mate/mates</string>
+
+    <integer name="integer_app_type">2</integer>
 
 </resources>
