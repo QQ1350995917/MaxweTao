@@ -173,7 +173,7 @@ public class GrantActivity extends BaseActivity implements SwipeRefreshLayout.On
 //                    return;
 //                }
 //                if (response.getCode() == IResponse.ResultCode.RC_SUCCESS_EMPTY.getCode()){
-//                    Toast.makeText(GrantActivity.this,R.string.string_agents_no_data,Toast.LENGTH_SHORT).show();
+//
 //                    srl_act_agent_list_container.setRefreshing(false);
 //                    return;
 //                }

@@ -37,7 +37,11 @@
     <string name="string_grant_cellphone_cancel">取消</string>
     <string name="string_grant_cellphone_confirm">确认</string>
     <string name="string_agent_code_no_enough">您的授权码数量不足</string>
-
+    <string name="string_no_data">没有数据</string>
+    <string name="string_history_trade_time">时间</string>
+    <string name="string_history_trade_number">数量(授权码)</string>
+    <string name="string_history_trade_to">转向</string>
+    <string name="string_no_more_data">没有更多的数据了</string>
 
     <!--<string name="string_grant_cellphone">请您正确输入要授权的手机号码</string>-->
     <!--<string name="string_right_cellphone">请您输入正确的手机号码</string>-->
@@ -45,13 +49,13 @@
     <!--<string name="string_grant_cellphone_dialog_title1">对</string>-->
     <!--<string name="string_grant_cellphone_dialog_title2">授权</string>-->
 
-    <!--<string name="string_grant_cellphone_ing1">正在在对</string>-->
+
     <!--<string name="string_grant_cellphone_ing2">授权，请稍后</string>-->
     <!--<string name="string_grant_cellphone_success">授权成功</string>-->
     <!--<string name="string_grant_cellphone_fail">授权失败</string>-->
     <!--<string name="string_grant_cellphone_no_exist">被授权人不存在</string>-->
     <!--<string name="string_grant_cellphone_repeat">该号码已经被授权</string>-->
-    <!--<string name="string_agents_no_data">没有更多的数据了</string>-->
+
     <!--<string name="string_params_error">参数错误</string>-->
     <!--<string name="string_agents_no_code">您已经没有授权码了</string>-->
     <!--<string name="string_result_empty">没有数据</string>-->
@@ -77,5 +81,6 @@
     <string name="string_url_meta_smsCode">/meta/smsCode</string>
     <string name="string_url_trade_grant">/trade/grant</string>
     <string name="string_url_trade_trade">/trade/trade</string>
+    <string name="string_url_history_history">/history/history</string>
 
 </resources>
