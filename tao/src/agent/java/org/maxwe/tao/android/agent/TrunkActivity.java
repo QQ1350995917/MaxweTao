@@ -18,6 +18,7 @@ import org.maxwe.tao.android.R;
 import org.maxwe.tao.android.account.agent.AgentEntity;
 import org.maxwe.tao.android.account.model.SessionModel;
 import org.maxwe.tao.android.activity.BaseActivity;
+import org.maxwe.tao.android.response.IResponse;
 import org.maxwe.tao.android.utils.SharedPreferencesUtils;
 import org.xutils.view.annotation.ContentView;
 import org.xutils.view.annotation.Event;
@@ -54,9 +55,16 @@ public class TrunkActivity extends BaseActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        // 已经加入成功
         if (AgentApplication.currentAgentEntity != null && AgentApplication.currentAgentEntity.getReach() == 1) {
             showLeaderInfo();
-        } else if (AgentApplication.currentAgentEntity != null && AgentApplication.currentAgentEntity.getReach() != 1) {
+        }
+        // 已经申请，但没有审核通过
+        if (AgentApplication.currentAgentEntity != null && AgentApplication.currentAgentEntity.getReach() != 1 && AgentApplication.currentAgentEntity.getpIdTime() != 0) {
+            showReaching("");
+        }
+        // 没有申请
+        if (AgentApplication.currentAgentEntity != null && AgentApplication.currentAgentEntity.getReach() != 1 && AgentApplication.currentAgentEntity.getpIdTime() == 0){
             showRequestLeader();
         }
     }
@@ -77,6 +85,14 @@ public class TrunkActivity extends BaseActivity {
         this.ll_act_trunk_after_status.setVisibility(View.VISIBLE);
         this.tv_act_trunk_leader_id.setText(this.getString(R.string.string_ID) + AgentApplication.currentAgentEntity.getMark());
         this.tv_act_trunk_leader_level.setText(this.getString(R.string.string_level) + AgentApplication.currentAgentEntity.getLevelId());
+    }
+
+    private void showReaching(String mark){
+        this.tv_act_trunk_no_data.setVisibility(View.GONE);
+        this.ll_act_trunk_before_status.setVisibility(View.GONE);
+        this.ll_act_trunk_after_status.setVisibility(View.VISIBLE);
+        this.tv_act_trunk_leader_id.setText(this.getString(R.string.string_ID) + mark);
+        this.tv_act_trunk_leader_level.setText(R.string.string_reaching);
     }
 
     private void showRequestLeader() {
@@ -106,12 +122,19 @@ public class TrunkActivity extends BaseActivity {
         }
 
         try {
-            String url = this.getString(R.string.string_url_domain) + this.getString(R.string.string_url_account_mine);
+            String url = this.getString(R.string.string_url_domain) + this.getString(R.string.string_url_mate_beg);
             session.setSign(session.getEncryptSing());
-            NetworkManager.requestByPost(url, session, new INetWorkManager.OnNetworkCallback() {
+            // TODO 加参数
+            NetworkManager.requestByPost(url, null, new INetWorkManager.OnNetworkCallback() {
                 @Override
                 public void onSuccess(String result) {
+                    // TODO 回显返回值
+                    showReaching("");
+                }
 
+                @Override
+                public void onEmptyResult(String result) {
+                    Toast.makeText(TrunkActivity.this, R.string.string_no_mark, Toast.LENGTH_SHORT).show();
                 }
 
                 @Override
@@ -123,9 +146,14 @@ public class TrunkActivity extends BaseActivity {
                 @Override
                 public void onError(Throwable ex, boolean isOnCallback) {
                     Toast.makeText(TrunkActivity.this, R.string.string_toast_network_error, Toast.LENGTH_SHORT).show();
-//                    onResponseReAct(MainActivity.this.getString(R.string.string_toast_network_error));
                 }
 
+                @Override
+                public void onOther(int code, String result) {
+                    if (code == IResponse.ResultCode.RC_ACCESS_BAD_2.getCode()){
+                        Toast.makeText(TrunkActivity.this, R.string.string_the_mark_no_reach, Toast.LENGTH_SHORT).show();
+                    }
+                }
             });
         } catch (Exception e) {
             e.printStackTrace();

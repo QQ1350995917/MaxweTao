@@ -53,7 +53,9 @@
     <string name="string_ID">ID：</string>
     <string name="string_level">级别：</string>
 
-    <!--<string name="string_right_cellphone">请您输入正确的手机号码</string>-->
+    <string name="string_no_mark">查无此人</string>
+    <string name="string_the_mark_no_reach">您查找的ID尚未得到授权</string>
+    <string name="string_reaching">授权处理中...,请稍后</string>
 
     <!--<string name="string_grant_cellphone_dialog_title1">对</string>-->
     <!--<string name="string_grant_cellphone_dialog_title2">授权</string>-->
@@ -90,7 +92,7 @@
     <string name="string_url_trade_grant">/trade/grant</string>
     <string name="string_url_trade_trade">/trade/trade</string>
     <string name="string_url_history_history">/history/history</string>
-    <string name="string_url_mate_query">/mate/query</string>
+    <string name="string_url_mate_beg">/mate/beg</string>
     <string name="string_url_mate_grant">/mate/grant</string>
     <string name="string_url_mate_reject">/mate/reject</string>
     <string name="string_url_mate_mates">/mate/mates</string>
