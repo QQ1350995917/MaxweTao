@@ -15,12 +15,14 @@ import android.widget.Toast;
 import com.alibaba.fastjson.JSON;
 
 import org.maxwe.tao.android.BaseFragment;
+import org.maxwe.tao.android.Constants;
 import org.maxwe.tao.android.INetWorkManager;
 import org.maxwe.tao.android.NetworkManager;
 import org.maxwe.tao.android.R;
 import org.maxwe.tao.android.account.agent.AgentEntity;
 import org.maxwe.tao.android.account.model.SessionModel;
 import org.maxwe.tao.android.main.MainActivity;
+import org.maxwe.tao.android.trade.TradeModel;
 import org.maxwe.tao.android.utils.SharedPreferencesUtils;
 import org.xutils.view.annotation.ContentView;
 import org.xutils.view.annotation.Event;
@@ -46,8 +48,8 @@ public class ActCodeFragment extends BaseFragment {
     @ViewInject(R.id.ll_frg_code_gen)
     private LinearLayout ll_frg_code_gen;
     // 显示激活码，生成激活码后的界面，默认不显示
-    @ViewInject(R.id.ll_frg_code_gen_display)
-    private TextView ll_frg_code_gen_display;
+    @ViewInject(R.id.tv_frg_code_gen_display)
+    private TextView tv_frg_code_gen_display;
 
     // 激活自己的账号的按钮，默认不显示
     @ViewInject(R.id.bt_frg_code_active_action)
@@ -65,7 +67,8 @@ public class ActCodeFragment extends BaseFragment {
         switch (requestCode) {
             case REQUEST_CODE_GEN_ACT_CODE:
                 if (resultCode == GenCodeActivity.RESULT_CODE_GEN_ACT_CODE_OK) {
-
+                    TradeModel tradeModel = (TradeModel) data.getSerializableExtra(Constants.KEY_INTENT_SESSION);
+                    onGenCodeSuccess(tradeModel);
                 } else if (resultCode == GenCodeActivity.RESULT_CODE_GEN_ACT_CODE_ERROR) {
 
                 }
@@ -75,28 +78,41 @@ public class ActCodeFragment extends BaseFragment {
         }
     }
 
-    // 成功生成一个激活码
-    private void onGenCodeSuccess(){
-//        MainActivity.currentAgentEntity.setSpendCodes(MainActivity.currentAgentEntity.getSpendCodes() + 1);
-//        MainActivity.currentAgentEntity.setLeftCodes(MainActivity.currentAgentEntity.getLeftCodes() - 1);
+    // 成功生成一个激活码回显到界面中
+    private void onGenCodeSuccess(TradeModel tradeModel) {
+        if (MainActivity.currentAgentEntity != null) {
+            MainActivity.currentAgentEntity.setSpendCodes(MainActivity.currentAgentEntity.getSpendCodes() + 1);
+            MainActivity.currentAgentEntity.setLeftCodes(MainActivity.currentAgentEntity.getLeftCodes() - 1);
+        }
+        this.ll_frg_code_gen.setVisibility(View.VISIBLE);
+        this.tv_frg_code_gen_display.setText(tradeModel.getActCode());
         resetCodesStatus();
     }
 
-    private void resetCodesStatus(){
-//        this.tv_frg_code_number.setText(MainActivity.currentAgentEntity.getSpendCodes());
+    public void resetCodesStatus() {
+        if (MainActivity.currentAgentEntity != null) {
+            this.tv_frg_code_number.setText(
+                    MainActivity.currentAgentEntity.getSpendCodes() + "/" +
+                            MainActivity.currentAgentEntity.getLeftCodes() + "/" +
+                            MainActivity.currentAgentEntity.getHaveCodes()
+            );
+        } else {
+            this.tv_frg_code_number.setText("0/0/0");
+        }
     }
 
     // 显示已经激活的显示状态（默认激活）
-    private void showReachView() {
+    private void showReachView(AgentEntity responseModel) {
+        MainActivity.currentAgentEntity = responseModel;
         this.bt_frg_code_active_action.setVisibility(View.INVISIBLE);
         resetCodesStatus();
     }
 
     // 显示未激活的显示状态（默认激活）
-    private void showUnReachView() {
+    private void showUnReachView(AgentEntity responseModel) {
+        MainActivity.currentAgentEntity = responseModel;
         this.bt_frg_code_active_action.setVisibility(View.VISIBLE);
     }
-
 
     // 历史记录
     @Event(value = R.id.bt_frg_code_history, type = View.OnClickListener.class)
@@ -110,7 +126,7 @@ public class ActCodeFragment extends BaseFragment {
     private void onGenCodeAction(View view) {
         if (MainActivity.currentAgentEntity == null || MainActivity.currentAgentEntity.getReach() != 1) {
             Toast.makeText(this.getContext(), R.string.string_your_account_need_active, Toast.LENGTH_SHORT).show();
-//            return;
+            return;
         }
         Intent intent = new Intent(this.getContext(), GenCodeActivity.class);
         this.startActivityForResult(intent, REQUEST_CODE_GEN_ACT_CODE);
@@ -121,7 +137,7 @@ public class ActCodeFragment extends BaseFragment {
     @Event(value = R.id.bt_frg_code_click_copy, type = View.OnClickListener.class)
     private void onCopyCodeAction(View view) {
         ClipboardManager clipboardManager = (ClipboardManager) this.getContext().getSystemService(Context.CLIPBOARD_SERVICE);
-        clipboardManager.setPrimaryClip(ClipData.newPlainText(null, this.ll_frg_code_gen_display.getText().toString()));
+        clipboardManager.setPrimaryClip(ClipData.newPlainText(null, this.tv_frg_code_gen_display.getText().toString()));
         Toast.makeText(this.getContext(), R.string.string_copy_success, Toast.LENGTH_SHORT).show();
     }
 
@@ -141,9 +157,9 @@ public class ActCodeFragment extends BaseFragment {
                 public void onSuccess(String result) {
                     AgentEntity responseModel = JSON.parseObject(result, AgentEntity.class);
                     if (responseModel.getReach() != 1) {
-                        showUnReachView();
+                        showUnReachView(responseModel);
                     } else {
-                        showReachView();
+                        showReachView(responseModel);
                     }
                 }
 

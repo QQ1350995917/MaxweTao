@@ -62,7 +62,7 @@ public class HistoryActivity extends BaseActivity implements SwipeRefreshLayout.
             TextView tv_act_history_item_status = (TextView) inflate.findViewById(R.id.tv_act_history_item_status);
             HistoryModel agentEntity = historyModelLinkedList.get(position);
             tv_act_history_item_time.setText(DateTimeUtils.parseLongToFullTime(agentEntity.getCreateTime()));
-            tv_act_history_item_number.setText(agentEntity.getNumCode() + "");
+            tv_act_history_item_number.setText(agentEntity.getCodeNum() + "");
             tv_act_history_item_to_id.setText(agentEntity.getMark());
             tv_act_history_item_status.setText(agentEntity.getToId());
             return inflate;

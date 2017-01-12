@@ -1,7 +1,10 @@
 package org.maxwe.tao.android.mine;
 
 import android.content.Intent;
+import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import org.maxwe.tao.android.BaseFragment;
@@ -16,6 +19,7 @@ import org.maxwe.tao.android.main.MainActivity;
 import org.maxwe.tao.android.utils.SharedPreferencesUtils;
 import org.xutils.view.annotation.ContentView;
 import org.xutils.view.annotation.Event;
+import org.xutils.view.annotation.ViewInject;
 
 /**
  * Created by Pengwei Ding on 2017-01-11 16:29.
@@ -25,6 +29,9 @@ import org.xutils.view.annotation.Event;
 @ContentView(R.layout.fragment_mine)
 public class MineFragment extends BaseFragment {
     public static final int REQUEST_CODE_MODIFY_PASSWORD = 3;
+
+    @ViewInject(R.id.tv_frg_mine_number)
+    private TextView tv_frg_mine_number;
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -38,6 +45,25 @@ public class MineFragment extends BaseFragment {
             default:
                 break;
         }
+    }
+
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        resetCodesStatus();
+    }
+
+    public void resetCodesStatus(){
+        if (MainActivity.currentAgentEntity != null) {
+            this.tv_frg_mine_number.setText(
+                    MainActivity.currentAgentEntity.getSpendCodes() + "/" +
+                            MainActivity.currentAgentEntity.getLeftCodes() + "/" +
+                            MainActivity.currentAgentEntity.getHaveCodes()
+            );
+        } else {
+            this.tv_frg_mine_number.setText("0/0/0");
+        }
+
     }
 
     @Event(value = R.id.bt_frg_mine_modify_password, type = View.OnClickListener.class)

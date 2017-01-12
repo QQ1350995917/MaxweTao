@@ -64,11 +64,11 @@ public class GrantDialogActivity extends BaseActivity {
         this.setFinishOnTouchOutside(false);
         this.cellphone = this.getIntent().getExtras().getString(KEY_CELLPHONE, null);
 
-        this.tv_act_grant_dlg_cellphone.setText(
-                this.getString(R.string.string_grant_cellphone_dialog_title1) +
-                        this.cellphone +
-                        this.getString(R.string.string_grant_cellphone_dialog_title2)
-        );
+//        this.tv_act_grant_dlg_cellphone.setText(
+//                this.getString(R.string.string_grant_cellphone_dialog_title1) +
+//                        this.cellphone +
+//                        this.getString(R.string.string_grant_cellphone_dialog_title2)
+//        );
 
         this.showNormalStatus();
     }

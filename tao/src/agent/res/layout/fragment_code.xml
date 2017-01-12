@@ -52,10 +52,9 @@
             android:layout_height="wrap_content"
             android:textColor="#000000"
             android:textSize="16dp"
-            android:visibility="gone"
             android:text="@string/string_code_of_your_gen"/>
         <TextView
-            android:id="@+id/ll_frg_code_gen_display"
+            android:id="@+id/tv_frg_code_gen_display"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"

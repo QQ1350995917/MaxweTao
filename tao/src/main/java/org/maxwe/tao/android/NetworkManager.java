@@ -44,7 +44,7 @@ public class NetworkManager implements INetWorkManager {
                     onNetworkCallback.onEmptyResult(responseModel.getData());
                     return;
                 }
-                if (responseModel.getCode() == IResponse.ResultCode.RC_ACCESS_BAD.getCode() || responseModel.getCode() == IResponse.ResultCode.RC_ACCESS_BAD_2.getCode()){
+                if (responseModel.getCode() == IResponse.ResultCode.RC_ACCESS_BAD.getCode()){
                     onNetworkCallback.onAccessBad(responseModel.getData());
                     return;
                 }

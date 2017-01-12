@@ -13,7 +13,7 @@ public class HistoryModel extends SessionModel {
     private String toId; // 操作流向ID，如果类型为1，则此ID为后来补充
     private int type; // 1激活码，2批量激活码
     private String actCode; //如果类型为1，则是向单个用激活
-    private int numCode;//如果类型为2，则表示交易为数量
+    private int codeNum;//如果类型为2，则表示交易为数量
     private long createTime;//创建时间
     private long updateTime;//更新时间
 
@@ -23,14 +23,14 @@ public class HistoryModel extends SessionModel {
 
     /**
      * 构建测试数据时候使用的
-     * @param numCode
+     * @param codeNum
      * @param mark
      * @param status
      * @param createTime
      */
-    public HistoryModel(int numCode,String mark,String status,long createTime) {
+    public HistoryModel(int codeNum,String mark,String status,long createTime) {
         this.setMark(mark);
-        this.numCode = numCode;
+        this.codeNum = codeNum;
         this.toId = status;
         this.createTime = createTime;
     }
@@ -67,12 +67,12 @@ public class HistoryModel extends SessionModel {
         this.actCode = actCode;
     }
 
-    public int getNumCode() {
-        return numCode;
+    public int getCodeNum() {
+        return codeNum;
     }
 
-    public void setNumCode(int numCode) {
-        this.numCode = numCode;
+    public void setCodeNum(int codeNum) {
+        this.codeNum = codeNum;
     }
 
     public long getCreateTime() {
@@ -96,7 +96,7 @@ public class HistoryModel extends SessionModel {
         return super.toString() + "HistoryModel{" +
                 "updateTime=" + updateTime +
                 ", createTime=" + createTime +
-                ", numCode=" + numCode +
+                ", codeNum=" + codeNum +
                 ", actCode='" + actCode + '\'' +
                 ", type=" + type +
                 ", toId='" + toId + '\'' +

@@ -11,12 +11,20 @@ import org.maxwe.tao.android.account.model.SessionModel;
 public class TradeModel extends SessionModel {
     private AgentEntity toAgentEntity;
     private int type;
+    private String actCode;
     private String levelId;
-    private int numCode;
+    private int codeNum;
 
     public TradeModel() {
         super();
     }
+
+    public TradeModel(SessionModel sessionModel,int type,int codeNum) {
+        super(sessionModel.getT(),sessionModel.getMark(),sessionModel.getCellphone());
+        this.type = type;
+        this.codeNum = codeNum;
+    }
+
 
     public AgentEntity getToAgentEntity() {
         return toAgentEntity;
@@ -34,6 +42,14 @@ public class TradeModel extends SessionModel {
         this.type = type;
     }
 
+    public String getActCode() {
+        return actCode;
+    }
+
+    public void setActCode(String actCode) {
+        this.actCode = actCode;
+    }
+
     public String getLevelId() {
         return levelId;
     }
@@ -42,12 +58,12 @@ public class TradeModel extends SessionModel {
         this.levelId = levelId;
     }
 
-    public int getNumCode() {
-        return numCode;
+    public int getCodeNum() {
+        return codeNum;
     }
 
-    public void setNumCode(int numCode) {
-        this.numCode = numCode;
+    public void setCodeNum(int codeNum) {
+        this.codeNum = codeNum;
     }
 
     @Override
@@ -56,7 +72,7 @@ public class TradeModel extends SessionModel {
                 "toAgentEntity=" + toAgentEntity +
                 ", type=" + type +
                 ", levelId=" + levelId +
-                ", numCode=" + numCode +
+                ", codeNum=" + codeNum +
                 '}';
     }
 }

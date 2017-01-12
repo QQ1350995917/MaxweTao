@@ -30,9 +30,9 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     private static final int REQUEST_CODE_TRADE = 1;
 
 
-    private Fragment codeFragment;
+    private ActCodeFragment codeFragment;
     private Fragment agentFragment;
-    private Fragment mineFragment;
+    private MineFragment mineFragment;
 
     @ViewInject(R.id.rg_act_navigate)
     private RadioGroup rg_act_navigate;
@@ -70,6 +70,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
                     fragmentTransaction.add(R.id.fl_act_content, this.codeFragment);
                 } else {
                     fragmentTransaction.show(this.codeFragment);
+                    this.codeFragment.resetCodesStatus();
                 }
                 break;
             case R.id.rb_act_main_agent:
@@ -86,6 +87,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
                     fragmentTransaction.add(R.id.fl_act_content, this.mineFragment);
                 } else {
                     fragmentTransaction.show(this.mineFragment);
+                    this.mineFragment.resetCodesStatus();
                 }
                 break;
             default:

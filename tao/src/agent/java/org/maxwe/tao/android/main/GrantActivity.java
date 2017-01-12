@@ -114,7 +114,7 @@ public class GrantActivity extends BaseActivity implements SwipeRefreshLayout.On
     private void onGrantAction(View view) {
         String cellphone = this.et_act_agent_search_content.getText().toString();
         if (!CellPhoneUtils.isCellphone(cellphone)) {
-            Toast.makeText(this, R.string.string_grant_cellphone, Toast.LENGTH_SHORT).show();
+//            Toast.makeText(this, R.string.string_grant_cellphone, Toast.LENGTH_SHORT).show();
             return;
         }
 
