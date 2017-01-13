@@ -34,6 +34,7 @@
     <string name="string_url_account_mine">/user/mine</string>
     <string name="string_url_account_active">/user/active</string>
     <string name="string_url_meta_smsCode">/meta/smsCode</string>
+    <string name="string_url_version_version">/version/version</string>
 
     <integer name="integer_app_type">1</integer>
 

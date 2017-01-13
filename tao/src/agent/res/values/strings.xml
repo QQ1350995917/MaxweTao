@@ -96,6 +96,7 @@
     <string name="string_url_mate_reject">/mate/reject</string>
     <string name="string_url_mate_leader">/mate/leader</string>
     <string name="string_url_mate_mates">/mate/mates</string>
+    <string name="string_url_version_version">/version/version</string>
 
     <item name="tag_key_1" type="id"></item>
     <item name="tag_key_2" type="id"></item>

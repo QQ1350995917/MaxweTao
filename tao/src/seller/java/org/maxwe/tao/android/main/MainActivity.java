@@ -22,8 +22,10 @@ import org.maxwe.tao.android.account.agent.AgentEntity;
 import org.maxwe.tao.android.account.model.SessionModel;
 import org.maxwe.tao.android.account.user.UserEntity;
 import org.maxwe.tao.android.activity.LoginActivity;
+import org.maxwe.tao.android.activity.VersionActivity;
 import org.maxwe.tao.android.index.IndexFragment;
 import org.maxwe.tao.android.mine.MineFragment;
+import org.maxwe.tao.android.response.IResponse;
 import org.maxwe.tao.android.utils.SharedPreferencesUtils;
 import org.maxwe.tao.android.version.VersionEntity;
 import org.xutils.view.annotation.ContentView;
@@ -176,34 +178,32 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     }
 
     private void onCheckNewVersion() {
-//        VersionEntity currentVersionEntity = new VersionEntity(this.getString(R.string.platform), this.getResources().getInteger(R.integer.type_id), this.getVersionCode());
-//        NetworkManager.requestNewVersion(currentVersionEntity, new NetworkManager.OnRequestCallback() {
-//            @Override
-//            public void onSuccess(Response response) {
-//                if (response.getCode() == IResponse.ResultCode.RC_SUCCESS.getCode()) {
-//                    VersionEntity versionEntity = JSON.parseObject(response.getData(), VersionEntity.class);
-//                    versionCompare(versionEntity);
-//                }
-//            }
-//
-//            @Override
-//            public void onError(Throwable exception, Object object) {
-//                exception.printStackTrace();
-//            }
-//        });
+        VersionEntity versionModel = new VersionEntity(this.getString(R.string.platform), this.getResources().getInteger(R.integer.integer_app_type), this.getVersionCode());
+        String url = this.getString(R.string.string_url_domain) + this.getString(R.string.string_url_version_version);
+        NetworkManager.requestByPost(url, versionModel, new INetWorkManager.OnNetworkCallback() {
+            @Override
+            public void onSuccess(String result) {
+                VersionEntity versionEntity = JSON.parseObject(result, VersionEntity.class);
+                versionCompare(versionEntity);
+            }
+
+            @Override
+            public void onError(Throwable ex, boolean isOnCallback) {
+
+            }
+        });
     }
 
     private void versionCompare(VersionEntity versionEntityFromServer) {
         if (versionEntityFromServer == null) {
             return;
         }
-
-//        VersionEntity currentVersionEntity = new VersionEntity(this.getString(R.string.platform), this.getResources().getInteger(R.integer.type_id), this.getVersionCode());
-//        if (currentVersionEntity.equals(versionEntityFromServer) && versionEntityFromServer.getVersionCode() > currentVersionEntity.getVersionCode()) {
-//            Intent intent = new Intent(MainActivity.this, VersionActivity.class);
-//            intent.putExtra(VersionActivity.KEY_VERSION, versionEntityFromServer);
-//            MainActivity.this.startActivity(intent);
-//        }
+        VersionEntity currentVersionEntity = new VersionEntity(this.getString(R.string.platform), this.getResources().getInteger(R.integer.integer_app_type), this.getVersionCode());
+        if (currentVersionEntity.equals(versionEntityFromServer) && versionEntityFromServer.getVersionCode() > currentVersionEntity.getVersionCode()) {
+            Intent intent = new Intent(MainActivity.this, VersionActivity.class);
+            intent.putExtra(VersionActivity.KEY_VERSION, versionEntityFromServer);
+            MainActivity.this.startActivity(intent);
+        }
     }
 
     protected int getVersionCode() {
