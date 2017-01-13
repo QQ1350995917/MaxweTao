@@ -212,6 +212,7 @@ public class HistoryActivity extends BaseActivity implements SwipeRefreshLayout.
         } catch (Exception e) {
             e.printStackTrace();
             Toast.makeText(this, "请求失败", Toast.LENGTH_SHORT).show();
+            this.srl_act_history_list_container.setRefreshing(false);
         }
     }
 }

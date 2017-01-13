@@ -13,10 +13,18 @@ import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.alibaba.fastjson.JSON;
 
 import org.maxwe.tao.android.BaseFragment;
+import org.maxwe.tao.android.INetWorkManager;
+import org.maxwe.tao.android.NetworkManager;
 import org.maxwe.tao.android.R;
 import org.maxwe.tao.android.account.agent.AgentEntity;
+import org.maxwe.tao.android.account.model.SessionModel;
+import org.maxwe.tao.android.mate.BranchModel;
+import org.maxwe.tao.android.utils.SharedPreferencesUtils;
 import org.xutils.view.annotation.ContentView;
 import org.xutils.view.annotation.Event;
 import org.xutils.view.annotation.ViewInject;
@@ -29,9 +37,9 @@ import java.util.LinkedList;
  * Description: TODO
  */
 @ContentView(R.layout.fragment_agent)
-public class AgentFragment extends BaseFragment implements SwipeRefreshLayout.OnRefreshListener, AbsListView.OnScrollListener, View.OnClickListener {
-    private LinkedList<AgentEntity> historyModelLinkedList = new LinkedList<>();
+public class AgentFragment extends BaseFragment implements SwipeRefreshLayout.OnRefreshListener, AbsListView.OnScrollListener, View.OnClickListener{
 
+    private LinkedList<AgentEntity> agentEntities = new LinkedList<>();
     private class AgentItemAdapter extends BaseAdapter {
         private LayoutInflater layoutInflater;
 
@@ -41,12 +49,12 @@ public class AgentFragment extends BaseFragment implements SwipeRefreshLayout.On
 
         @Override
         public int getCount() {
-            return historyModelLinkedList.size();
+            return agentEntities.size();
         }
 
         @Override
         public Object getItem(int position) {
-            return historyModelLinkedList.get(position);
+            return agentEntities.get(position);
         }
 
         @Override
@@ -57,41 +65,52 @@ public class AgentFragment extends BaseFragment implements SwipeRefreshLayout.On
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
             View inflate = this.layoutInflater.inflate(R.layout.fragment_agent_item, null);
-            TextView bt_frg_agent_item_id = (TextView) inflate.findViewById(R.id.bt_frg_agent_item_id);
-            TextView bt_frg_agent_item_level = (TextView) inflate.findViewById(R.id.bt_frg_agent_item_level);
-            Button bt_frg_agent_item_status = (Button) inflate.findViewById(R.id.bt_frg_agent_item_status);
+            TextView tv_frg_agent_item_id = (TextView) inflate.findViewById(R.id.tv_frg_agent_item_id);
+            TextView tv_frg_agent_item_level = (TextView) inflate.findViewById(R.id.tv_frg_agent_item_level);
+            GrantButton bt_frg_agent_item_status = (GrantButton) inflate.findViewById(R.id.bt_frg_agent_item_status);
 
-            AgentEntity agentEntity = historyModelLinkedList.get(position);
-
-            bt_frg_agent_item_id.setText(agentEntity.getMark());
-            bt_frg_agent_item_level.setText(agentEntity.getLevelId());
-            bt_frg_agent_item_status.setText(agentEntity.getMark());
-
-            bt_frg_agent_item_status.setOnClickListener(AgentFragment.this);
+            AgentEntity agentEntity = agentEntities.get(position);
+            tv_frg_agent_item_id.setText(agentEntity.getMark());
+//            tv_frg_agent_item_level.setText("分销");
+            bt_frg_agent_item_status.setAgentEntity(agentEntity);
             return inflate;
         }
     }
 
+
+    @ViewInject(R.id.tv_act_agent_no_data)
+    private TextView tv_act_agent_no_data;
 
     @ViewInject(R.id.srl_frg_agent_list_container)
     private SwipeRefreshLayout srl_frg_agent_list_container;
     @ViewInject(R.id.lv_frg_agent_list)
     private ListView lv_frg_agent_list;
 
+    private AgentItemAdapter agentItemAdapter = null;
+    private int pageIndex = 0;
+    private static final int pageSize = 20;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = super.onCreateView(inflater, container, savedInstanceState);
-        for (int i = 0; i < 100; i++) {
-            historyModelLinkedList.add(new AgentEntity("QAZWSXEDCRF", "分销"));
-        }
-        this.lv_frg_agent_list.setAdapter(new AgentItemAdapter(this.getContext()));
+        this.srl_frg_agent_list_container.setOnRefreshListener(this);
+        this.srl_frg_agent_list_container.setColorSchemeResources(android.R.color.holo_orange_dark,
+                android.R.color.holo_green_light,
+                android.R.color.holo_orange_light,
+                android.R.color.holo_red_light);
+        this.lv_frg_agent_list.setOnScrollListener(this);
+        this.agentItemAdapter = new AgentItemAdapter(this.getContext());
+        this.lv_frg_agent_list.setAdapter(agentItemAdapter);
+        this.onRequestAgentMates();
         return view;
     }
 
     @Override
     public void onRefresh() {
-        srl_frg_agent_list_container.setRefreshing(false);
+        this.agentEntities.clear();
+        this.pageIndex = 0;
+        this.onRequestAgentMates();
     }
 
     @Override
@@ -104,22 +123,89 @@ public class AgentFragment extends BaseFragment implements SwipeRefreshLayout.On
         if (scrollState == AbsListView.OnScrollListener.SCROLL_STATE_IDLE) {
             // 判断是否滚动到底部
             if (view.getLastVisiblePosition() == view.getCount() - 1) {
-
+                this.pageIndex++;
+                this.onRequestAgentMates();
+                this.srl_frg_agent_list_container.setRefreshing(true);
             }
         }
     }
 
     @Override
     public void onClick(View v) {
-        Intent intent = new Intent(this.getContext(), TradeActivity.class);
-        this.getActivity().startActivity(intent);
-    }
 
+    }
 
     @Event(value = R.id.bt_frg_agent_leader, type = View.OnClickListener.class)
     private void onFindTrunkAgentAction(View view) {
         Intent intent = new Intent(this.getContext(), TrunkActivity.class);
         this.startActivity(intent);
+    }
+
+
+    // 成功返回空数据
+    private void onResponseSuccessEmpty() {
+        this.srl_frg_agent_list_container.setRefreshing(false);
+        if (this.agentEntities.size() == 0) {
+            this.tv_act_agent_no_data.setVisibility(View.VISIBLE);
+        } else {
+            Toast.makeText(this.getContext(), R.string.string_no_more_data, Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    // 成功返回
+    private void onResponseSuccess(LinkedList<AgentEntity> agentEntities) {
+        this.srl_frg_agent_list_container.setRefreshing(false);
+        this.agentEntities.addAll(agentEntities);
+        this.agentItemAdapter.notifyDataSetChanged();
+        this.tv_act_agent_no_data.setVisibility(View.GONE);
+    }
+
+    // 失败
+    private void onResponseError() {
+        this.srl_frg_agent_list_container.setRefreshing(false);
+        if (this.agentEntities.size() == 0) {
+            this.tv_act_agent_no_data.setVisibility(View.VISIBLE);
+        }
+    }
+
+    private void onRequestAgentMates() {
+        this.srl_frg_agent_list_container.setRefreshing(true);
+        try {
+            SessionModel session = SharedPreferencesUtils.getSession(this.getContext());
+            BranchModel branchModel = new BranchModel(session, pageIndex, pageSize);
+            branchModel.setSign(session.getEncryptSing());
+            String url = this.getString(R.string.string_url_domain) + this.getString(R.string.string_url_mate_mates);
+            NetworkManager.requestByPost(url, branchModel, new INetWorkManager.OnNetworkCallback() {
+                @Override
+                public void onSuccess(String result) {
+                    BranchModel responseModel = JSON.parseObject(result, BranchModel.class);
+                    onResponseSuccess(responseModel.getAgentEntities());
+                }
+
+                @Override
+                public void onLoginTimeout(String result) {
+                    onResponseError();
+                    SharedPreferencesUtils.clearSession(AgentFragment.this.getContext());
+                    Toast.makeText(AgentFragment.this.getContext(), R.string.string_toast_timeout, Toast.LENGTH_SHORT).show();
+                }
+
+                @Override
+                public void onEmptyResult(String result) {
+                    onResponseSuccessEmpty();
+                }
+
+                @Override
+                public void onError(Throwable ex, boolean isOnCallback) {
+                    onResponseError();
+                    Toast.makeText(AgentFragment.this.getContext(), R.string.string_toast_network_error, Toast.LENGTH_SHORT).show();
+                }
+
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+            Toast.makeText(this.getActivity(), "请求失败", Toast.LENGTH_SHORT).show();
+            this.srl_frg_agent_list_container.setRefreshing(false);
+        }
     }
 
 }

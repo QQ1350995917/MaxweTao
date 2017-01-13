@@ -4,9 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 
-import org.maxwe.tao.android.Constants;
 import org.maxwe.tao.android.R;
-import org.maxwe.tao.android.account.agent.AgentEntity;
 import org.maxwe.tao.android.account.model.SessionModel;
 
 /**

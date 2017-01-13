@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
@@ -24,8 +24,10 @@
     </RelativeLayout>
 
     <RelativeLayout
+        android:id="@+id/rl_frg_agent_search_container"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/rl_act_history_nav">
         <EditText
             android:id="@+id/et_frg_agent_search_content"
             android:layout_width="match_parent"
@@ -41,11 +43,20 @@
             android:text="@string/string_search"/>
     </RelativeLayout>
 
+    <TextView
+        android:id="@+id/tv_act_agent_no_data"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:layout_below="@+id/rl_frg_agent_search_container"
+        android:text="@string/string_no_data"
+        android:textSize="20dp" />
+
     <android.support.v4.widget.SwipeRefreshLayout
         android:id="@+id/srl_frg_agent_list_container"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
+        android:layout_height="match_parent"
+        android:layout_below="@+id/rl_frg_agent_search_container">
         <ListView
             android:id="@+id/lv_frg_agent_list"
             android:layout_width="match_parent"
@@ -54,4 +65,4 @@
             android:layout_marginRight="10dp"></ListView>
     </android.support.v4.widget.SwipeRefreshLayout>
 
-</LinearLayout>
+</RelativeLayout>

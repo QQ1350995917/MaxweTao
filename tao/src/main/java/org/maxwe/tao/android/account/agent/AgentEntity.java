@@ -11,6 +11,7 @@ import java.io.Serializable;
  */
 public class AgentEntity extends AccountEntity {
     private int reach; // 就代理关系达成一致意见 数据库可为空，1达成，其他不达成
+    private String pMark; // 上级的显示ID
     private String levelId; // 级别的ID
     private int haveCodes; // 累计购买
     private int spendCodes; // 已经消费
@@ -38,6 +39,14 @@ public class AgentEntity extends AccountEntity {
 
     public void setReach(int reach) {
         this.reach = reach;
+    }
+
+    public String getpMark() {
+        return pMark;
+    }
+
+    public void setpMark(String pMark) {
+        this.pMark = pMark;
     }
 
     public String getLevelId() {
@@ -104,10 +113,16 @@ public class AgentEntity extends AccountEntity {
         this.reachTime = reachTime;
     }
 
+
+    public String getCodeStatusString(){
+        return this.getSpendCodes() + "/"  + this.getLeftCodes() + "/" + this.getHaveCodes();
+    }
+
     @Override
     public String toString() {
         return super.toString() + "AgentEntity{" +
                 "reach='" + reach + '\'' +
+                ", pMark='" + pMark + '\'' +
                 ", levelId='" + levelId + '\'' +
                 ", haveCodes=" + haveCodes +
                 ", spendCodes=" + spendCodes +

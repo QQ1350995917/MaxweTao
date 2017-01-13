@@ -2,24 +2,34 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="horizontal"
-    android:background="#FFFFFF">
+    android:minHeight="50dp"
+    android:background="#FFFFFF"
+    android:paddingLeft="10dp"
+    android:paddingRight="10dp">
 
-    <TextView
-        android:id="@+id/bt_frg_agent_item_id"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:orientation="vertical">
+        <TextView
+            android:id="@+id/tv_frg_agent_item_id"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"/>
+        <TextView
+            android:id="@+id/tv_frg_agent_item_level"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"/>
+    </LinearLayout>
 
-    <TextView
-        android:id="@+id/bt_frg_agent_item_level"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"/>
-
-    <Button
+    <org.maxwe.tao.android.agent.GrantButton
         android:id="@+id/bt_frg_agent_item_status"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
         android:layout_alignParentRight="true"/>
 
 </RelativeLayout>

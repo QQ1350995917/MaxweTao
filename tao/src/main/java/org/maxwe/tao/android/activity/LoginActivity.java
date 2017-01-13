@@ -58,7 +58,8 @@ public class LoginActivity extends BaseActivity {
     }
 
     @Event(value = R.id.bt_act_login_action, type = View.OnClickListener.class)
-    private void onLoginAction(View view) {
+    private void onLoginAction(final View view) {
+        view.setClickable(false);
         String cellphone = et_act_login_cellphone.getText().toString();
         String password = et_act_login_password.getText().toString();
         if (TextUtils.isEmpty(cellphone) || !CellPhoneUtils.isCellphone(cellphone)) {
@@ -79,17 +80,25 @@ public class LoginActivity extends BaseActivity {
             public void onSuccess(String result) {
                 SessionModel responseModel = JSON.parseObject(result, SessionModel.class);
                 onLoginSuccessCallback(responseModel);
+                view.setClickable(true);
             }
 
             @Override
             public void onAccessBad(String result) {
                 super.onAccessBad(result);
                 Toast.makeText(LoginActivity.this, R.string.string_toast_account_login_error, Toast.LENGTH_SHORT).show();
+                view.setClickable(true);
             }
 
             @Override
             public void onError(Throwable ex, boolean isOnCallback) {
                 Toast.makeText(LoginActivity.this, R.string.string_toast_network_error, Toast.LENGTH_SHORT).show();
+                view.setClickable(true);
+            }
+
+            @Override
+            public void onOther(int code, String result) {
+                view.setClickable(true);
             }
         });
     }

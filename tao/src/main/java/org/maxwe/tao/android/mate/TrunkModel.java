@@ -9,21 +9,24 @@ import org.maxwe.tao.android.account.model.SessionModel;
  * Description: TODO
  */
 public class TrunkModel extends SessionModel {
-    private String mark;
+    private String targetMark;
     private AgentEntity agentEntity;
 
     public TrunkModel() {
         super();
     }
 
-    @Override
-    public String getMark() {
-        return mark;
+    public TrunkModel(SessionModel sessionModel, String targetMark) {
+        super(sessionModel.getT(), sessionModel.getMark(), sessionModel.getCellphone(), sessionModel.getApt());
+        this.targetMark = targetMark;
     }
 
-    @Override
-    public void setMark(String mark) {
-        this.mark = mark;
+    public String getTargetMark() {
+        return targetMark;
+    }
+
+    public void setTargetMark(String targetMark) {
+        this.targetMark = targetMark;
     }
 
     public AgentEntity getAgentEntity() {
@@ -37,7 +40,7 @@ public class TrunkModel extends SessionModel {
     @Override
     public String toString() {
         return super.toString() + "TrunkModel{" +
-                "mark='" + mark + '\'' +
+                "targetMark='" + targetMark + '\'' +
                 ", agentEntity=" + agentEntity +
                 '}';
     }

@@ -18,6 +18,7 @@ import org.maxwe.tao.android.R;
 import org.maxwe.tao.android.account.agent.AgentEntity;
 import org.maxwe.tao.android.account.model.SessionModel;
 import org.maxwe.tao.android.activity.BaseActivity;
+import org.maxwe.tao.android.mate.TrunkModel;
 import org.maxwe.tao.android.response.IResponse;
 import org.maxwe.tao.android.utils.SharedPreferencesUtils;
 import org.xutils.view.annotation.ContentView;
@@ -31,7 +32,6 @@ import org.xutils.view.annotation.ViewInject;
  */
 @ContentView(R.layout.activity_trunk)
 public class TrunkActivity extends BaseActivity {
-
 
     @ViewInject(R.id.tv_act_trunk_no_data)
     private TextView tv_act_trunk_no_data;
@@ -55,16 +55,23 @@ public class TrunkActivity extends BaseActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        // 数据异常
+        if (AgentApplication.currentAgentEntity == null){
+            showException();
+        }
         // 已经加入成功
         if (AgentApplication.currentAgentEntity != null && AgentApplication.currentAgentEntity.getReach() == 1) {
             showLeaderInfo();
         }
         // 已经申请，但没有审核通过
-        if (AgentApplication.currentAgentEntity != null && AgentApplication.currentAgentEntity.getReach() != 1 && AgentApplication.currentAgentEntity.getpIdTime() != 0) {
-            showReaching("");
+        if (AgentApplication.currentAgentEntity != null && AgentApplication.currentAgentEntity.getReach() != 1 && !TextUtils.isEmpty(AgentApplication.currentAgentEntity.getpMark())) {
+            AgentEntity agentEntity = new AgentEntity();
+            agentEntity.setMark(AgentApplication.currentAgentEntity.getpMark());
+            agentEntity.setReachTime(AgentApplication.currentAgentEntity.getReachTime());
+            showReaching(agentEntity);
         }
         // 没有申请
-        if (AgentApplication.currentAgentEntity != null && AgentApplication.currentAgentEntity.getReach() != 1 && AgentApplication.currentAgentEntity.getpIdTime() == 0){
+        if (AgentApplication.currentAgentEntity != null && AgentApplication.currentAgentEntity.getReach() != 1 && TextUtils.isEmpty(AgentApplication.currentAgentEntity.getpMark())){
             showRequestLeader();
         }
     }
@@ -79,6 +86,12 @@ public class TrunkActivity extends BaseActivity {
         this.onBackPressed();
     }
 
+    private void showException(){
+        this.tv_act_trunk_no_data.setVisibility(View.VISIBLE);
+        this.ll_act_trunk_before_status.setVisibility(View.GONE);
+        this.ll_act_trunk_after_status.setVisibility(View.GONE);
+    }
+
     private void showLeaderInfo() {
         this.tv_act_trunk_no_data.setVisibility(View.GONE);
         this.ll_act_trunk_before_status.setVisibility(View.GONE);
@@ -87,11 +100,14 @@ public class TrunkActivity extends BaseActivity {
         this.tv_act_trunk_leader_level.setText(this.getString(R.string.string_level) + AgentApplication.currentAgentEntity.getLevelId());
     }
 
-    private void showReaching(String mark){
+    private void showReaching(AgentEntity agentEntity){
+        AgentApplication.currentAgentEntity.setReach(0);
+        AgentApplication.currentAgentEntity.setpMark(agentEntity.getMark());
+        AgentApplication.currentAgentEntity.setReachTime(agentEntity.getReachTime());
         this.tv_act_trunk_no_data.setVisibility(View.GONE);
         this.ll_act_trunk_before_status.setVisibility(View.GONE);
         this.ll_act_trunk_after_status.setVisibility(View.VISIBLE);
-        this.tv_act_trunk_leader_id.setText(this.getString(R.string.string_ID) + mark);
+        this.tv_act_trunk_leader_id.setText(this.getString(R.string.string_ID) + agentEntity.getMark());
         this.tv_act_trunk_leader_level.setText(R.string.string_reaching);
     }
 
@@ -102,7 +118,7 @@ public class TrunkActivity extends BaseActivity {
     }
 
     @Event(value = R.id.et_act_trunk_action, type = View.OnClickListener.class)
-    private void onConfirmAction(View view) {
+    private void onBegConfirmAction(View view) {
         String leaderMark = et_act_trunk_leader_mark.getText().toString();
         String password = et_act_trunk_password.getText().toString();
         if (TextUtils.isEmpty(leaderMark)) {
@@ -124,12 +140,13 @@ public class TrunkActivity extends BaseActivity {
         try {
             String url = this.getString(R.string.string_url_domain) + this.getString(R.string.string_url_mate_beg);
             session.setSign(session.getEncryptSing());
-            // TODO 加参数
-            NetworkManager.requestByPost(url, null, new INetWorkManager.OnNetworkCallback() {
+            TrunkModel trunkModel = new TrunkModel(session, leaderMark);
+            trunkModel.setSign(session.getEncryptSing());
+            NetworkManager.requestByPost(url, trunkModel, new INetWorkManager.OnNetworkCallback() {
                 @Override
                 public void onSuccess(String result) {
-                    // TODO 回显返回值
-                    showReaching("");
+                    TrunkModel responseModel = JSON.parseObject(result, TrunkModel.class);
+                    showReaching(responseModel.getAgentEntity());
                 }
 
                 @Override

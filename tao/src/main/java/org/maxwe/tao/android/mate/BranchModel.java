@@ -1,6 +1,6 @@
 package org.maxwe.tao.android.mate;
 
-import org.maxwe.tao.android.account.agent.AgentModel;
+import org.maxwe.tao.android.account.agent.AgentEntity;
 import org.maxwe.tao.android.account.model.SessionModel;
 
 import java.util.LinkedList;
@@ -14,10 +14,16 @@ public class BranchModel extends SessionModel {
     private int total;
     private int pageIndex;
     private int pageSize;
-    private LinkedList<AgentModel> mates;
+    private LinkedList<AgentEntity> agentEntities;
 
     public BranchModel() {
         super();
+    }
+
+    public BranchModel(SessionModel sessionModel,int pageIndex,int pageSize) {
+        super(sessionModel.getT(),sessionModel.getMark(),sessionModel.getCellphone(),sessionModel.getApt());
+        this.pageIndex = pageIndex;
+        this.pageSize = pageSize;
     }
 
     public int getTotal() {
@@ -44,12 +50,12 @@ public class BranchModel extends SessionModel {
         this.pageSize = pageSize;
     }
 
-    public LinkedList<AgentModel> getMates() {
-        return mates;
+    public LinkedList<AgentEntity> getAgentEntities() {
+        return agentEntities;
     }
 
-    public void setMates(LinkedList<AgentModel> mates) {
-        this.mates = mates;
+    public void setAgentEntities(LinkedList<AgentEntity> agentEntities) {
+        this.agentEntities = agentEntities;
     }
 
     @Override

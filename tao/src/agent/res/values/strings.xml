@@ -56,6 +56,7 @@
     <string name="string_no_mark">查无此人</string>
     <string name="string_the_mark_no_reach">您查找的ID尚未得到授权</string>
     <string name="string_reaching">授权处理中...,请稍后</string>
+    <string name="string_grant_new_agent">批准新申请</string>
 
     <!--<string name="string_grant_cellphone_dialog_title1">对</string>-->
     <!--<string name="string_grant_cellphone_dialog_title2">授权</string>-->
@@ -69,7 +70,7 @@
 
 
     <!--<string name="string_agents_no_code">您已经没有授权码了</string>-->
-    <!--<string name="string_result_empty">没有数据</string>-->
+
 
 
     <!--<string name="string_input_grant_code_number">请输入转让授权码数量</string>-->
@@ -95,8 +96,12 @@
     <string name="string_url_mate_beg">/mate/beg</string>
     <string name="string_url_mate_grant">/mate/grant</string>
     <string name="string_url_mate_reject">/mate/reject</string>
+    <string name="string_url_mate_leader">/mate/leader</string>
     <string name="string_url_mate_mates">/mate/mates</string>
 
+    <item name="tag_key_1" type="id"></item>
+    <item name="tag_key_2" type="id"></item>
+    <item name="tag_key_3" type="id"></item>
     <integer name="integer_app_type">2</integer>
 
 </resources>
