@@ -73,7 +73,8 @@ public class MineFragment extends BaseFragment {
     }
 
     @Event(value = R.id.bt_frg_mine_exit, type = View.OnClickListener.class)
-    private void onExitAction(View view) {
+    private void onExitAction(final View view) {
+        view.setClickable(false);
         SessionModel sessionModel = SharedPreferencesUtils.getSession(MineFragment.this.getContext());
         try {
             sessionModel.setSign(sessionModel.getEncryptSing());
@@ -102,8 +103,14 @@ public class MineFragment extends BaseFragment {
                     MineFragment.this.getActivity().startActivity(intent);
                     MineFragment.this.getActivity().finish();
                 }
+
+                @Override
+                public void onOther(int code, String result) {
+                    view.setClickable(true);
+                }
             });
         } catch (Exception e) {
+            view.setClickable(true);
             e.printStackTrace();
             Toast.makeText(MineFragment.this.getContext(), "请求失败", Toast.LENGTH_SHORT).show();
         }

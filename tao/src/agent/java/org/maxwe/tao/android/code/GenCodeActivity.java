@@ -66,12 +66,13 @@ public class GenCodeActivity extends BaseActivity {
 
 
     @Event(value = R.id.et_act_gen_code_confirm, type = View.OnClickListener.class)
-    private void onGenCodeConfirmAction(View view) {
+    private void onGenCodeConfirmAction(final View view) {
         String password = this.et_act_gen_code_password.getText().toString();
         if (TextUtils.isEmpty(password) || password.length() < 6 || password.length() > 12){
             Toast.makeText(GenCodeActivity.this,R.string.string_input_account_password,Toast.LENGTH_SHORT).show();
             return;
         }
+        view.setClickable(false);
         try {
             SessionModel sessionModel = SharedPreferencesUtils.getSession(this);
             TradeModel tradeModel = new TradeModel(sessionModel,1,1);
@@ -92,11 +93,13 @@ public class GenCodeActivity extends BaseActivity {
                 public void onParamsError(String result) {
                     Toast.makeText(GenCodeActivity.this,R.string.string_toast_password_different,Toast.LENGTH_SHORT).show();
                     resetPasswordInput();
+                    view.setClickable(true);
                 }
 
                 @Override
                 public void onAccessBad(String result) {
                     Toast.makeText(GenCodeActivity.this,R.string.string_gen_act_code_forbidden,Toast.LENGTH_SHORT).show();
+                    view.setClickable(true);
                 }
 
                 @Override
@@ -119,9 +122,11 @@ public class GenCodeActivity extends BaseActivity {
                     if (code == IResponse.ResultCode.RC_ACCESS_BAD_2.getCode()){
                         Toast.makeText(GenCodeActivity.this,R.string.string_agent_code_no_enough,Toast.LENGTH_SHORT).show();
                     }
+                    view.setClickable(true);
                 }
             });
         } catch (Exception e) {
+            view.setClickable(true);
             e.printStackTrace();
             Toast.makeText(this, "请求失败", Toast.LENGTH_SHORT).show();
         }

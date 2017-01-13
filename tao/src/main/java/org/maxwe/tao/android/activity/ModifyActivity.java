@@ -50,7 +50,7 @@ public class ModifyActivity extends BaseActivity {
     }
 
     @Event(value = R.id.bt_act_modify, type = View.OnClickListener.class)
-    private void onModifyAction(View view) {
+    private void onModifyAction(final View view) {
         String oldPassword = et_act_modify_old_password.getText().toString();
         String newPassword = et_act_modify_new_password.getText().toString();
         String newPasswordConfirm = et_act_modify_new_password_confirm.getText().toString();
@@ -75,6 +75,7 @@ public class ModifyActivity extends BaseActivity {
             return;
         }
 
+        view.setClickable(false);
         String url = this.getString(R.string.string_url_domain) + this.getString(R.string.string_url_account_password);
         SessionModel sessionModel = SharedPreferencesUtils.getSession(this);
         ModifyModel modifyModel = new ModifyModel(sessionModel, oldPassword, newPassword);
@@ -94,6 +95,7 @@ public class ModifyActivity extends BaseActivity {
                 @Override
                 public void onAccessBad(String result) {
                     Toast.makeText(ModifyActivity.this, R.string.string_toast_old_password_error, Toast.LENGTH_SHORT).show();
+                    view.setClickable(true);
                 }
 
                 @Override
@@ -104,15 +106,18 @@ public class ModifyActivity extends BaseActivity {
                 @Override
                 public void onError(Throwable ex, boolean isOnCallback) {
                     Toast.makeText(ModifyActivity.this, R.string.string_toast_network_error, Toast.LENGTH_SHORT).show();
+                    view.setClickable(true);
                 }
 
                 @Override
                 public void onOther(int code, String result) {
                     Toast.makeText(ModifyActivity.this, R.string.string_toast_reset_password_error, Toast.LENGTH_SHORT).show();
+                    view.setClickable(true);
                 }
             });
         } catch (Exception e) {
             e.printStackTrace();
+            view.setClickable(true);
             Toast.makeText(this, "请求失败", Toast.LENGTH_SHORT).show();
         }
     }

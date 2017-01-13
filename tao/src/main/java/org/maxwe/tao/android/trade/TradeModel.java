@@ -1,6 +1,5 @@
 package org.maxwe.tao.android.trade;
 
-import org.maxwe.tao.android.account.agent.AgentEntity;
 import org.maxwe.tao.android.account.model.SessionModel;
 
 /**
@@ -9,7 +8,7 @@ import org.maxwe.tao.android.account.model.SessionModel;
  * Description: TODO
  */
 public class TradeModel extends SessionModel {
-    private AgentEntity toAgentEntity;
+    private String targetMark;
     private int type;
     private String actCode;
     private String levelId;
@@ -26,12 +25,12 @@ public class TradeModel extends SessionModel {
     }
 
 
-    public AgentEntity getToAgentEntity() {
-        return toAgentEntity;
+    public String getTargetMark() {
+        return targetMark;
     }
 
-    public void setToAgentEntity(AgentEntity toAgentEntity) {
-        this.toAgentEntity = toAgentEntity;
+    public void setTargetMark(String targetMark) {
+        this.targetMark = targetMark;
     }
 
     public int getType() {
@@ -69,7 +68,7 @@ public class TradeModel extends SessionModel {
     @Override
     public String toString() {
         return super.toString() + "TradeModel{" +
-                "toAgentEntity=" + toAgentEntity +
+                "targetMark=" + targetMark +
                 ", type=" + type +
                 ", levelId=" + levelId +
                 ", codeNum=" + codeNum +

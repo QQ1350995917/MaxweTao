@@ -27,6 +27,7 @@
         android:id="@+id/rl_frg_agent_search_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:visibility="gone"
         android:layout_below="@+id/rl_act_history_nav">
         <EditText
             android:id="@+id/et_frg_agent_search_content"
@@ -48,7 +49,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="center"
-        android:layout_below="@+id/rl_frg_agent_search_container"
+        android:layout_below="@+id/rl_act_history_nav"
         android:text="@string/string_no_data"
         android:textSize="20dp" />
 
@@ -56,7 +57,7 @@
         android:id="@+id/srl_frg_agent_list_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/rl_frg_agent_search_container">
+        android:layout_below="@+id/rl_act_history_nav">
         <ListView
             android:id="@+id/lv_frg_agent_list"
             android:layout_width="match_parent"

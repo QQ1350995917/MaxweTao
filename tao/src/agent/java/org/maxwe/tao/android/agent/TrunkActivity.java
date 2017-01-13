@@ -118,7 +118,7 @@ public class TrunkActivity extends BaseActivity {
     }
 
     @Event(value = R.id.et_act_trunk_action, type = View.OnClickListener.class)
-    private void onBegConfirmAction(View view) {
+    private void onBegConfirmAction(final View view) {
         String leaderMark = et_act_trunk_leader_mark.getText().toString();
         String password = et_act_trunk_password.getText().toString();
         if (TextUtils.isEmpty(leaderMark)) {
@@ -137,6 +137,7 @@ public class TrunkActivity extends BaseActivity {
             return;
         }
 
+        view.setClickable(false);
         try {
             String url = this.getString(R.string.string_url_domain) + this.getString(R.string.string_url_mate_beg);
             session.setSign(session.getEncryptSing());
@@ -147,22 +148,26 @@ public class TrunkActivity extends BaseActivity {
                 public void onSuccess(String result) {
                     TrunkModel responseModel = JSON.parseObject(result, TrunkModel.class);
                     showReaching(responseModel.getAgentEntity());
+                    view.setClickable(true);
                 }
 
                 @Override
                 public void onEmptyResult(String result) {
                     Toast.makeText(TrunkActivity.this, R.string.string_no_mark, Toast.LENGTH_SHORT).show();
+                    view.setClickable(true);
                 }
 
                 @Override
                 public void onLoginTimeout(String result) {
                     Toast.makeText(TrunkActivity.this, R.string.string_toast_timeout, Toast.LENGTH_SHORT).show();
                     SharedPreferencesUtils.clearSession(TrunkActivity.this);
+                    view.setClickable(true);
                 }
 
                 @Override
                 public void onError(Throwable ex, boolean isOnCallback) {
                     Toast.makeText(TrunkActivity.this, R.string.string_toast_network_error, Toast.LENGTH_SHORT).show();
+                    view.setClickable(true);
                 }
 
                 @Override
@@ -170,9 +175,11 @@ public class TrunkActivity extends BaseActivity {
                     if (code == IResponse.ResultCode.RC_ACCESS_BAD_2.getCode()){
                         Toast.makeText(TrunkActivity.this, R.string.string_the_mark_no_reach, Toast.LENGTH_SHORT).show();
                     }
+                    view.setClickable(true);
                 }
             });
         } catch (Exception e) {
+            view.setClickable(true);
             e.printStackTrace();
             Toast.makeText(this, "请求失败", Toast.LENGTH_SHORT).show();
         }

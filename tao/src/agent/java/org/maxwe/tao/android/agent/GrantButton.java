@@ -58,6 +58,7 @@ public class GrantButton extends Button implements View.OnClickListener {
             return;
         }
         if (this.agentEntity.getReach() != 1) {
+            this.setClickable(false);
             onRequestGrantAgent(this.agentEntity);
         } else {
             onTradeCode(this.agentEntity);
@@ -67,6 +68,11 @@ public class GrantButton extends Button implements View.OnClickListener {
     private void onRequestGrantSuccess() {
         this.agentEntity.setReach(1);
         this.setText(agentEntity.getCodeStatusString());
+        this.setClickable(true);
+    }
+
+    private void onRequestGrantFail() {
+        this.setClickable(true);
     }
 
     private void onRequestGrantAgent(final AgentEntity agentEntity) {
@@ -86,15 +92,18 @@ public class GrantButton extends Button implements View.OnClickListener {
                 public void onLoginTimeout(String result) {
                     SharedPreferencesUtils.clearSession(GrantButton.this.getContext());
                     Toast.makeText(GrantButton.this.getContext(), R.string.string_toast_timeout, Toast.LENGTH_SHORT).show();
+                    onRequestGrantFail();
                 }
 
                 @Override
                 public void onError(Throwable ex, boolean isOnCallback) {
                     Toast.makeText(GrantButton.this.getContext(), R.string.string_toast_network_error, Toast.LENGTH_SHORT).show();
+                    onRequestGrantFail();
                 }
 
             });
         } catch (Exception e) {
+            this.setClickable(true);
             e.printStackTrace();
             Toast.makeText(GrantButton.this.getContext(), "请求失败", Toast.LENGTH_SHORT).show();
         }

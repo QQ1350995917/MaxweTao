@@ -50,6 +50,9 @@ public class AccessActivity extends BaseActivity {
     //输入激活码界面的输入框
     @ViewInject(R.id.et_act_access_act_code)
     private EditText et_act_access_act_code;
+    //输入密码
+    @ViewInject(R.id.et_act_access_act_password)
+    private EditText et_act_access_act_password;
 
     private UserEntity userEntity = null;
 
@@ -148,12 +151,19 @@ public class AccessActivity extends BaseActivity {
             return;
         }
 
+        String password = et_act_access_act_password.getText().toString();
+        if (TextUtils.isEmpty(password) || password.length() < 6 || password.length() > 12) {
+            Toast.makeText(AccessActivity.this, R.string.string_input_account_password, Toast.LENGTH_SHORT).show();
+            return;
+        }
+
         onRequestingView();
 
         try {
             String url = this.getString(R.string.string_url_domain) + this.getString(R.string.string_url_account_active);
             SessionModel session = SharedPreferencesUtils.getSession(this);
             ActiveModel activeModel = new ActiveModel(session, actCode);
+            activeModel.setVerification(password);
             activeModel.setSign(session.getEncryptSing());
             NetworkManager.requestByPost(url, activeModel, new INetWorkManager.OnNetworkCallback() {
                 @Override
@@ -161,6 +171,12 @@ public class AccessActivity extends BaseActivity {
                     ActiveModel responseModel = JSON.parseObject(result, ActiveModel.class);
                     onResponseActSuccess(responseModel.getActCode());
                     Toast.makeText(AccessActivity.this, R.string.string_act_success, Toast.LENGTH_SHORT).show();
+                }
+
+                @Override
+                public void onParamsError(String result) {
+                    Toast.makeText(AccessActivity.this, R.string.string_act_error, Toast.LENGTH_SHORT).show();
+                    onResponseReAct(AccessActivity.this.getString(R.string.string_act_error));
                 }
 
                 @Override
@@ -189,6 +205,37 @@ public class AccessActivity extends BaseActivity {
 
     }
 
+    @Event(value = R.id.bt_act_access_logout, type = View.OnClickListener.class)
+    private void onLogoutAction(View view) {
+        try {
+            SessionModel sessionModel = SharedPreferencesUtils.getSession(this);
+            sessionModel.setSign(sessionModel.getEncryptSing());
+            String url = this.getString(R.string.string_url_domain) + this.getString(R.string.string_url_account_logout);
+            NetworkManager.requestByPost(url, sessionModel, new INetWorkManager.OnNetworkCallback() {
+                @Override
+                public void onSuccess(String result) {
+                    SharedPreferencesUtils.clearSession(AccessActivity.this);
+                    onReopenLaterAction(null);
+                }
+
+                @Override
+                public void onLoginTimeout(String result) {
+                    SharedPreferencesUtils.clearSession(AccessActivity.this);
+                    onReopenLaterAction(null);
+                }
+
+                @Override
+                public void onError(Throwable ex, boolean isOnCallback) {
+                    SharedPreferencesUtils.clearSession(AccessActivity.this);
+                    onReopenLaterAction(null);
+                }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+            Toast.makeText(this, "请求失败", Toast.LENGTH_SHORT).show();
+        }
+    }
+
     @Event(value = R.id.bt_act_access_goto_login, type = View.OnClickListener.class)
     private void onReLoginAction(View view) {
         AccessActivity.this.setResult(MainActivity.REQUEST_CODE_LOGIN_TIME_OUT);
@@ -200,5 +247,4 @@ public class AccessActivity extends BaseActivity {
         AccessActivity.this.setResult(LoginActivity.RESPONSE_CODE_FAIL);
         AccessActivity.this.finish();
     }
-
 }

@@ -24,11 +24,7 @@
     <string name="string_trade_level1">总代（500码起）</string>
     <string name="string_trade_level2">一级（50码起）</string>
     <string name="string_trade_level3">分销（5码起）</string>
-    <string name="string_alert">⚠️</string>
-    <string name="string_doing_trade_alert1">您正在向</string>
-    <string name="string_doing_trade_alert2">转让</string>
-    <string name="string_doing_trade_alert3">个授权码，</string>
-    <string name="string_doing_trade_alert4">该操作将会消耗掉您的授权码量。该操作完成后不可撤销。</string>
+    <string name="string_doing_trade_alert">⚠您正在向转让授权码，该操作将会消耗掉您的授权码量。该操不可撤销。</string>
     <string name="string_access">授权</string>
     <string name="string_input_trade_number">请输入转码数量</string>
     <string name="string_access_trade">授权转让</string>
@@ -57,6 +53,9 @@
     <string name="string_the_mark_no_reach">您查找的ID尚未得到授权</string>
     <string name="string_reaching">授权处理中...,请稍后</string>
     <string name="string_grant_new_agent">批准新申请</string>
+    <string name="string_input_grant_code_number">请输入转让授权码数量</string>
+    <string name="string_input_grant_code_number_integer">授权码数量必须为整数</string>
+    <string name="string_input_trade_success">转让成功</string>
 
     <!--<string name="string_grant_cellphone_dialog_title1">对</string>-->
     <!--<string name="string_grant_cellphone_dialog_title2">授权</string>-->
@@ -73,11 +72,10 @@
 
 
 
-    <!--<string name="string_input_grant_code_number">请输入转让授权码数量</string>-->
-    <!--<string name="string_input_grant_code_number_integer">授权码数量必须为整数</string>-->
+
     <!--<string name="string_input_grant_data_error">数据错误，请重新搜索</string>-->
     <!--<string name="string_input_trade_fail">转让失败</string>-->
-    <!--<string name="string_input_trade_success">转让成功</string>-->
+
 
 
     <string name="string_url_domain">http://192.168.13.138:8080/tao</string>

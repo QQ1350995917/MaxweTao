@@ -75,13 +75,12 @@ public class LostActivity extends BaseActivity {
     }
 
     @Event(value = R.id.bt_act_cellphone_code, type = View.OnClickListener.class)
-    private void onCellphoneCodeAction(View view) {
+    private void onCellphoneCodeAction(final View view) {
         String cellphone = et_act_lost_cellphone.getText().toString();
         if (TextUtils.isEmpty(cellphone) || !CellPhoneUtils.isCellphone(cellphone)) {
             Toast.makeText(this, this.getString(R.string.string_toast_cellphone), Toast.LENGTH_SHORT).show();
             return;
         }
-
         this.cellphoneOfGetCode = cellphone;
         String url = this.getString(R.string.string_url_domain) + this.getString(R.string.string_url_meta_smsCode);
         SMSModel smsModel = new SMSModel(this.cellphoneOfGetCode);
@@ -94,6 +93,10 @@ public class LostActivity extends BaseActivity {
             @Override
             public void onError(Throwable ex, boolean isOnCallback) {
                 Toast.makeText(LostActivity.this, R.string.string_toast_network_error, Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onOther(int code, String result) {
             }
         });
 
@@ -115,7 +118,7 @@ public class LostActivity extends BaseActivity {
     }
 
     @Event(value = R.id.bt_act_lost, type = View.OnClickListener.class)
-    private void onLostAction(View view) {
+    private void onLostAction(final View view) {
         String cellphone = et_act_lost_cellphone.getText().toString();
         String cellphoneCode = et_act_lost_cellphone_code.getText().toString();
         String password = et_act_lost_password.getText().toString();
@@ -150,6 +153,7 @@ public class LostActivity extends BaseActivity {
             return;
         }
 
+        view.setClickable(false);
         String url = this.getString(R.string.string_url_domain) + this.getString(R.string.string_url_account_lost);
         RegisterModel registerModel = new RegisterModel(this.cellphoneOfGetCode,cellphoneCode,password);
         registerModel.setApt(this.getResources().getInteger(R.integer.integer_app_type));
@@ -172,11 +176,13 @@ public class LostActivity extends BaseActivity {
             @Override
             public void onError(Throwable ex, boolean isOnCallback) {
                 Toast.makeText(LostActivity.this, R.string.string_toast_network_error, Toast.LENGTH_SHORT).show();
+                view.setClickable(true);
             }
 
             @Override
             public void onOther(int code, String result) {
                 Toast.makeText(LostActivity.this, R.string.string_toast_reset_password_error, Toast.LENGTH_SHORT).show();
+                view.setClickable(true);
             }
         });
     }

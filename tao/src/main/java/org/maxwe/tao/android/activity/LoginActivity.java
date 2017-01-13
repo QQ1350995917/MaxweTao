@@ -59,7 +59,6 @@ public class LoginActivity extends BaseActivity {
 
     @Event(value = R.id.bt_act_login_action, type = View.OnClickListener.class)
     private void onLoginAction(final View view) {
-        view.setClickable(false);
         String cellphone = et_act_login_cellphone.getText().toString();
         String password = et_act_login_password.getText().toString();
         if (TextUtils.isEmpty(cellphone) || !CellPhoneUtils.isCellphone(cellphone)) {
@@ -71,6 +70,7 @@ public class LoginActivity extends BaseActivity {
             Toast.makeText(this, this.getString(R.string.string_input_account_password), Toast.LENGTH_SHORT).show();
             return;
         }
+        view.setClickable(false);
         SharedPreferencesUtils.saveLastLoginCellphone(this, cellphone);
         String url = this.getString(R.string.string_url_domain) + this.getString(R.string.string_url_account_login);
         LoginModel loginModel = new LoginModel(cellphone, password);

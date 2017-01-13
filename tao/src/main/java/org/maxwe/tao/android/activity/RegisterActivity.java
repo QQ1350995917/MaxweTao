@@ -77,7 +77,7 @@ public class RegisterActivity extends BaseActivity {
     }
 
     @Event(value = R.id.bt_act_cellphone_code, type = View.OnClickListener.class)
-    private void onCellphoneCodeAction(View view) {
+    private void onCellphoneCodeAction(final View view) {
         String cellphone = et_act_register_cellphone.getText().toString();
         if (TextUtils.isEmpty(cellphone) || !CellPhoneUtils.isCellphone(cellphone)) {
             Toast.makeText(this, this.getString(R.string.string_toast_cellphone), Toast.LENGTH_SHORT).show();
@@ -85,7 +85,6 @@ public class RegisterActivity extends BaseActivity {
         }
 
         this.cellphoneOfGetCode = cellphone;
-
         String url = this.getString(R.string.string_url_domain) + this.getString(R.string.string_url_meta_smsCode);
         SMSModel smsModel = new SMSModel(this.cellphoneOfGetCode);
         NetworkManager.requestByPost(url, smsModel, new NetworkManager.OnNetworkCallback() {
@@ -98,7 +97,6 @@ public class RegisterActivity extends BaseActivity {
             public void onError(Throwable ex, boolean isOnCallback) {
                 Toast.makeText(RegisterActivity.this, R.string.string_toast_network_error, Toast.LENGTH_SHORT).show();
             }
-
         });
         this.bt_act_cellphone_code.setClickable(false);
         final int delay = DELAY;
@@ -118,7 +116,7 @@ public class RegisterActivity extends BaseActivity {
     }
 
     @Event(value = R.id.bt_act_register, type = View.OnClickListener.class)
-    private void onRegisterAction(View view) {
+    private void onRegisterAction(final View view) {
         String cellphone = et_act_register_cellphone.getText().toString();
         String cellphoneCode = et_act_register_cellphone_code.getText().toString();
         String password = et_act_register_password.getText().toString();
@@ -152,7 +150,7 @@ public class RegisterActivity extends BaseActivity {
             Toast.makeText(this, this.getString(R.string.string_toast_password_different), Toast.LENGTH_SHORT).show();
             return;
         }
-
+        view.setClickable(false);
         String url = this.getString(R.string.string_url_domain) + this.getString(R.string.string_url_account_register);
         RegisterModel registerModel = new RegisterModel(this.cellphoneOfGetCode,cellphoneCode,password);
         registerModel.setApt(this.getResources().getInteger(R.integer.integer_app_type));
@@ -175,11 +173,13 @@ public class RegisterActivity extends BaseActivity {
             @Override
             public void onError(Throwable ex, boolean isOnCallback) {
                 Toast.makeText(RegisterActivity.this, R.string.string_toast_network_error, Toast.LENGTH_SHORT).show();
+                view.setClickable(true);
             }
 
             @Override
             public void onOther(int code, String result) {
                 Toast.makeText(RegisterActivity.this, R.string.string_toast_register_error, Toast.LENGTH_SHORT).show();
+                view.setClickable(true);
             }
         });
     }
