@@ -11,7 +11,6 @@ public class TradeModel extends SessionModel {
     private String targetMark;
     private int type;
     private String actCode;
-    private String levelId;
     private int codeNum;
 
     public TradeModel() {
@@ -49,14 +48,6 @@ public class TradeModel extends SessionModel {
         this.actCode = actCode;
     }
 
-    public String getLevelId() {
-        return levelId;
-    }
-
-    public void setLevelId(String levelId) {
-        this.levelId = levelId;
-    }
-
     public int getCodeNum() {
         return codeNum;
     }
@@ -70,7 +61,6 @@ public class TradeModel extends SessionModel {
         return super.toString() + "TradeModel{" +
                 "targetMark=" + targetMark +
                 ", type=" + type +
-                ", levelId=" + levelId +
                 ", codeNum=" + codeNum +
                 '}';
     }

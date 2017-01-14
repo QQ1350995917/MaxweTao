@@ -22,6 +22,7 @@ import org.maxwe.tao.android.INetWorkManager;
 import org.maxwe.tao.android.NetworkManager;
 import org.maxwe.tao.android.R;
 import org.maxwe.tao.android.account.agent.AgentEntity;
+import org.maxwe.tao.android.account.agent.AgentModel;
 import org.maxwe.tao.android.account.model.SessionModel;
 import org.maxwe.tao.android.mate.BranchModel;
 import org.maxwe.tao.android.utils.SharedPreferencesUtils;
@@ -39,7 +40,7 @@ import java.util.LinkedList;
 @ContentView(R.layout.fragment_agent)
 public class AgentFragment extends BaseFragment implements SwipeRefreshLayout.OnRefreshListener, AbsListView.OnScrollListener, View.OnClickListener{
 
-    private LinkedList<AgentEntity> agentEntities = new LinkedList<>();
+    private LinkedList<AgentModel> agentEntities = new LinkedList<>();
     private class AgentItemAdapter extends BaseAdapter {
         private LayoutInflater layoutInflater;
 
@@ -68,11 +69,12 @@ public class AgentFragment extends BaseFragment implements SwipeRefreshLayout.On
             TextView tv_frg_agent_item_id = (TextView) inflate.findViewById(R.id.tv_frg_agent_item_id);
             TextView tv_frg_agent_item_level = (TextView) inflate.findViewById(R.id.tv_frg_agent_item_level);
             GrantButton bt_frg_agent_item_status = (GrantButton) inflate.findViewById(R.id.bt_frg_agent_item_status);
-
-            AgentEntity agentEntity = agentEntities.get(position);
-            tv_frg_agent_item_id.setText(agentEntity.getMark());
-//            tv_frg_agent_item_level.setText("分销");
-            bt_frg_agent_item_status.setAgentEntity(agentEntity);
+            AgentModel agentModel = agentEntities.get(position);
+            tv_frg_agent_item_id.setText("ID:" + agentModel.getAgentEntity().getMark());
+            if (agentModel.getLevelEntity() != null){
+                tv_frg_agent_item_level.setText(agentModel.getLevelEntity().getName());
+            }
+            bt_frg_agent_item_status.setAgentEntity(agentModel);
             return inflate;
         }
     }
@@ -153,7 +155,7 @@ public class AgentFragment extends BaseFragment implements SwipeRefreshLayout.On
     }
 
     // 成功返回
-    private void onResponseSuccess(LinkedList<AgentEntity> agentEntities) {
+    private void onResponseSuccess(LinkedList<AgentModel> agentEntities) {
         this.srl_frg_agent_list_container.setRefreshing(false);
         this.agentEntities.addAll(agentEntities);
         this.agentItemAdapter.notifyDataSetChanged();

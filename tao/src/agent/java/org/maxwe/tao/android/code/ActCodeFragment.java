@@ -21,8 +21,9 @@ import org.maxwe.tao.android.INetWorkManager;
 import org.maxwe.tao.android.NetworkManager;
 import org.maxwe.tao.android.R;
 import org.maxwe.tao.android.account.agent.AgentEntity;
+import org.maxwe.tao.android.account.agent.AgentModel;
 import org.maxwe.tao.android.account.model.SessionModel;
-import org.maxwe.tao.android.main.MainActivity;
+import org.maxwe.tao.android.agent.TrunkActivity;
 import org.maxwe.tao.android.trade.TradeModel;
 import org.maxwe.tao.android.utils.SharedPreferencesUtils;
 import org.xutils.view.annotation.ContentView;
@@ -81,9 +82,10 @@ public class ActCodeFragment extends BaseFragment {
 
     // 成功生成一个激活码回显到界面中
     private void onGenCodeSuccess(TradeModel tradeModel) {
-        if (AgentApplication.currentAgentEntity != null) {
-            AgentApplication.currentAgentEntity.setSpendCodes(AgentApplication.currentAgentEntity.getSpendCodes() + 1);
-            AgentApplication.currentAgentEntity.setLeftCodes(AgentApplication.currentAgentEntity.getLeftCodes() - 1);
+        if (AgentApplication.currentAgentModel != null) {
+            AgentEntity agentEntity = AgentApplication.currentAgentModel.getAgentEntity();
+            agentEntity.setSpendCodes(agentEntity.getSpendCodes() + 1);
+            agentEntity.setLeftCodes(agentEntity.getLeftCodes() - 1);
         }
         this.ll_frg_code_gen.setVisibility(View.VISIBLE);
         this.tv_frg_code_gen_display.setText(tradeModel.getActCode());
@@ -91,27 +93,33 @@ public class ActCodeFragment extends BaseFragment {
     }
 
     public void resetCodesStatus() {
-        if (AgentApplication.currentAgentEntity != null) {
-            this.tv_frg_code_number.setText(
-                    AgentApplication.currentAgentEntity.getSpendCodes() + "/" +
-                            AgentApplication.currentAgentEntity.getLeftCodes() + "/" +
-                            AgentApplication.currentAgentEntity.getHaveCodes()
-            );
+        if (AgentApplication.currentAgentModel != null) {
+            if (AgentApplication.currentAgentModel.getLevelEntity() != null) {
+                this.tv_frg_code_level_name.setText(AgentApplication.currentAgentModel.getLevelEntity().getName());
+            }
+            if (AgentApplication.currentAgentModel.getAgentEntity() != null) {
+                this.tv_frg_code_number.setText(
+                        AgentApplication.currentAgentModel.getAgentEntity().getSpendCodes() + "/" +
+                                AgentApplication.currentAgentModel.getAgentEntity().getLeftCodes() + "/" +
+                                AgentApplication.currentAgentModel.getAgentEntity().getHaveCodes()
+                );
+            }
+
         } else {
             this.tv_frg_code_number.setText("0/0/0");
         }
     }
 
     // 显示已经激活的显示状态（默认激活）
-    private void showReachView(AgentEntity responseModel) {
-        AgentApplication.currentAgentEntity = responseModel;
+    private void showReachView(AgentModel responseModel) {
+        AgentApplication.currentAgentModel = responseModel;
         this.bt_frg_code_active_action.setVisibility(View.INVISIBLE);
         resetCodesStatus();
     }
 
     // 显示未激活的显示状态（默认激活）
-    private void showUnReachView(AgentEntity responseModel) {
-        AgentApplication.currentAgentEntity = responseModel;
+    private void showUnReachView(AgentModel responseModel) {
+        AgentApplication.currentAgentModel = responseModel;
         this.bt_frg_code_active_action.setVisibility(View.VISIBLE);
     }
 
@@ -125,7 +133,7 @@ public class ActCodeFragment extends BaseFragment {
     // 一键生成授权码
     @Event(value = R.id.bt_frg_code_click_gen_code, type = View.OnClickListener.class)
     private void onGenCodeAction(View view) {
-        if (AgentApplication.currentAgentEntity == null || AgentApplication.currentAgentEntity.getReach() != 1) {
+        if (AgentApplication.currentAgentModel == null || AgentApplication.currentAgentModel.getAgentEntity().getReach() != 1) {
             Toast.makeText(this.getContext(), R.string.string_your_account_need_active, Toast.LENGTH_SHORT).show();
             return;
         }
@@ -145,7 +153,8 @@ public class ActCodeFragment extends BaseFragment {
     // 点击激活账户
     @Event(value = R.id.bt_frg_code_active_action, type = View.OnClickListener.class)
     private void onActiveAction(View view) {
-
+        Intent intent = new Intent(this.getContext(), TrunkActivity.class);
+        this.startActivity(intent);
     }
 
     private void onRequestMineInfo() {
@@ -156,8 +165,8 @@ public class ActCodeFragment extends BaseFragment {
             NetworkManager.requestByPost(url, session, new INetWorkManager.OnNetworkCallback() {
                 @Override
                 public void onSuccess(String result) {
-                    AgentEntity responseModel = JSON.parseObject(result, AgentEntity.class);
-                    if (responseModel.getReach() != 1) {
+                    AgentModel responseModel = JSON.parseObject(result, AgentModel.class);
+                    if (responseModel.getAgentEntity().getReach() != 1) {
                         showUnReachView(responseModel);
                     } else {
                         showReachView(responseModel);

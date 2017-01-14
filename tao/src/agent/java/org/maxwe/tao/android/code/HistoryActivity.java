@@ -1,5 +1,7 @@
 package org.maxwe.tao.android.code;
 
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -41,9 +43,11 @@ public class HistoryActivity extends BaseActivity implements SwipeRefreshLayout.
 
     private class HistoryItemAdapter extends BaseAdapter {
         private LayoutInflater layoutInflater;
+        private Context context;
 
         public HistoryItemAdapter(Context context) {
             this.layoutInflater = LayoutInflater.from(context);
+            this.context = context;
         }
 
         @Override
@@ -65,18 +69,28 @@ public class HistoryActivity extends BaseActivity implements SwipeRefreshLayout.
         public View getView(int position, View convertView, ViewGroup parent) {
             View inflate = this.layoutInflater.inflate(R.layout.activity_history_item, null);
             TextView tv_act_history_item_time = (TextView) inflate.findViewById(R.id.tv_act_history_item_time);
-            TextView tv_act_history_item_number = (TextView) inflate.findViewById(R.id.tv_act_history_item_number);
+            final TextView tv_act_history_item_number = (TextView) inflate.findViewById(R.id.tv_act_history_item_number);
             TextView tv_act_history_item_to_id = (TextView) inflate.findViewById(R.id.tv_act_history_item_to_id);
-            TextView tv_act_history_item_status = (TextView) inflate.findViewById(R.id.tv_act_history_item_status);
             HistoryEntity historyEntity = historyEntityLinkedList.get(position);
             tv_act_history_item_time.setText(historyEntity.getSwapTimeString());
             if (historyEntity.getType() == 1) {
                 tv_act_history_item_number.setText(historyEntity.getActCode());
+                if (historyEntity.getToMark() == null) {
+                    tv_act_history_item_number.setClickable(true);
+                    tv_act_history_item_number.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            ClipboardManager clipboardManager = (ClipboardManager) HistoryItemAdapter.this.context.getSystemService(Context.CLIPBOARD_SERVICE);
+                            String code = tv_act_history_item_number.getText().toString();
+                            clipboardManager.setPrimaryClip(ClipData.newPlainText(null, code));
+                            Toast.makeText(HistoryItemAdapter.this.context, R.string.string_copy_success, Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                }
             } else {
                 tv_act_history_item_number.setText(historyEntity.getCodeNum() + "");
             }
-            tv_act_history_item_to_id.setText(historyEntity.getToId());
-            tv_act_history_item_status.setText(historyEntity.getToId());
+            tv_act_history_item_to_id.setText(historyEntity.getToMark());
             return inflate;
         }
     }
@@ -207,7 +221,6 @@ public class HistoryActivity extends BaseActivity implements SwipeRefreshLayout.
                     onResponseError();
                     Toast.makeText(HistoryActivity.this, R.string.string_toast_network_error, Toast.LENGTH_SHORT).show();
                 }
-
             });
         } catch (Exception e) {
             e.printStackTrace();

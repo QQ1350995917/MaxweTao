@@ -11,7 +11,7 @@ import org.maxwe.tao.android.Constants;
 import org.maxwe.tao.android.INetWorkManager;
 import org.maxwe.tao.android.NetworkManager;
 import org.maxwe.tao.android.R;
-import org.maxwe.tao.android.account.agent.AgentEntity;
+import org.maxwe.tao.android.account.agent.AgentModel;
 import org.maxwe.tao.android.account.model.SessionModel;
 import org.maxwe.tao.android.mate.TrunkModel;
 import org.maxwe.tao.android.utils.SharedPreferencesUtils;
@@ -22,7 +22,7 @@ import org.maxwe.tao.android.utils.SharedPreferencesUtils;
  * Description: TODO
  */
 public class GrantButton extends Button implements View.OnClickListener {
-    private AgentEntity agentEntity;
+    private AgentModel agentModel;
 
     public GrantButton(Context context) {
         super(context);
@@ -43,31 +43,31 @@ public class GrantButton extends Button implements View.OnClickListener {
         this.setOnClickListener(this);
     }
 
-    public void setAgentEntity(AgentEntity agentEntity) {
-        this.agentEntity = agentEntity;
-        if (agentEntity.getReach() != 1) {
+    public void setAgentEntity(AgentModel agentEntity) {
+        this.agentModel = agentEntity;
+        if (agentEntity.getAgentEntity().getReach() != 1) {
             this.setText(R.string.string_grant_new_agent);
         } else {
-            this.setText(agentEntity.getCodeStatusString());
+            this.setText(agentEntity.getAgentEntity().getCodeStatusString());
         }
     }
 
     @Override
     public void onClick(View v) {
-        if (this.agentEntity == null) {
+        if (this.agentModel == null) {
             return;
         }
-        if (this.agentEntity.getReach() != 1) {
+        if (this.agentModel.getAgentEntity().getReach() != 1) {
             this.setClickable(false);
-            onRequestGrantAgent(this.agentEntity);
+            onRequestGrantAgent(this.agentModel);
         } else {
-            onTradeCode(this.agentEntity);
+            onTradeCode(this.agentModel);
         }
     }
 
     private void onRequestGrantSuccess() {
-        this.agentEntity.setReach(1);
-        this.setText(agentEntity.getCodeStatusString());
+        this.agentModel.getAgentEntity().setReach(1);
+        this.setText(this.agentModel.getAgentEntity().getCodeStatusString());
         this.setClickable(true);
     }
 
@@ -75,7 +75,7 @@ public class GrantButton extends Button implements View.OnClickListener {
         this.setClickable(true);
     }
 
-    private void onRequestGrantAgent(final AgentEntity agentEntity) {
+    private void onRequestGrantAgent(final AgentModel agentEntity) {
         try {
             SessionModel session = SharedPreferencesUtils.getSession(this.getContext());
             TrunkModel trunkModel = new TrunkModel(session, agentEntity.getMark());
@@ -109,7 +109,7 @@ public class GrantButton extends Button implements View.OnClickListener {
         }
     }
 
-    private void onTradeCode(AgentEntity agentEntity) {
+    private void onTradeCode(AgentModel agentEntity) {
         Intent intent = new Intent(this.getContext(), TradeActivity.class);
         intent.putExtra(Constants.KEY_INTENT_AGENT, agentEntity);
         this.getContext().startActivity(intent);

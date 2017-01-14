@@ -56,23 +56,31 @@ public class TrunkActivity extends BaseActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         // 数据异常
-        if (AgentApplication.currentAgentEntity == null){
+        if (AgentApplication.currentAgentModel == null) {
             showException();
         }
-        // 已经加入成功
-        if (AgentApplication.currentAgentEntity != null && AgentApplication.currentAgentEntity.getReach() == 1) {
-            showLeaderInfo();
-        }
-        // 已经申请，但没有审核通过
-        if (AgentApplication.currentAgentEntity != null && AgentApplication.currentAgentEntity.getReach() != 1 && !TextUtils.isEmpty(AgentApplication.currentAgentEntity.getpMark())) {
-            AgentEntity agentEntity = new AgentEntity();
-            agentEntity.setMark(AgentApplication.currentAgentEntity.getpMark());
-            agentEntity.setReachTime(AgentApplication.currentAgentEntity.getReachTime());
-            showReaching(agentEntity);
-        }
+
         // 没有申请
-        if (AgentApplication.currentAgentEntity != null && AgentApplication.currentAgentEntity.getReach() != 1 && TextUtils.isEmpty(AgentApplication.currentAgentEntity.getpMark())){
+        if (AgentApplication.currentAgentModel != null
+                && AgentApplication.currentAgentModel.getAgentEntity() != null
+                && AgentApplication.currentAgentModel.getAgentEntity().getReach() != 1
+                && TextUtils.isEmpty(AgentApplication.currentAgentModel.getAgentEntity().getpMark())) {
             showRequestLeader();
+        }
+
+        // 已经申请，但没有审核通过
+        if (AgentApplication.currentAgentModel != null
+                && AgentApplication.currentAgentModel.getAgentEntity() != null
+                && AgentApplication.currentAgentModel.getAgentEntity().getReach() != 1
+                && !TextUtils.isEmpty(AgentApplication.currentAgentModel.getAgentEntity().getpMark())) {
+            onLeaderAction();
+        }
+
+        // 已经加入成功
+        if (AgentApplication.currentAgentModel != null
+                && AgentApplication.currentAgentModel.getAgentEntity() != null
+                && AgentApplication.currentAgentModel.getAgentEntity().getReach() == 1) {
+            onLeaderAction();
         }
     }
 
@@ -86,24 +94,24 @@ public class TrunkActivity extends BaseActivity {
         this.onBackPressed();
     }
 
-    private void showException(){
+    private void showException() {
         this.tv_act_trunk_no_data.setVisibility(View.VISIBLE);
         this.ll_act_trunk_before_status.setVisibility(View.GONE);
         this.ll_act_trunk_after_status.setVisibility(View.GONE);
     }
 
-    private void showLeaderInfo() {
+    private void showLeaderInfo(TrunkModel responseModel) {
         this.tv_act_trunk_no_data.setVisibility(View.GONE);
         this.ll_act_trunk_before_status.setVisibility(View.GONE);
         this.ll_act_trunk_after_status.setVisibility(View.VISIBLE);
-        this.tv_act_trunk_leader_id.setText(this.getString(R.string.string_ID) + AgentApplication.currentAgentEntity.getMark());
-        this.tv_act_trunk_leader_level.setText(this.getString(R.string.string_level) + AgentApplication.currentAgentEntity.getLevelId());
+        this.tv_act_trunk_leader_id.setText(this.getString(R.string.string_ID) + responseModel.getAgentEntity().getMark());
+        this.tv_act_trunk_leader_level.setText(this.getString(R.string.string_level) + responseModel.getLevelEntity().getName());
     }
 
-    private void showReaching(AgentEntity agentEntity){
-        AgentApplication.currentAgentEntity.setReach(0);
-        AgentApplication.currentAgentEntity.setpMark(agentEntity.getMark());
-        AgentApplication.currentAgentEntity.setReachTime(agentEntity.getReachTime());
+    private void showReaching(AgentEntity agentEntity) {
+        AgentApplication.currentAgentModel.getAgentEntity().setReach(0);
+        AgentApplication.currentAgentModel.getAgentEntity().setpMark(agentEntity.getMark());
+        AgentApplication.currentAgentModel.getAgentEntity().setReachTime(agentEntity.getReachTime());
         this.tv_act_trunk_no_data.setVisibility(View.GONE);
         this.ll_act_trunk_before_status.setVisibility(View.GONE);
         this.ll_act_trunk_after_status.setVisibility(View.VISIBLE);
@@ -172,7 +180,7 @@ public class TrunkActivity extends BaseActivity {
 
                 @Override
                 public void onOther(int code, String result) {
-                    if (code == IResponse.ResultCode.RC_ACCESS_BAD_2.getCode()){
+                    if (code == IResponse.ResultCode.RC_ACCESS_BAD_2.getCode()) {
                         Toast.makeText(TrunkActivity.this, R.string.string_the_mark_no_reach, Toast.LENGTH_SHORT).show();
                     }
                     view.setClickable(true);
@@ -183,7 +191,49 @@ public class TrunkActivity extends BaseActivity {
             e.printStackTrace();
             Toast.makeText(this, "请求失败", Toast.LENGTH_SHORT).show();
         }
-
     }
 
+    private void onLeaderAction() {
+        try {
+            SessionModel session = SharedPreferencesUtils.getSession(this);
+            String url = this.getString(R.string.string_url_domain) + this.getString(R.string.string_url_mate_leader);
+            session.setSign(session.getEncryptSing());
+            TrunkModel trunkModel = new TrunkModel(session, AgentApplication.currentAgentModel.getAgentEntity().getpMark());
+            trunkModel.setSign(session.getEncryptSing());
+            NetworkManager.requestByPost(url, trunkModel, new INetWorkManager.OnNetworkCallback() {
+                @Override
+                public void onSuccess(String result) {
+                    TrunkModel responseModel = JSON.parseObject(result, TrunkModel.class);
+                    showReaching(responseModel.getAgentEntity());
+                    showLeaderInfo(responseModel);
+                }
+
+                @Override
+                public void onEmptyResult(String result) {
+                    Toast.makeText(TrunkActivity.this, R.string.string_no_mark, Toast.LENGTH_SHORT).show();
+                }
+
+                @Override
+                public void onLoginTimeout(String result) {
+                    Toast.makeText(TrunkActivity.this, R.string.string_toast_timeout, Toast.LENGTH_SHORT).show();
+                    SharedPreferencesUtils.clearSession(TrunkActivity.this);
+                }
+
+                @Override
+                public void onError(Throwable ex, boolean isOnCallback) {
+                    Toast.makeText(TrunkActivity.this, R.string.string_toast_network_error, Toast.LENGTH_SHORT).show();
+                }
+
+                @Override
+                public void onOther(int code, String result) {
+                    if (code == IResponse.ResultCode.RC_ACCESS_BAD_2.getCode()) {
+                        Toast.makeText(TrunkActivity.this, R.string.string_the_mark_no_reach, Toast.LENGTH_SHORT).show();
+                    }
+                }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+            Toast.makeText(this, "请求失败", Toast.LENGTH_SHORT).show();
+        }
+    }
 }

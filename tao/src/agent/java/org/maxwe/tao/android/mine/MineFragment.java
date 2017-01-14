@@ -1,5 +1,8 @@
 package org.maxwe.tao.android.mine;
 
+import android.content.ClipData;
+import android.content.ClipboardManager;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -30,8 +33,13 @@ import org.xutils.view.annotation.ViewInject;
 public class MineFragment extends BaseFragment {
     public static final int REQUEST_CODE_MODIFY_PASSWORD = 3;
 
+    @ViewInject(R.id.tv_frg_mine_level_name)
+    private TextView tv_frg_mine_level_name;
     @ViewInject(R.id.tv_frg_mine_number)
     private TextView tv_frg_mine_number;
+
+    @ViewInject(R.id.tv_frg_mine_id)
+    private TextView tv_frg_mine_id;
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -53,17 +61,31 @@ public class MineFragment extends BaseFragment {
         resetCodesStatus();
     }
 
-    public void resetCodesStatus(){
-        if (AgentApplication.currentAgentEntity != null) {
-            this.tv_frg_mine_number.setText(
-                    AgentApplication.currentAgentEntity.getSpendCodes() + "/" +
-                            AgentApplication.currentAgentEntity.getLeftCodes() + "/" +
-                            AgentApplication.currentAgentEntity.getHaveCodes()
-            );
+    public void resetCodesStatus() {
+        if (AgentApplication.currentAgentModel != null) {
+            if (AgentApplication.currentAgentModel.getLevelEntity() != null) {
+                this.tv_frg_mine_level_name.setText(AgentApplication.currentAgentModel.getLevelEntity().getName());
+            }
+            if (AgentApplication.currentAgentModel.getAgentEntity() != null) {
+                this.tv_frg_mine_number.setText(
+                        AgentApplication.currentAgentModel.getAgentEntity().getSpendCodes() + "/" +
+                                AgentApplication.currentAgentModel.getAgentEntity().getLeftCodes() + "/" +
+                                AgentApplication.currentAgentModel.getAgentEntity().getHaveCodes()
+                );
+                this.tv_frg_mine_id.setText("ID:" + AgentApplication.currentAgentModel.getAgentEntity().getMark());
+            }
         } else {
             this.tv_frg_mine_number.setText("0/0/0");
         }
+    }
 
+    @Event(value = R.id.bt_frg_mine_id_copy, type = View.OnClickListener.class)
+    private void onCopyMarkAction(View view){
+        ClipboardManager clipboardManager = (ClipboardManager) this.getContext().getSystemService(Context.CLIPBOARD_SERVICE);
+        String markId = this.tv_frg_mine_id.getText().toString();
+        String mark = markId.substring(3,markId.length());//去掉 ID:
+        clipboardManager.setPrimaryClip(ClipData.newPlainText(null, mark));
+        Toast.makeText(this.getContext(), R.string.string_copy_success, Toast.LENGTH_SHORT).show();
     }
 
     @Event(value = R.id.bt_frg_mine_modify_password, type = View.OnClickListener.class)
@@ -106,7 +128,10 @@ public class MineFragment extends BaseFragment {
 
                 @Override
                 public void onOther(int code, String result) {
-                    view.setClickable(true);
+                    SharedPreferencesUtils.clearSession(MineFragment.this.getContext());
+                    Intent intent = new Intent(MineFragment.this.getContext(), LoginActivity.class);
+                    MineFragment.this.getActivity().startActivity(intent);
+                    MineFragment.this.getActivity().finish();
                 }
             });
         } catch (Exception e) {

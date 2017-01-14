@@ -19,8 +19,11 @@ import org.maxwe.tao.android.INetWorkManager;
 import org.maxwe.tao.android.NetworkManager;
 import org.maxwe.tao.android.R;
 import org.maxwe.tao.android.account.agent.AgentEntity;
+import org.maxwe.tao.android.account.agent.AgentModel;
 import org.maxwe.tao.android.account.model.SessionModel;
 import org.maxwe.tao.android.activity.BaseActivity;
+import org.maxwe.tao.android.level.LevelEntity;
+import org.maxwe.tao.android.response.IResponse;
 import org.maxwe.tao.android.trade.TradeModel;
 import org.maxwe.tao.android.utils.SharedPreferencesUtils;
 import org.xutils.view.annotation.ContentView;
@@ -38,7 +41,7 @@ import java.util.regex.Pattern;
 @ContentView(R.layout.activity_trade)
 public class TradeActivity extends BaseActivity implements View.OnFocusChangeListener {
 
-    private AgentEntity agentEntity;
+    private AgentModel agentEntityModel;
 
     @ViewInject(R.id.tv_act_trade_id)
     private TextView tv_act_trade_id;
@@ -74,17 +77,18 @@ public class TradeActivity extends BaseActivity implements View.OnFocusChangeLis
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Serializable serializableExtra = this.getIntent().getSerializableExtra(Constants.KEY_INTENT_AGENT);
-        if (serializableExtra != null && serializableExtra instanceof AgentEntity) {
-            this.agentEntity = (AgentEntity) serializableExtra;
+        if (serializableExtra != null && serializableExtra instanceof AgentModel) {
+            this.agentEntityModel = (AgentModel) serializableExtra;
             this.et_act_trade_number.setOnFocusChangeListener(this);
             this.tv_act_trade_no_data.setVisibility(View.GONE);
             this.rl_act_trade_container.setVisibility(View.VISIBLE);
-
-            this.tv_act_trade_id.setText("ID:" + this.agentEntity.getMark());
-            this.tv_act_trade_level.setText(this.agentEntity.getLevelId());
-            this.tv_act_trade_haveCodes.setText(this.agentEntity.getHaveCodes() + "");
-            this.tv_act_trade_leftCodes.setText(this.agentEntity.getLeftCodes() + "");
-            this.tv_act_trade_spendCodes.setText(this.agentEntity.getSpendCodes() + "");
+            AgentEntity agentEntity = agentEntityModel.getAgentEntity();
+            LevelEntity levelEntity = agentEntityModel.getLevelEntity();
+            this.tv_act_trade_id.setText("ID:" + agentEntity.getMark());
+            this.tv_act_trade_level.setText(levelEntity.getName());
+            this.tv_act_trade_haveCodes.setText(agentEntity.getHaveCodes() + "");
+            this.tv_act_trade_leftCodes.setText(agentEntity.getLeftCodes() + "");
+            this.tv_act_trade_spendCodes.setText(agentEntity.getSpendCodes() + "");
         }
     }
 
@@ -108,18 +112,21 @@ public class TradeActivity extends BaseActivity implements View.OnFocusChangeLis
 
     private void onResponseSuccess(TradeModel responseModel) {
         this.bt_act_trade_action.setClickable(true);
-        if (AgentApplication.currentAgentEntity != null) {
-            AgentApplication.currentAgentEntity.setSpendCodes(AgentApplication.currentAgentEntity.getSpendCodes() + responseModel.getCodeNum());
-            AgentApplication.currentAgentEntity.setLeftCodes(AgentApplication.currentAgentEntity.getLeftCodes() - responseModel.getCodeNum());
+        this.et_act_trade_number.setText(null);
+        this.et_act_trade_password.setText(null);
+        if (AgentApplication.currentAgentModel != null) {
+            AgentEntity agentEntity = AgentApplication.currentAgentModel.getAgentEntity();
+            agentEntity.setSpendCodes(agentEntity.getSpendCodes() + responseModel.getCodeNum());
+            agentEntity.setLeftCodes(agentEntity.getLeftCodes() - responseModel.getCodeNum());
         }
 
-        if (this.agentEntity != null) {
-            this.agentEntity.setHaveCodes(this.agentEntity.getHaveCodes() + responseModel.getCodeNum());
-            this.agentEntity.setLeftCodes(this.agentEntity.getLeftCodes() + responseModel.getCodeNum());
-
-            this.tv_act_trade_haveCodes.setText(this.agentEntity.getHaveCodes() + "");
-            this.tv_act_trade_leftCodes.setText(this.agentEntity.getLeftCodes() + "");
-            this.tv_act_trade_spendCodes.setText(this.agentEntity.getSpendCodes() + "");
+        if (this.agentEntityModel != null) {
+            AgentEntity agentEntity = this.agentEntityModel.getAgentEntity();
+            agentEntity.setHaveCodes(agentEntity.getHaveCodes() + responseModel.getCodeNum());
+            agentEntity.setLeftCodes(agentEntity.getLeftCodes() + responseModel.getCodeNum());
+            this.tv_act_trade_haveCodes.setText(agentEntity.getHaveCodes() + "");
+            this.tv_act_trade_leftCodes.setText(agentEntity.getLeftCodes() + "");
+            this.tv_act_trade_spendCodes.setText(agentEntity.getSpendCodes() + "");
         }
     }
 
@@ -135,10 +142,17 @@ public class TradeActivity extends BaseActivity implements View.OnFocusChangeLis
             Toast.makeText(this, R.string.string_input_grant_code_number, Toast.LENGTH_SHORT).show();
             return;
         }
+
         if (!Pattern.compile("^[-\\+]?[\\d]*$").matcher(number).matches()) {
             Toast.makeText(this, R.string.string_input_grant_code_number_integer, Toast.LENGTH_SHORT).show();
             return;
         }
+
+        if (Integer.parseInt(number) < this.agentEntityModel.getLevelEntity().getMinNum()){
+            Toast.makeText(this, R.string.string_trade_num_by_level, Toast.LENGTH_SHORT).show();
+            return;
+        }
+
         if (TextUtils.isEmpty(password)) {
             Toast.makeText(this, R.string.string_input_account_password, Toast.LENGTH_SHORT).show();
             return;
@@ -148,9 +162,7 @@ public class TradeActivity extends BaseActivity implements View.OnFocusChangeLis
             SessionModel session = SharedPreferencesUtils.getSession(this);
             TradeModel tradeModel = new TradeModel(session, 2, Integer.parseInt(number));
             tradeModel.setSign(session.getEncryptSing());
-            tradeModel.setTargetMark(this.agentEntity.getMark());
-            tradeModel.setLevelId(this.agentEntity.getLevelId());
-            tradeModel.setLevelId("testid");
+            tradeModel.setTargetMark(this.agentEntityModel.getAgentEntity().getMark());
             String url = this.getString(R.string.string_url_domain) + this.getString(R.string.string_url_trade_trade);
             NetworkManager.requestByPost(url, tradeModel, new INetWorkManager.OnNetworkCallback() {
                 @Override
@@ -173,6 +185,13 @@ public class TradeActivity extends BaseActivity implements View.OnFocusChangeLis
                     Toast.makeText(TradeActivity.this, R.string.string_toast_network_error, Toast.LENGTH_SHORT).show();
                 }
 
+                @Override
+                public void onOther(int code, String result) {
+                    if (code == IResponse.ResultCode.RC_ACCESS_BAD_2.getCode()){
+                        Toast.makeText(TradeActivity.this, R.string.string_trade_num_by_level, Toast.LENGTH_SHORT).show();
+                    }
+                    onResponseError();
+                }
             });
         } catch (Exception e) {
             view.setClickable(true);

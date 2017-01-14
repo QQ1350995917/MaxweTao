@@ -57,7 +57,8 @@
     <string name="string_input_grant_code_number_integer">授权码数量必须为整数</string>
     <string name="string_input_trade_success">转让成功</string>
 
-    <!--<string name="string_grant_cellphone_dialog_title1">对</string>-->
+    <string name="string_trade_num_by_level">您的转让数量小于当前转让级别</string>
+
     <!--<string name="string_grant_cellphone_dialog_title2">授权</string>-->
 
 

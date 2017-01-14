@@ -7,30 +7,22 @@
 
     <TextView
         android:id="@+id/tv_act_history_item_time"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="center"
         android:layout_weight="1"/>
 
     <TextView
         android:id="@+id/tv_act_history_item_number"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:gravity="center"
         android:layout_weight="1"/>
 
     <TextView
         android:id="@+id/tv_act_history_item_to_id"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:gravity="center"
         android:layout_weight="1"/>
-
-    <TextView
-        android:id="@+id/tv_act_history_item_status"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:layout_weight="1"/>
-
 </LinearLayout>

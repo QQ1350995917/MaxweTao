@@ -1,6 +1,7 @@
 package org.maxwe.tao.android.mate;
 
 import org.maxwe.tao.android.account.agent.AgentEntity;
+import org.maxwe.tao.android.account.agent.AgentModel;
 import org.maxwe.tao.android.account.model.SessionModel;
 
 import java.util.LinkedList;
@@ -14,7 +15,7 @@ public class BranchModel extends SessionModel {
     private int total;
     private int pageIndex;
     private int pageSize;
-    private LinkedList<AgentEntity> agentEntities;
+    private LinkedList<AgentModel> agentEntities; // 相应字段
 
     public BranchModel() {
         super();
@@ -50,11 +51,11 @@ public class BranchModel extends SessionModel {
         this.pageSize = pageSize;
     }
 
-    public LinkedList<AgentEntity> getAgentEntities() {
+    public LinkedList<AgentModel> getAgentEntities() {
         return agentEntities;
     }
 
-    public void setAgentEntities(LinkedList<AgentEntity> agentEntities) {
+    public void setAgentEntities(LinkedList<AgentModel> agentEntities) {
         this.agentEntities = agentEntities;
     }
 

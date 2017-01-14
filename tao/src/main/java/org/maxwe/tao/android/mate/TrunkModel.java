@@ -2,6 +2,7 @@ package org.maxwe.tao.android.mate;
 
 import org.maxwe.tao.android.account.agent.AgentEntity;
 import org.maxwe.tao.android.account.model.SessionModel;
+import org.maxwe.tao.android.level.LevelEntity;
 
 /**
  * Created by Pengwei Ding on 2017-01-12 16:17.
@@ -10,7 +11,8 @@ import org.maxwe.tao.android.account.model.SessionModel;
  */
 public class TrunkModel extends SessionModel {
     private String targetMark;
-    private AgentEntity agentEntity;
+    private AgentEntity agentEntity; // 相应字段
+    private LevelEntity levelEntity; // 相应字段
 
     public TrunkModel() {
         super();
@@ -35,6 +37,14 @@ public class TrunkModel extends SessionModel {
 
     public void setAgentEntity(AgentEntity agentEntity) {
         this.agentEntity = agentEntity;
+    }
+
+    public LevelEntity getLevelEntity() {
+        return levelEntity;
+    }
+
+    public void setLevelEntity(LevelEntity levelEntity) {
+        this.levelEntity = levelEntity;
     }
 
     @Override
