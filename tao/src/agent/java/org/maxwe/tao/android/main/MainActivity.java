@@ -112,7 +112,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     private void onCheckNewVersion() {
         VersionEntity versionModel = new VersionEntity(this.getString(R.string.platform), this.getResources().getInteger(R.integer.integer_app_type), this.getVersionCode());
         String url = this.getString(R.string.string_url_domain) + this.getString(R.string.string_url_version_version);
-        NetworkManager.requestByPost(url, versionModel, new INetWorkManager.OnNetworkCallback() {
+        NetworkManager.requestByPostNoCryption(url, versionModel, new INetWorkManager.OnNetworkCallback() {
             @Override
             public void onSuccess(String result) {
                 VersionEntity versionEntity = JSON.parseObject(result, VersionEntity.class);
