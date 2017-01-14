@@ -33,10 +33,7 @@
         <activity android:name=".code.HistoryActivity"></activity>
         <activity android:name=".agent.TrunkActivity"></activity>
         <activity android:name=".agent.TradeActivity"></activity>
-
-        <!--<activity android:name=".main.GrantActivity"></activity>-->
-        <!--<activity android:name=".main.GrantDialogActivity" android:theme="@style/AppTheme_activity_dialog"></activity>-->
-        <!--<activity android:name=".agent.TradeActivity"></activity>-->
+        <activity android:name=".mine.BankActivity"></activity>
     </application>
 
 </manifest>

@@ -19,6 +19,7 @@ import org.maxwe.tao.android.R;
 import org.maxwe.tao.android.account.model.SessionModel;
 import org.maxwe.tao.android.activity.LoginActivity;
 import org.maxwe.tao.android.activity.ModifyActivity;
+import org.maxwe.tao.android.agent.TradeActivity;
 import org.maxwe.tao.android.utils.SharedPreferencesUtils;
 import org.xutils.view.annotation.ContentView;
 import org.xutils.view.annotation.Event;
@@ -86,6 +87,13 @@ public class MineFragment extends BaseFragment {
         String mark = markId.substring(3,markId.length());//去掉 ID:
         clipboardManager.setPrimaryClip(ClipData.newPlainText(null, mark));
         Toast.makeText(this.getContext(), R.string.string_copy_success, Toast.LENGTH_SHORT).show();
+    }
+
+    @Event(value = R.id.bt_frg_mine_bank, type = View.OnClickListener.class)
+    private void onBankBindAction(View view) {
+        Intent intent = new Intent(this.getContext(), BankActivity.class);
+        intent.putExtra(Constants.KEY_INTENT_AGENT, AgentApplication.currentAgentModel);
+        this.getContext().startActivity(intent);
     }
 
     @Event(value = R.id.bt_frg_mine_modify_password, type = View.OnClickListener.class)

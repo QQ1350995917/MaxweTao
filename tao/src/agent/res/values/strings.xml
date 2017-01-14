@@ -59,13 +59,13 @@
 
     <string name="string_trade_num_by_level">您的转让数量小于当前转让级别</string>
 
-    <!--<string name="string_grant_cellphone_dialog_title2">授权</string>-->
-
-
-
-    <!--<string name="string_grant_cellphone_success">授权成功</string>-->
-    <!--<string name="string_grant_cellphone_fail">授权失败</string>-->
-    <!--<string name="string_grant_cellphone_no_exist">被授权人不存在</string>-->
+    <string name="string_my_bank_account">我的返点账号</string>
+    <string name="string_my_bank_alert">⚠️您正在绑定返点账户，该操作成功后无法撤销，请您谨慎操作。</string>
+    <string name="string_my_true_name">请输入您的姓名</string>
+    <string name="string_my_zhifubao">请输入您的支付宝账户</string>
+    <string name="string_your_true_name">您的真实姓名：</string>
+    <string name="string_your_zhifubao">您的支付宝账户：</string>
+    <string name="string_bank_error">绑定失败</string>
     <!--<string name="string_grant_cellphone_repeat">该号码已经被授权</string>-->
 
 

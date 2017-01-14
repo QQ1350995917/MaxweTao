@@ -12,11 +12,16 @@ import org.maxwe.tao.android.account.model.SessionModel;
 public class BankModel extends SessionModel {
     private String trueName;
     private String zhifubao;
-    private String password;
     private long timestamp;// 响应字段
 
     public BankModel() {
         super();
+    }
+
+    public BankModel(SessionModel sessionModel,String trueName,String zhifubao) {
+        super(sessionModel.getT(),sessionModel.getMark(),sessionModel.getCellphone(),sessionModel.getApt());
+        this.trueName = trueName;
+        this.zhifubao = zhifubao;
     }
 
     public String getTrueName() {
@@ -35,13 +40,6 @@ public class BankModel extends SessionModel {
         this.zhifubao = zhifubao;
     }
 
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
 
     public long getTimestamp() {
         return timestamp;
@@ -56,7 +54,6 @@ public class BankModel extends SessionModel {
         return "BankModel{" +
                 "trueName='" + trueName + '\'' +
                 ", zhifubao='" + zhifubao + '\'' +
-                ", password='" + password + '\'' +
                 ", timestamp='" + timestamp + '\'' +
                 '}';
     }
@@ -65,9 +62,9 @@ public class BankModel extends SessionModel {
     public boolean isParamsOk() {
         if (TextUtils.isEmpty(this.getTrueName())
                 || TextUtils.isEmpty(this.getZhifubao())
-                || TextUtils.isEmpty(this.getPassword())
-                || this.getPassword().length() < 6
-                || this.getPassword().length() > 12) {
+                || TextUtils.isEmpty(this.getVerification())
+                || this.getVerification().length() < 6
+                || this.getVerification().length() > 12) {
             return false;
         }
         return super.isParamsOk();
