@@ -12,6 +12,8 @@ import org.maxwe.tao.android.account.user.UserEntity;
  */
 public class SellerApplication extends TaoApplication {
     public static String TAO_APP_KEY = "23595494";
+    public static String TAO_APP_SESSION = "610002895f444607e40d5d4a524d84a591f210a75c143ee837058645";
+    public static String TAO_APP_REFRESH_TOKEN = "61004289471dbf45b52aa40e248da1a144ef15a35f2550b837058645";
     public static String TAO_APP_SECRET = "6608da9c96be14e186ff485020892334";
 
     public static UserEntity currentUserEntity = null;

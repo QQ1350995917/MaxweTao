@@ -1,25 +1,15 @@
 package org.maxwe.tao.android.api.goods;
 
-import android.text.method.DateTimeKeyListener;
-
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.TypeReference;
 
-import org.json.JSONObject;
-import org.maxwe.tao.android.Constants;
-import org.maxwe.tao.android.NetworkManager;
-import org.maxwe.tao.android.api.CommonEntity;
+import org.maxwe.tao.android.api.CommonModel;
 import org.maxwe.tao.android.api.ParamsSignFiller;
-import org.maxwe.tao.android.response.Response;
+import org.maxwe.tao.android.api.TaoNetwork;
 import org.maxwe.tao.android.utils.DateTimeUtils;
-import org.xutils.common.Callback;
-import org.xutils.http.RequestParams;
-import org.xutils.x;
 
 import java.io.IOException;
 import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
 
 /**
  * Created by Pengwei Ding on 2017-01-08 11:36.
@@ -27,69 +17,26 @@ import java.util.Set;
  * Description: TODO
  */
 public class GoodsManager {
-    private static final String METHOD_NAME = "taobao.tbk.item.get";
-    private static final String URL_FOMRAL = "http://gw.api.taobao.com/router/rest";
-    private static final String URL_SANDBOX = "http://gw.api.tbsandbox.com/router/rest";
+    public static void requestGoods(GoodsQueryEntity goodsQueryEntity, TaoNetwork.OnRequestCallback onRequestCallback) {
+        GoodsRequestModel goodsEntity = new GoodsRequestModel();
+        goodsEntity.setMethod(TaoNetwork.METHOD_NAME_GOODS);
+//        goodsEntity.setApp_key(SellerApplication.TAO_APP_KEY);
+        goodsEntity.setTimestamp(DateTimeUtils.getCurrentFullTime());
+//        goodsEntity.setFields("num_iid,title,pict_url,small_images,reserve_price,zk_final_price,user_type,provcity,item_url,seller_id,volume,nick");
+        goodsEntity.setFields("nick");
 
-    public interface OnRequestCallback{
-        void onSuccess(String text);
-        void onError(Throwable ex,Object object);
-    }
+        goodsEntity.setQ(goodsQueryEntity.getQ());
+        goodsEntity.setSort(goodsQueryEntity.getSort());
+        goodsEntity.setPage_no(goodsQueryEntity.getPage_no());
+        goodsEntity.setPage_size(goodsQueryEntity.getPage_size());
 
-    private static Callback.Cancelable request(String url, final GoodsEntity goodsEntity, final OnRequestCallback onRequestCallback) {
-        RequestParams requestParams = new RequestParams(url);
-        HashMap<String,String> hashMap = (HashMap<String,String>)JSON.parseObject(JSON.toJSONString(goodsEntity), HashMap.class);
-        Set<Map.Entry<String, String>> entries = hashMap.entrySet();
-        for (Map.Entry<String, String> entry:entries){
-            requestParams.addParameter(entry.getKey(),entry.getValue());
-        }
-        Callback.Cancelable cancelable = x.http().post(requestParams, new Callback.CommonCallback<String>() {
-            @Override
-            public void onSuccess(String result) {
-                onRequestCallback.onSuccess(result);
-            }
-
-            @Override
-            public void onError(Throwable ex, boolean isOnCallback) {
-                ex.printStackTrace();
-                onRequestCallback.onError(ex, goodsEntity);
-            }
-
-            @Override
-            public void onCancelled(CancelledException cex) {
-
-            }
-
-            @Override
-            public void onFinished() {
-
-            }
+        HashMap<String, String> stringStringHashMap = JSON.parseObject(JSON.toJSONString(goodsEntity, new ParamsSignFiller()), new TypeReference<HashMap<String, String>>() {
         });
-        return cancelable;
-    }
-
-
-    public static void queryGoods(GoodsQueryEntity goodsQueryEntity, GoodsManager.OnRequestCallback onRequestCallback) {
-//        GoodsEntity goodsEntity = new GoodsEntity();
-//        goodsEntity.setMethod(METHOD_NAME);
-//        goodsEntity.setApp_key(Constants.TAO_APP_KEY);
-//        goodsEntity.setTimestamp(DateTimeUtils.getCurrentFullTime());
-////        goodsEntity.setFields("num_iid,title,pict_url,small_images,reserve_price,zk_final_price,user_type,provcity,item_url,seller_id,volume,nick");
-//        goodsEntity.setFields("nick");
-//
-//        goodsEntity.setQ(goodsQueryEntity.getQ());
-////        goodsEntity.setSort(goodsQueryEntity.getSort());
-//        goodsEntity.setPage_no(goodsQueryEntity.getPage_no());
-//        goodsEntity.setPage_size(goodsQueryEntity.getPage_size());
-//
-//        HashMap<String, String> stringStringHashMap = JSON.parseObject(JSON.toJSONString(goodsEntity, new ParamsSignFiller()), new TypeReference<HashMap<String, String>>() {
-//        });
-//        try {
-//            goodsEntity.setSign(CommonEntity.signTopRequest(stringStringHashMap,Constants.TAO_APP_SECRET,goodsEntity.getSign_method()));
-//            request(URL_FOMRAL, goodsEntity, onRequestCallback);
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-
+        try {
+//            goodsEntity.setSign(CommonModel.signTopRequest(stringStringHashMap,SellerApplication.TAO_APP_SECRET,goodsEntity.getSign_method()));
+            TaoNetwork.request(TaoNetwork.URL_FORMAL, goodsEntity, onRequestCallback);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

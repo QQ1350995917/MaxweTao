@@ -7,7 +7,9 @@
         android:name=".TaoApplication"
         android:allowBackup="true"
         android:supportsRtl="true">
-
+        <uses-library android:name="android.test.runner"/>
     </application>
+    <instrumentation android:name="android.test.InstrumentationTestRunner"
+        android:targetPackage="org.maxwe.tao.android" android:label="Tao"/>
 
 </manifest>

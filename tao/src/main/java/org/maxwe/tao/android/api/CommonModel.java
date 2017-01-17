@@ -1,7 +1,6 @@
 package org.maxwe.tao.android.api;
 
 import java.io.IOException;
-import java.io.Serializable;
 import java.security.GeneralSecurityException;
 import java.util.Arrays;
 import java.util.Map;
@@ -19,7 +18,7 @@ import javax.crypto.spec.SecretKeySpec;
  * http://open.taobao.com/doc2/apiDetail.htm?spm=0.0.0.0.PBdy7Y&apiId=24519&scopeId=11651
  * http://open.taobao.com/doc2/api_list.htm?spm=a219a.7629140.0.0.1SFv1f
  */
-public abstract class CommonEntity implements Serializable {
+public abstract class CommonModel implements IModel {
     // API接口名称
     private String method;// 是
     // TOP分配给应用的AppKey
@@ -226,9 +225,25 @@ public abstract class CommonEntity implements Serializable {
         }
         String s = sb.toString();
         if (s.endsWith("&")) {
-            s = s.substring(0, s.length() -1);
+            s = s.substring(0, s.length() - 1);
         }
         return s;
     }
 
+    @Override
+    public String toString() {
+        return "CommonModel{" +
+                "sign='" + sign + '\'' +
+                ", sign_method='" + sign_method + '\'' +
+                ", simplify=" + simplify +
+                ", target_app_key='" + target_app_key + '\'' +
+                ", partner_id='" + partner_id + '\'' +
+                ", v='" + v + '\'' +
+                ", format='" + format + '\'' +
+                ", timestamp='" + timestamp + '\'' +
+                ", session='" + session + '\'' +
+                ", app_key='" + app_key + '\'' +
+                ", method='" + method + '\'' +
+                '}';
+    }
 }

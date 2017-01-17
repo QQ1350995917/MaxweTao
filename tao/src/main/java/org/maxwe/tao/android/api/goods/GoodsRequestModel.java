@@ -1,15 +1,13 @@
 package org.maxwe.tao.android.api.goods;
 
-import org.maxwe.tao.android.api.CommonEntity;
-
-import java.io.Serializable;
+import org.maxwe.tao.android.api.CommonModel;
 
 /**
  * Created by Pengwei Ding on 2017-01-08 11:35.
  * Email: www.dingpengwei@foxmail.com www.dingpegnwei@gmail.com
  * Description: TODO
  */
-public class GoodsEntity extends CommonEntity {
+public class GoodsRequestModel extends CommonModel {
 
     // 需返回的字段列表
     private String fields; // 是
@@ -150,5 +148,25 @@ public class GoodsEntity extends CommonEntity {
 
     public void setPage_size(int page_size) {
         this.page_size = page_size;
+    }
+
+    @Override
+    public String toString() {
+        return super.toString() + "GoodsRequestModel{" +
+                "page_size=" + page_size +
+                ", page_no=" + page_no +
+                ", platform=" + platform +
+                ", end_tk_rate=" + end_tk_rate +
+                ", start_tk_rate=" + start_tk_rate +
+                ", end_price=" + end_price +
+                ", start_price=" + start_price +
+                ", is_overseas=" + is_overseas +
+                ", is_tmall=" + is_tmall +
+                ", sort='" + sort + '\'' +
+                ", itemloc='" + itemloc + '\'' +
+                ", cat='" + cat + '\'' +
+                ", q='" + q + '\'' +
+                ", fields='" + fields + '\'' +
+                '}';
     }
 }
