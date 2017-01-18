@@ -66,20 +66,20 @@ public class IndexFragment extends BaseFragment {
 
     @Event(value = R.id.bt_frg_search, type = View.OnClickListener.class)
     private void onSearchAction(View view) {
-//        AuthorRequestModel authorRequestModel = new AuthorRequestModel("23595494", 1234);
-//        AuthorizeManager.authorize(authorRequestModel, new TaoNetwork.OnRequestCallback() {
-//            @Override
-//            public void onSuccess(String text) {
-//                Intent intent = new Intent(IndexFragment.this.getContext(), AuthorActivity.class);
-//                intent.putExtra(AuthorActivity.KEY_CONTENT_HTML, text);
-//                IndexFragment.this.startActivityForResult(intent, 0);
-//            }
-//
-//            @Override
-//            public void onError(Throwable ex, IModel object) {
-//                ex.printStackTrace();
-//            }
-//        });
+        AuthorRequestModel authorRequestModel = new AuthorRequestModel("23595494", 1234);
+        AuthorizeManager.authorize(authorRequestModel, new TaoNetwork.OnRequestCallback() {
+            @Override
+            public void onSuccess(String text) {
+                Intent intent = new Intent(IndexFragment.this.getContext(), AuthorActivity.class);
+                intent.putExtra(AuthorActivity.KEY_CONTENT_HTML, text);
+                IndexFragment.this.startActivityForResult(intent, 0);
+            }
+
+            @Override
+            public void onError(Throwable ex, IModel object) {
+                ex.printStackTrace();
+            }
+        });
     }
 
 }

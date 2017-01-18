@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#FFFFFF"
     android:orientation="vertical">
 
     <RelativeLayout
@@ -28,44 +29,45 @@
         android:id="@+id/tv_act_trunk_no_data"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:visibility="visible"
         android:gravity="center"
-        android:text="@string/string_no_data"/>
+        android:text="@string/string_no_data"
+        android:visibility="visible" />
 
     <LinearLayout
         android:id="@+id/ll_act_trunk_before_status"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:visibility="gone"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:visibility="gone">
+
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
-            android:textSize="16dp"
-            android:text="@string/string_alert_leader"/>
+            android:text="@string/string_alert_leader"
+            android:textSize="16dp" />
 
         <EditText
             android:id="@+id/et_act_trunk_leader_mark"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
-            android:hint="@string/string_leader_mark"/>
+            android:hint="@string/string_leader_mark" />
 
         <EditText
             android:id="@+id/et_act_trunk_password"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
-            android:inputType="textPassword"
-            android:hint="@string/string_input_account_password"/>
+            android:hint="@string/string_input_account_password"
+            android:inputType="textPassword" />
 
         <Button
             android:id="@+id/et_act_trunk_action"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
-            android:text="@string/string_confirm"/>
+            android:text="@string/string_confirm" />
     </LinearLayout>
 
     <LinearLayout
@@ -74,12 +76,13 @@
         android:layout_height="match_parent"
         android:orientation="vertical"
         android:visibility="gone">
+
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
-            android:textSize="16dp"
-            android:text="@string/string_your_leader"/>
+            android:text="@string/string_your_leader"
+            android:textSize="16dp" />
 
         <TextView
             android:id="@+id/tv_act_trunk_leader_id"
@@ -93,6 +96,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
-            android:textSize="16dp"/>
+            android:textSize="16dp" />
     </LinearLayout>
 </LinearLayout>

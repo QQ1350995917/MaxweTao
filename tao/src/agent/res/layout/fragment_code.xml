@@ -2,24 +2,25 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#FFFFFF"
     android:orientation="vertical">
 
     <Button
         android:id="@+id/bt_frg_code_history"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/string_code_history"
         android:layout_alignParentRight="true"
-        android:background="#00000000"/>
+        android:background="#00000000"
+        android:text="@string/string_code_history" />
 
     <LinearLayout
         android:id="@+id/ll_frg_code_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
+        android:layout_marginTop="10dp"
         android:background="@drawable/shape_circle"
-        android:orientation="vertical"
-        android:layout_marginTop="10dp">
+        android:orientation="vertical">
 
         <TextView
             android:id="@+id/tv_frg_code_level_name"
@@ -42,53 +43,55 @@
         android:id="@+id/ll_frg_code_gen"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
+        android:layout_below="@+id/ll_frg_code_title"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="10dp"
-        android:visibility="invisible"
-        android:layout_below="@+id/ll_frg_code_title">
+        android:orientation="vertical"
+        android:visibility="invisible">
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:text="@string/string_code_of_your_gen"
             android:textColor="#000000"
-            android:textSize="16dp"
-            android:text="@string/string_code_of_your_gen"/>
+            android:textSize="16dp" />
+
         <TextView
             android:id="@+id/tv_frg_code_gen_display"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
+            android:layout_marginTop="5dp"
             android:textColor="#000000"
-            android:textSize="18dp"
-            android:layout_marginTop="5dp" />
+            android:textSize="18dp" />
+
         <Button
             android:id="@+id/bt_frg_code_click_copy"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:text="@string/string_click_copy"
             android:background="#00000000"
-            />
+            android:text="@string/string_click_copy" />
     </LinearLayout>
 
     <Button
         android:id="@+id/bt_frg_code_click_gen_code"
         android:layout_width="300dp"
         android:layout_height="wrap_content"
-        android:text="@string/string_click_gen_code"
         android:layout_below="@+id/ll_frg_code_gen"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="20dp"/>
+        android:layout_marginTop="20dp"
+        android:text="@string/string_click_gen_code" />
 
     <Button
         android:id="@+id/bt_frg_code_active_action"
         android:layout_width="300dp"
         android:layout_height="wrap_content"
-        android:text="@string/string_active_your_account"
-        android:layout_marginTop="20dp"
         android:layout_below="@+id/bt_frg_code_click_gen_code"
         android:layout_centerHorizontal="true"
+        android:layout_marginTop="20dp"
         android:background="#00000000"
-        android:visibility="invisible"/>
+        android:text="@string/string_active_your_account"
+        android:visibility="invisible" />
 
 </RelativeLayout>

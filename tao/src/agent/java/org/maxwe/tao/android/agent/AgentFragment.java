@@ -10,7 +10,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.BaseAdapter;
-import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -21,7 +20,6 @@ import org.maxwe.tao.android.BaseFragment;
 import org.maxwe.tao.android.INetWorkManager;
 import org.maxwe.tao.android.NetworkManager;
 import org.maxwe.tao.android.R;
-import org.maxwe.tao.android.account.agent.AgentEntity;
 import org.maxwe.tao.android.account.agent.AgentModel;
 import org.maxwe.tao.android.account.model.SessionModel;
 import org.maxwe.tao.android.mate.BranchModel;
@@ -38,9 +36,10 @@ import java.util.LinkedList;
  * Description: TODO
  */
 @ContentView(R.layout.fragment_agent)
-public class AgentFragment extends BaseFragment implements SwipeRefreshLayout.OnRefreshListener, AbsListView.OnScrollListener, View.OnClickListener{
+public class AgentFragment extends BaseFragment implements SwipeRefreshLayout.OnRefreshListener, AbsListView.OnScrollListener, View.OnClickListener {
 
     private LinkedList<AgentModel> agentEntities = new LinkedList<>();
+
     private class AgentItemAdapter extends BaseAdapter {
         private LayoutInflater layoutInflater;
 
@@ -71,7 +70,7 @@ public class AgentFragment extends BaseFragment implements SwipeRefreshLayout.On
             GrantButton bt_frg_agent_item_status = (GrantButton) inflate.findViewById(R.id.bt_frg_agent_item_status);
             AgentModel agentModel = agentEntities.get(position);
             tv_frg_agent_item_id.setText("ID:" + agentModel.getAgentEntity().getMark());
-            if (agentModel.getLevelEntity() != null){
+            if (agentModel.getLevelEntity() != null) {
                 tv_frg_agent_item_level.setText(agentModel.getLevelEntity().getName());
             }
             bt_frg_agent_item_status.setAgentEntity(agentModel);

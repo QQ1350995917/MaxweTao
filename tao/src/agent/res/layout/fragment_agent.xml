@@ -2,11 +2,13 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:background="#FFFFFF">
+    android:background="#FFFFFF"
+    android:orientation="vertical">
+
     <RelativeLayout
         android:id="@+id/rl_act_history_nav"
         style="@style/nav_header_of_act">
+
         <TextView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -18,38 +20,39 @@
             android:id="@+id/bt_frg_agent_leader"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/string_my_agent_leader"
             android:layout_alignParentRight="true"
-            android:background="#00000000"/>
+            android:background="#00000000"
+            android:text="@string/string_my_agent_leader" />
     </RelativeLayout>
 
     <RelativeLayout
         android:id="@+id/rl_frg_agent_search_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:visibility="gone"
-        android:layout_below="@+id/rl_act_history_nav">
+        android:layout_below="@+id/rl_act_history_nav"
+        android:visibility="gone">
+
         <EditText
             android:id="@+id/et_frg_agent_search_content"
             android:layout_width="match_parent"
             android:layout_height="55dp"
-            android:hint="@string/string_input_ID"
-            />
+            android:hint="@string/string_input_ID" />
+
         <Button
             android:id="@+id/bt_frg_agent_search_action"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignBaseline="@+id/et_frg_agent_search_content"
             android:layout_alignRight="@+id/et_frg_agent_search_content"
-            android:text="@string/string_search"/>
+            android:text="@string/string_search" />
     </RelativeLayout>
 
     <TextView
         android:id="@+id/tv_act_agent_no_data"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:gravity="center"
         android:layout_below="@+id/rl_act_history_nav"
+        android:gravity="center"
         android:text="@string/string_no_data"
         android:textSize="20dp" />
 
@@ -58,6 +61,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@+id/rl_act_history_nav">
+
         <ListView
             android:id="@+id/lv_frg_agent_list"
             android:layout_width="match_parent"

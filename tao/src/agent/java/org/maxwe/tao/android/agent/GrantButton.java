@@ -78,7 +78,7 @@ public class GrantButton extends Button implements View.OnClickListener {
     private void onRequestGrantAgent(final AgentModel agentEntity) {
         try {
             SessionModel session = SharedPreferencesUtils.getSession(this.getContext());
-            TrunkModel trunkModel = new TrunkModel(session, agentEntity.getMark());
+            TrunkModel trunkModel = new TrunkModel(session, agentEntity.getAgentEntity().getMark());
             trunkModel.setSign(session.getEncryptSing());
             String url = GrantButton.this.getContext().getString(R.string.string_url_domain) + GrantButton.this.getContext().getString(R.string.string_url_mate_grant);
             NetworkManager.requestByPost(url, trunkModel, new INetWorkManager.OnNetworkCallback() {

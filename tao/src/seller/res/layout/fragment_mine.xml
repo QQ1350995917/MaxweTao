@@ -2,8 +2,8 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="10dp"
-    android:background="#FFFFFF">
+    android:background="#FFFFFF"
+    android:padding="10dp">
 
 
     <Button
@@ -16,16 +16,16 @@
         android:id="@+id/bt_frg_mine_password"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_below="@+id/bt_frg_mine_promotion"
         android:layout_marginTop="20dp"
-        android:layout_below="@+id/bt_frg_mine_link_convert"
         android:text="@string/string_modify_password" />
 
     <Button
         android:id="@+id/bt_frg_mine_newbie"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
         android:layout_below="@+id/bt_frg_mine_password"
+        android:layout_marginTop="20dp"
         android:text="@string/string_newbie" />
 
     <Button
@@ -42,7 +42,7 @@
         android:layout_below="@+id/bt_frg_mine_about_us"
         android:layout_marginTop="30dp"
         android:background="#CC0000"
-        android:textColor="#FFFFFF"
-        android:text="@string/string_exit" />
+        android:text="@string/string_exit"
+        android:textColor="#FFFFFF" />
 
 </RelativeLayout>

@@ -2,6 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#FFFFFF"
     android:orientation="vertical">
 
     <RelativeLayout
@@ -37,8 +38,8 @@
         android:id="@+id/ll_act_history_header"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
         android:layout_below="@+id/rl_act_history_nav"
+        android:orientation="horizontal"
         android:visibility="gone">
 
         <TextView
@@ -46,21 +47,21 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center"
-            android:text="@string/string_history_trade_time"/>
+            android:text="@string/string_history_trade_time" />
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center"
-            android:text="@string/string_history_trade_number"/>
+            android:text="@string/string_history_trade_number" />
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center"
-            android:text="@string/string_history_trade_to"/>
+            android:text="@string/string_history_trade_to" />
     </LinearLayout>
 
     <android.support.v4.widget.SwipeRefreshLayout
@@ -68,8 +69,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@+id/ll_act_history_header"
-        android:visibility="gone"
-        >
+        android:visibility="gone">
+
         <ListView
             android:id="@+id/lv_act_history_list"
             android:layout_width="match_parent"

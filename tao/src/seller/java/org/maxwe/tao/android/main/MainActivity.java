@@ -58,8 +58,8 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         this.setCurrentFragment(R.id.rb_act_main_index);
 
         if (SellerApplication.currentUserEntity == null || SellerApplication.currentUserEntity.getActCode() == null) {
-            Intent intent = new Intent(this, AccessActivity.class);
-            this.startActivityForResult(intent, REQUEST_CODE_ACCESS_CHECK);
+//            Intent intent = new Intent(this, AccessActivity.class);
+//            this.startActivityForResult(intent, REQUEST_CODE_ACCESS_CHECK);
         }
     }
 

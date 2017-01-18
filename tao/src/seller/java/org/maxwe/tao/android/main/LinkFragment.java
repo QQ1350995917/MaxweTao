@@ -20,7 +20,7 @@ import org.xutils.view.annotation.Event;
  * Email: www.dingpengwei@foxmail.com www.dingpegnwei@gmail.com
  * Description: TODO
  */
-@ContentView(R.layout.activity_link)
+@ContentView(R.layout.fragment_link)
 public class LinkFragment extends BaseFragment {
 
     private UMShareListener umShareListener = new UMShareListener() {

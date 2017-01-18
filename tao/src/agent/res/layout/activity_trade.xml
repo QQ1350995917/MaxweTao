@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="#FFFFFF">
 
     <RelativeLayout
         android:id="@+id/rl_act_trade_nav"
         style="@style/nav_header_of_act">
+
         <TextView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -27,15 +29,16 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_centerInParent="true"
-        android:text="@string/string_no_data"
-        android:gravity="center"/>
+        android:gravity="center"
+        android:text="@string/string_no_data" />
 
     <RelativeLayout
         android:id="@+id/rl_act_trade_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:visibility="gone"
-        android:layout_below="@+id/rl_act_trade_nav">
+        android:layout_below="@+id/rl_act_trade_nav"
+        android:visibility="gone">
+
         <TableLayout
             android:id="@+id/tl_act_trade_to_agent_info"
             android:layout_width="match_parent"
@@ -44,10 +47,12 @@
             android:layout_margin="20dp">
 
             <TableRow>
+
                 <TextView
                     android:id="@+id/tv_act_trade_id"
                     style="@style/table_cell_of_agent"
                     android:text="ID: 西门吹雪" />
+
                 <TextView
                     android:id="@+id/tv_act_trade_level"
                     style="@style/table_cell_of_agent"
@@ -97,8 +102,8 @@
             android:layout_below="@+id/tl_act_trade_to_agent_info"
             android:layout_centerInParent="true"
             android:gravity="center"
-            android:visibility="gone"
-            android:text="您于2017-01-08:21:39向该账号转让10个码量" />
+            android:text="您于2017-01-08:21:39向该账号转让10个码量"
+            android:visibility="gone" />
 
         <LinearLayout
             android:id="@+id/ll_act_trade_detail_alert"
@@ -153,11 +158,11 @@
         <EditText
             android:id="@+id/et_act_trade_number"
             style="@style/editor"
-            android:hint="@string/string_input_trade_number"
-            android:inputType="number"
+            android:layout_below="@+id/ll_act_trade_detail_alert"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
-            android:layout_below="@+id/ll_act_trade_detail_alert"
+            android:hint="@string/string_input_trade_number"
+            android:inputType="number"
             android:maxLength="4" />
 
         <EditText
@@ -166,8 +171,8 @@
             android:layout_below="@+id/et_act_trade_number"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
-            android:inputType="textPassword"
             android:hint="@string/string_input_password"
+            android:inputType="textPassword"
             android:maxLength="12" />
 
         <Button
