@@ -9,9 +9,10 @@ import org.maxwe.tao.android.INetWorkManager;
 import org.maxwe.tao.android.NetworkManager;
 import org.maxwe.tao.android.R;
 import org.maxwe.tao.android.account.model.SessionModel;
+import org.maxwe.tao.android.activity.AuthorActivity;
 import org.maxwe.tao.android.activity.LoginActivity;
 import org.maxwe.tao.android.activity.ModifyActivity;
-import org.maxwe.tao.android.main.LinkFragment;
+import org.maxwe.tao.android.api.authorize.AuthorizeEntity;
 import org.maxwe.tao.android.main.MainActivity;
 import org.maxwe.tao.android.utils.SharedPreferencesUtils;
 import org.xutils.view.annotation.ContentView;
@@ -24,9 +25,16 @@ import org.xutils.view.annotation.Event;
  */
 @ContentView(R.layout.fragment_mine)
 public class MineFragment extends BaseFragment {
+    private static final int CODE_REQUEST_AUTHOR = 0;
+
     @Event(value = R.id.bt_frg_mine_promotion, type = View.OnClickListener.class)
     private void onPromotionAction(View view) {
-        Toast.makeText(MineFragment.this.getActivity(), "推广位开发中，敬请关注...", Toast.LENGTH_SHORT).show();
+        AuthorizeEntity author = SharedPreferencesUtils.getAuthor(this.getContext());
+        if (author == null || (System.currentTimeMillis() - author.getCreateTime()) / 1000 > Integer.parseInt(author.getExpires_in())) {
+            Intent intent = new Intent(MineFragment.this.getContext(), AuthorActivity.class);
+            intent.putExtra(AuthorActivity.KEY_INTENT_OF_STATE_CODE, 1234);
+            MineFragment.this.startActivityForResult(intent, this.CODE_REQUEST_AUTHOR);
+        }
     }
 
     @Event(value = R.id.bt_frg_mine_password, type = View.OnClickListener.class)
@@ -55,6 +63,7 @@ public class MineFragment extends BaseFragment {
                 @Override
                 public void onSuccess(String result) {
                     SharedPreferencesUtils.clearSession(MineFragment.this.getContext());
+                    SharedPreferencesUtils.clearAuthor(MineFragment.this.getContext());
                     Intent intent = new Intent(MineFragment.this.getContext(), LoginActivity.class);
                     MineFragment.this.getActivity().startActivity(intent);
                     MineFragment.this.getActivity().finish();
@@ -63,6 +72,7 @@ public class MineFragment extends BaseFragment {
                 @Override
                 public void onLoginTimeout(String result) {
                     SharedPreferencesUtils.clearSession(MineFragment.this.getContext());
+                    SharedPreferencesUtils.clearAuthor(MineFragment.this.getContext());
                     Intent intent = new Intent(MineFragment.this.getContext(), LoginActivity.class);
                     MineFragment.this.getActivity().startActivity(intent);
                     MineFragment.this.getActivity().finish();
@@ -71,6 +81,7 @@ public class MineFragment extends BaseFragment {
                 @Override
                 public void onError(Throwable ex, boolean isOnCallback) {
                     SharedPreferencesUtils.clearSession(MineFragment.this.getContext());
+                    SharedPreferencesUtils.clearAuthor(MineFragment.this.getContext());
                     Intent intent = new Intent(MineFragment.this.getContext(), LoginActivity.class);
                     MineFragment.this.getActivity().startActivity(intent);
                     MineFragment.this.getActivity().finish();
@@ -80,5 +91,21 @@ public class MineFragment extends BaseFragment {
             e.printStackTrace();
             Toast.makeText(this.getContext(), "请求失败", Toast.LENGTH_SHORT).show();
         }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch (requestCode) {
+            case CODE_REQUEST_AUTHOR:
+                if (resultCode == AuthorActivity.CODE_RESULT_OF_AUTHOR_SUCCESS) {
+                    AuthorizeEntity serializableExtra = (AuthorizeEntity) data.getSerializableExtra(AuthorActivity.KEY_INTENT_OF_AUTHOR);
+                    SharedPreferencesUtils.saveAuthor(this.getContext(), serializableExtra);
+                }
+                break;
+            default:
+                break;
+        }
+
     }
 }

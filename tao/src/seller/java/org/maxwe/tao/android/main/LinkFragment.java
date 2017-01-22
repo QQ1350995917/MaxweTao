@@ -11,7 +11,12 @@ import com.umeng.socialize.UMShareListener;
 import com.umeng.socialize.bean.SHARE_MEDIA;
 
 import org.maxwe.tao.android.BaseFragment;
+import org.maxwe.tao.android.Constants;
 import org.maxwe.tao.android.R;
+import org.maxwe.tao.android.account.model.SessionModel;
+import org.maxwe.tao.android.activity.AuthorActivity;
+import org.maxwe.tao.android.api.authorize.AuthorizeEntity;
+import org.maxwe.tao.android.utils.SharedPreferencesUtils;
 import org.xutils.view.annotation.ContentView;
 import org.xutils.view.annotation.Event;
 
@@ -22,6 +27,7 @@ import org.xutils.view.annotation.Event;
  */
 @ContentView(R.layout.fragment_link)
 public class LinkFragment extends BaseFragment {
+    private static final int CODE_REQUEST_AUTHOR = 0;
 
     private UMShareListener umShareListener = new UMShareListener() {
         @Override
@@ -46,14 +52,32 @@ public class LinkFragment extends BaseFragment {
 
     @Event(value = R.id.bt_act_link_action, type = View.OnClickListener.class)
     private void onLinkConvertAction(View view) {
-        new ShareAction(LinkFragment.this.getActivity()).withTitle(this.getString(R.string.app_name)).withText("hello")
-                .setDisplayList(SHARE_MEDIA.SINA, SHARE_MEDIA.QQ, SHARE_MEDIA.WEIXIN)
-                .setCallback(umShareListener).open();
+        AuthorizeEntity author = SharedPreferencesUtils.getAuthor(this.getContext());
+        if (author == null || (System.currentTimeMillis() - author.getCreateTime()) / 1000 > Integer.parseInt(author.getExpires_in())) {
+            Intent intent = new Intent(LinkFragment.this.getContext(), AuthorActivity.class);
+            intent.putExtra(AuthorActivity.KEY_INTENT_OF_STATE_CODE, 1234);
+            LinkFragment.this.startActivityForResult(intent, this.CODE_REQUEST_AUTHOR);
+        } else {
+            new ShareAction(LinkFragment.this.getActivity()).withTitle(this.getString(R.string.app_name)).withText("hello")
+                    .setDisplayList(SHARE_MEDIA.SINA, SHARE_MEDIA.QQ, SHARE_MEDIA.WEIXIN)
+                    .setCallback(umShareListener).open();
+        }
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        UMShareAPI.get(this.getContext()).onActivityResult(requestCode, resultCode, data);
+        switch (requestCode) {
+            case CODE_REQUEST_AUTHOR:
+                if (resultCode == AuthorActivity.CODE_RESULT_OF_AUTHOR_SUCCESS) {
+                    AuthorizeEntity serializableExtra = (AuthorizeEntity) data.getSerializableExtra(AuthorActivity.KEY_INTENT_OF_AUTHOR);
+                    SharedPreferencesUtils.saveAuthor(this.getContext(),serializableExtra);
+                }
+                break;
+            default:
+                UMShareAPI.get(this.getContext()).onActivityResult(requestCode, resultCode, data);
+                break;
+        }
+
     }
 }

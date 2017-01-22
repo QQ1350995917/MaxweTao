@@ -122,6 +122,7 @@ public class AccessActivity extends BaseActivity {
                 public void onLoginTimeout(String result) {
                     Toast.makeText(AccessActivity.this, R.string.string_toast_timeout, Toast.LENGTH_SHORT).show();
                     SharedPreferencesUtils.clearSession(AccessActivity.this);
+                    SharedPreferencesUtils.clearAuthor(AccessActivity.this);
                     onResponseLoginTimeout();
                 }
 
@@ -183,6 +184,7 @@ public class AccessActivity extends BaseActivity {
                 public void onLoginTimeout(String result) {
                     Toast.makeText(AccessActivity.this, R.string.string_toast_timeout, Toast.LENGTH_SHORT).show();
                     SharedPreferencesUtils.clearSession(AccessActivity.this);
+                    SharedPreferencesUtils.clearAuthor(AccessActivity.this);
                     onResponseLoginTimeout();
                 }
 
@@ -215,18 +217,21 @@ public class AccessActivity extends BaseActivity {
                 @Override
                 public void onSuccess(String result) {
                     SharedPreferencesUtils.clearSession(AccessActivity.this);
+                    SharedPreferencesUtils.clearAuthor(AccessActivity.this);
                     onReopenLaterAction(null);
                 }
 
                 @Override
                 public void onLoginTimeout(String result) {
                     SharedPreferencesUtils.clearSession(AccessActivity.this);
+                    SharedPreferencesUtils.clearAuthor(AccessActivity.this);
                     onReopenLaterAction(null);
                 }
 
                 @Override
                 public void onError(Throwable ex, boolean isOnCallback) {
                     SharedPreferencesUtils.clearSession(AccessActivity.this);
+                    SharedPreferencesUtils.clearAuthor(AccessActivity.this);
                     onReopenLaterAction(null);
                 }
             });

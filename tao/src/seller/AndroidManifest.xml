@@ -37,9 +37,8 @@
             android:theme="@style/AppTheme_activity_dialog"></activity>
 
         <activity
-            android:name=".main.AuthorActivity"
+            android:name=".activity.AuthorActivity"
             android:theme="@style/AppTheme_activity_dialog"></activity>
-
 
         <receiver android:name=".main.TaoReceiver">
             <intent-filter>
