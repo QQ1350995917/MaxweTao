@@ -75,7 +75,7 @@ public class LinkFragment extends BaseFragment {
                 }
                 break;
             default:
-                UMShareAPI.get(this.getContext()).onActivityResult(requestCode, resultCode, data);
+                //UMShareAPI.get(this.getContext()).onActivityResult(requestCode, resultCode, data);
                 break;
         }
 

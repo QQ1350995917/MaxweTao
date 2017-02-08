@@ -4,9 +4,10 @@
     android:layout_height="match_parent"
     android:background="#FFFFFF">
 
-    <WebView
+    <org.maxwe.tao.android.activity.AuthorWebView
         android:id="@+id/wv_act_author"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"></WebView>
+        android:layout_height="match_parent">
+    </org.maxwe.tao.android.activity.AuthorWebView>
 
 </RelativeLayout>
