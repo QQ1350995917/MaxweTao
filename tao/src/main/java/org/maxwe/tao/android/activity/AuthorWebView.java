@@ -69,17 +69,31 @@ public class AuthorWebView extends WebView {
     // 获取推广管理的集合
     public static final String KEY_OTHER_LIST = "otherList";
     public static final String KEY_OTHER_ADZONES = "otherAdzones";
+    public static final String KEY_OK = "ok";
+    public static final String KEY_GUIDE_LIST = "guideList";
 
     // 获取推广位的导购名称
     public static final String KEY_NAME = "name";
     public static final String KEY_SUB = "sub";
+    public static final String KEY_CATEGORY_ID = "categoryId";
+    public static final String KEY_ACCOUNT1 = "account1";
+    public static final String KEY_TAG = "tag";
+    public static final String KEY_NEW_AD_ZONE_NAME = "newadzonename";
+    public static final String KEY_SITE_ID = "siteid";
+    public static final String KEY_T = "t";
+    public static final String KEY_GCID = "gcid";
+    public static final String KEY_SELECT_ACT = "selectact";
+    public static final String KEY_GUIDE_ID = "guideID";
 
 
     // 查询是否登录状态
     public static final String URL_LOGIN_MESSAGE = "http://ad.alimama.com/cps/shopkeeper/loginMessage.json";
 
-    // 导购管理和导购推广位的信息
+    // 获取导购管理和导购推广位的信息
     public static final String URL_AD_ZONE = "http://pub.alimama.com/common/adzone/newSelfAdzone2.json?tag=29";
+
+    public static final String URL_ADD_GUIDE = "http://pub.alimama.com/common/site/generalize/guideAdd.json";
+    public static final String URL_ADD_AD_ZONE = "http://pub.alimama.com/common/adzone/selfAdzoneCreate.json";
 
     // 查询推广位的信息
     public static final String URL_GUIDE_LIST = "http://pub.alimama.com/common/site/generalize/guideList.json";
@@ -220,7 +234,7 @@ public class AuthorWebView extends WebView {
 
             @Override
             public void onPageFinished(final WebView view, String url) {
-                if (url.equals(URL_LOGIN_MESSAGE)) {
+                if (url.equals(URL_INDEX)) {
                     //view.loadUrl("javascript:window.local_obj.showSource(document.body)");
                 }
                 super.onPageFinished(view, url);

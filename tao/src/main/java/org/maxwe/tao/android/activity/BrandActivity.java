@@ -46,34 +46,145 @@ public class BrandActivity extends BaseActivity {
             public void onSuccess(String result) {
                 Map rootMap = JSON.parseObject(result, Map.class);
                 Map<String, Object> dataMap = (Map<String, Object>) rootMap.get(AuthorWebView.KEY_DATA);
-                List<Map<String, Object>> otherList = (List<Map<String, Object>>) dataMap.get(AuthorWebView.KEY_OTHER_LIST);
                 List<Map<String, Object>> adZoneList = (List<Map<String, Object>>) dataMap.get(AuthorWebView.KEY_OTHER_ADZONES);
-//                if (otherList != null && otherList.size() > 0) {
-//                    Map<String, Object> stringObjectMap = otherList.get(0);
-//                    String name = stringObjectMap.get(AuthorWebView.KEY_NAME).toString();
-//                    tv_act_brand_unit.setText(name);
-//                    Toast.makeText(BrandActivity.this, "ok", Toast.LENGTH_SHORT).show();
-//                } else {
-//
-//                }
-
-                if (adZoneList != null && adZoneList.size() > 0){
+                if (adZoneList != null && adZoneList.size() > 0) {
                     Map<String, Object> stringObjectMap = adZoneList.get(0);
                     String name = stringObjectMap.get(AuthorWebView.KEY_NAME).toString();
                     tv_act_brand_unit.setText(name);
                     List<Map<String, Object>> maps = (List<Map<String, Object>>) stringObjectMap.get(AuthorWebView.KEY_SUB);
-                    String s = maps.get(0).get(AuthorWebView.KEY_NAME).toString();
-                    tv_act_brand_position.setText(s);
-
+                    if (maps != null && maps.size() > 0){
+                        String s = maps.get(0).get(AuthorWebView.KEY_NAME).toString();
+                        tv_act_brand_position.setText(s);
+                    }
                     Toast.makeText(BrandActivity.this, "ok", Toast.LENGTH_SHORT).show();
+                } else {
+                    createGuide("测试名称","w123456");
+                    Toast.makeText(BrandActivity.this, "创建推广单元", Toast.LENGTH_SHORT).show();
                 }
-                Toast.makeText(BrandActivity.this, "ok", Toast.LENGTH_SHORT).show();
             }
 
             @Override
             public void onError(Throwable ex, boolean isOnCallback) {
                 ex.printStackTrace();
-                Toast.makeText(BrandActivity.this, "出错了", Toast.LENGTH_SHORT).show();
+                Toast.makeText(BrandActivity.this, "获取推广列表出错了", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onCancelled(CancelledException cex) {
+
+            }
+
+            @Override
+            public void onFinished() {
+
+            }
+        });
+    }
+
+    private void createGuide(final String name,String account) {
+        RequestParams requestParams = new RequestParams(AuthorWebView.URL_ADD_GUIDE);
+        CookieManager cookieManager = CookieManager.getInstance();
+        String CookieStr = cookieManager.getCookie(AuthorWebView.URL_LOGIN_MESSAGE);
+        requestParams.addHeader("Cookie", CookieStr);
+        requestParams.addParameter(AuthorWebView.KEY_NAME,name);
+        requestParams.addParameter(AuthorWebView.KEY_CATEGORY_ID,14);
+        requestParams.addParameter(AuthorWebView.KEY_ACCOUNT1,account);
+        Callback.Cancelable cancelable = x.http().post(requestParams, new Callback.CommonCallback<String>() {
+            @Override
+            public void onSuccess(String result) {
+                Map rootMap = JSON.parseObject(result, Map.class);
+                Map<String, Object> infoMap = (Map<String, Object>) rootMap.get(AuthorWebView.KEY_INFO);
+                if (Boolean.parseBoolean(infoMap.get(AuthorWebView.KEY_OK).toString())) {
+                    Toast.makeText(BrandActivity.this, "推广单元创建成功", Toast.LENGTH_SHORT).show();
+                    getNewGuideInfo(name);
+                }
+            }
+
+            @Override
+            public void onError(Throwable ex, boolean isOnCallback) {
+                ex.printStackTrace();
+                Toast.makeText(BrandActivity.this, "推广单元创建出错了", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onCancelled(CancelledException cex) {
+
+            }
+
+            @Override
+            public void onFinished() {
+
+            }
+        });
+    }
+
+    private void getNewGuideInfo(final String newGuidName){
+        RequestParams requestParams = new RequestParams(AuthorWebView.URL_GUIDE_LIST);
+        CookieManager cookieManager = CookieManager.getInstance();
+        String CookieStr = cookieManager.getCookie(AuthorWebView.URL_LOGIN_MESSAGE);
+        requestParams.addHeader("Cookie", CookieStr);
+        Callback.Cancelable cancelable = x.http().get(requestParams, new Callback.CommonCallback<String>() {
+            @Override
+            public void onSuccess(String result) {
+                Map rootMap = JSON.parseObject(result, Map.class);
+                Map<String, Object> dataMap = (Map<String, Object>) rootMap.get(AuthorWebView.KEY_DATA);
+                List<Map<String, Object>> adZoneList = (List<Map<String, Object>>) dataMap.get(AuthorWebView.KEY_GUIDE_LIST);
+                if (adZoneList != null && adZoneList.size() > 0) {
+                    Map<String, Object> stringObjectMap = adZoneList.get(0);
+                    String name = stringObjectMap.get(AuthorWebView.KEY_NAME).toString();
+                    String guideId = stringObjectMap.get(AuthorWebView.KEY_GUIDE_ID).toString();
+                    if (newGuidName.equals(name)){
+                        createADZone(guideId);
+                        Toast.makeText(BrandActivity.this, "获取新建单元成功", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            }
+
+            @Override
+            public void onError(Throwable ex, boolean isOnCallback) {
+                ex.printStackTrace();
+                Toast.makeText(BrandActivity.this, "获取新建单元出错了", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onCancelled(CancelledException cex) {
+
+            }
+
+            @Override
+            public void onFinished() {
+
+            }
+        });
+    }
+
+    private void createADZone(String siteId) {
+        RequestParams requestParams = new RequestParams(AuthorWebView.URL_ADD_AD_ZONE);
+        CookieManager cookieManager = CookieManager.getInstance();
+        String CookieStr = cookieManager.getCookie(AuthorWebView.URL_LOGIN_MESSAGE);
+        requestParams.addHeader("Cookie", CookieStr);
+        requestParams.addParameter(AuthorWebView.KEY_TAG,29);
+        requestParams.addParameter(AuthorWebView.KEY_SITE_ID,siteId);
+        requestParams.addParameter(AuthorWebView.KEY_T,System.currentTimeMillis());
+        requestParams.addParameter(AuthorWebView.KEY_NEW_AD_ZONE_NAME,"微信推广位000");
+        requestParams.addParameter(AuthorWebView.KEY_GCID,8);
+        requestParams.addParameter("_tb_token_","HP1B1kCmnFLq");
+        requestParams.addParameter(AuthorWebView.KEY_SELECT_ACT,"add");
+        Callback.Cancelable cancelable = x.http().post(requestParams, new Callback.CommonCallback<String>() {
+            @Override
+            public void onSuccess(String result) {
+                Map rootMap = JSON.parseObject(result, Map.class);
+                Map<String, Object> infoMap = (Map<String, Object>) rootMap.get(AuthorWebView.KEY_INFO);
+                if (Boolean.parseBoolean(infoMap.get(AuthorWebView.KEY_OK).toString())) {
+                    Toast.makeText(BrandActivity.this, "推广单元创建成功", Toast.LENGTH_SHORT).show();
+                    getGuideList();
+                }
+            }
+
+            @Override
+            public void onError(Throwable ex, boolean isOnCallback) {
+                ex.printStackTrace();
+                Toast.makeText(BrandActivity.this, "推广单元出错了", Toast.LENGTH_SHORT).show();
             }
 
             @Override
