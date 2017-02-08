@@ -19,7 +19,7 @@
             android:name="UMENG_APPKEY"
             android:value="5870b05f8f4a9d378a000958"></meta-data>
 
-        <activity android:name=".activity.AuthorActivity">
+        <activity android:name=".activity.SplashActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -37,8 +37,10 @@
             android:name=".main.AccessActivity"
             android:theme="@style/AppTheme_activity_dialog"></activity>
 
-        <!--<activity-->
-            <!--android:name=".activity.AuthorActivity"></activity>-->
+        <activity
+            android:name=".activity.AuthorActivity"></activity>
+
+        <activity android:name=".activity.BrandActivity"></activity>
 
         <receiver android:name=".main.TaoReceiver">
             <intent-filter>

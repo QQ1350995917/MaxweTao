@@ -1,6 +1,7 @@
 package org.maxwe.tao.android.activity;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.os.Handler;
 import android.os.Message;
 import android.util.AttributeSet;
@@ -9,21 +10,90 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+
 /**
  * Created by Pengwei Ding on 2017-02-05 14:32.
  * Email: www.dingpengwei@foxmail.com www.dingpegnwei@gmail.com
  * Description: TODO
+ * <p/>
+ * {"data":{"loginUrlPrefix":"http://www.alimama.com/member/login.htm?forward=","noLogin":true},"info":{"message":null,"ok":true}}
+ */
+
+/**
+ * {"data":{"loginUrlPrefix":"http://www.alimama.com/member/login.htm?forward=","noLogin":true},"info":{"message":null,"ok":true}}
+ */
+
+/**
+ * {
+ * "data": {
+ * "isTmallHKSeller": false,
+ * "isShowMaterial": false,
+ * "nickname": "www_ding",
+ * "isB2C": false,
+ * "isInCPADebtWhiteList": false,
+ * "isJoinedCps": false,
+ * "isEarnedSeller": false,
+ * "env": "product",
+ * "frozen": 0,
+ * "logname": "www.dingpengwei@foxmail.com",
+ * "taobaoNumberID": 837058645,
+ * "isEarnedSellerEvaluatePermitted": true,
+ * "isShopKeeperOwningMoney": false,
+ * "infoCompleteUrl": null,
+ * "isBigShopKeeper": false,
+ * "shopKeeperId": 120134623,
+ * "isEarnedSellerShopPermitted": false,
+ * "_tb_token_": "HP1B1kCmnFLq",
+ * "isInCPAWhiteList": false,
+ * "newItemEventCount": 0
+ * },
+ * "info": {
+ * "message": null,
+ * "ok": true
+ * }
+ * }
  */
 public class AuthorWebView extends WebView {
+    // 返回数据的data关键字
+    public static final String KEY_DATA = "data";
+    // 返回数据的info关键字
+    public static final String KEY_INFO = "info";
+    // 判断登录过期的关键字
+    public static final String KEY_NO_LOGIN = "noLogin";
+    // 判断登录状态的关键字
+    public static final String KEY_TB_TOKEN_ = "_tb_token_";
+    // 获取推广管理的集合
+    public static final String KEY_OTHER_LIST = "otherList";
+    public static final String KEY_OTHER_ADZONES = "otherAdzones";
 
-    private static final String isLoginRequest = "http://ad.alimama.com/cps/shopkeeper/loginMessage.json";
+    // 获取推广位的导购名称
+    public static final String KEY_NAME = "name";
+    public static final String KEY_SUB = "sub";
 
+
+    // 查询是否登录状态
+    public static final String URL_LOGIN_MESSAGE = "http://ad.alimama.com/cps/shopkeeper/loginMessage.json";
+
+    // 导购管理和导购推广位的信息
+    public static final String URL_AD_ZONE = "http://pub.alimama.com/common/adzone/newSelfAdzone2.json?tag=29";
+
+    // 查询推广位的信息
+    public static final String URL_GUIDE_LIST = "http://pub.alimama.com/common/site/generalize/guideList.json";
+
+    // 登录页面,登陆成功后返回登录信息
+    private static final String URL_LOGIN = "https://login.m.taobao.com/login.htm?redirectURL=http://login.taobao.com/member/taobaoke/login.htm?is_login=1&loginFrom=wap_alimama";
+
+
+    //                                           https://login.m.taobao.com/login.htm?redirectURL=http%3A%2F%2Flogin.taobao.com%2Fmember%2Ftaobaoke%2Flogin.htm%3Fis_login%3D1&loginFrom=wap_alimama
     private static final String main = "http://pub.alimama.com/myunion.htm";
     private static final String index2 = "https://login.m.taobao.com/login.htm?loginFrom=wap_tb";
     private static final String index3 = "http://h5.m.taobao.com/mlapp/mytaobao.html#mlapp-mytaobao";
 
-    // 登录页面
-    private static final String URL_LOGIN = "https://login.m.taobao.com/login.htm?redirectURL=http://pub.alimama.com/common/site/generalize/guideList.json";
+
     // 登录成功后跳转的页面 在这个页面加载完毕后执行 SCRIPT_ON_INDEX 脚本
     private static final String URL_INDEX = "http://www.alimama.com/index.htm";//
     // 执行 SCRIPT_ON_INDEX 脚本后要执行一个脚本跳转到用户后台页面 在该页面执行 SCRIPT_SHOPPING_ADD_CLICK 脚本
@@ -40,8 +110,9 @@ public class AuthorWebView extends WebView {
 
     private boolean isLogin = false;
     private boolean isUnion = false;
+    boolean isLoadUrl = false;
 
-    private Handler addNewShopping = new Handler(){
+    private Handler addNewShopping = new Handler() {
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
@@ -76,67 +147,112 @@ public class AuthorWebView extends WebView {
         this.getSettings().setAllowFileAccess(true);
         this.getSettings().setAppCacheEnabled(true);
         this.getSettings().setDatabaseEnabled(true);
+        this.getSettings().setDomStorageEnabled(true);
 //        this.getSettings().setUserAgentString("Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/56.0.2924.87 Safari/537.36");
 
         this.setWebViewClient(new WebViewClient() {
+
+//            @Override
+//            public boolean shouldOverrideUrlLoading(final WebView view, String url) {
+//                System.out.println("========执行了shouldOverrideUrlLoading=========");
+//
+//                String htmlContent = "";
+//                final HttpGet httpGet = new HttpGet(url);
+//                Thread theard = new Thread(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        try {
+//                            HttpResponse response;
+//                            String htmlContent;
+//                            HttpClient httpClient = new DefaultHttpClient();
+//                            response = httpClient.execute(httpGet);
+//                            if (response.getStatusLine().getStatusCode() == 200) {
+//                                Header[] headers = response.getAllHeaders();
+//                                for (Header header : headers) {
+//                                    String name = header.getName();
+//                                    String value = header.getValue();
+//                                }
+//                                HttpEntity entity = response.getEntity();
+//                                if (entity != null) {
+//                                    InputStream inputStream = entity.getContent();
+//                                    final String s = convertToString(inputStream);
+//                                    System.out.println(s);
+//                                    new Handler().post(new Runnable() {
+//                                        @Override
+//                                        public void run() {
+//                                            view.loadData(s, "text/html", "utf-8");
+//                                        }
+//                                    });
+//
+//                                }
+//                            }
+//                        } catch (Exception e) {
+//                            e.printStackTrace();
+//                        }
+//                    }
+//                });
+//                theard.start();
+//                return true;
+//            }
+
+            @Override
+            public void onPageStarted(WebView view, final String url, Bitmap favicon) {
+//                new Thread(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        URL local_url;
+//                        URLConnection connection;
+//                        try {
+//                            local_url = new URL(url);
+//                            connection = local_url.openConnection();
+//                            connection.setConnectTimeout(5000);
+//                            connection.connect();
+//                            InputStream inputStream = connection.getInputStream();
+//                            String convertToString = convertToString(inputStream);
+//                            System.out.println(convertToString);
+//                        } catch (Exception e) {
+//                            e.printStackTrace();
+//                        }
+//                    }
+//                }).start();
+                super.onPageStarted(view, url, favicon);
+            }
+
             @Override
             public void onPageFinished(final WebView view, String url) {
-                view.loadUrl("javascript:window.local_obj.showSource('<html>'+document.getElementsByTagName('html')+'</html>');");
-//                System.out.println(url);
-//                if (url.equals(URL_INDEX)) {
-//                    if (!isLogin) {
-//                        view.loadUrl(URL_SHOPPING);
-////                        isLogin = true;
-////                        view.loadUrl(SCRIPT_ON_MY_UNION);
-//                    }
-//
-//                } else if (url.equals(URL_SHOPPING)) {
-//                    int baseDelay = 5000;
-//                    new Handler().postDelayed(new Runnable() {
-//                        @Override
-//                        public void run() {
-//                            view.loadUrl(SCRIPT_SHOPPING_ADD_CLICK);
-//                            System.out.println("执行点击事件");
-//                        }
-//                    },baseDelay + 2000);
-//                    new Handler().postDelayed(new Runnable() {
-//                        @Override
-//                        public void run() {
-//                            view.loadUrl(SCRIPT_SHOPPING_ADD_NAME);
-//                            System.out.println("设置名称");
-//                        }
-//                    },baseDelay + 6000);
-//
-//                    new Handler().postDelayed(new Runnable() {
-//                        @Override
-//                        public void run() {
-//                            view.loadUrl(SCRIPT_SHOPPING_ADD_CATEGORY);
-//                            System.out.println("设置类别");
-//                        }
-//                    },baseDelay + 4000);
-//
-//                    new Handler().postDelayed(new Runnable() {
-//                        @Override
-//                        public void run() {
-//                            view.loadUrl(SCRIPT_SHOPPING_ADD_ACCOUNT);
-//                            System.out.println("设置账号");
-//                        }
-//                    },baseDelay + 5000);
-//
-//                }
+                if (url.equals(URL_LOGIN_MESSAGE)) {
+                    //view.loadUrl("javascript:window.local_obj.showSource(document.body)");
+                }
                 super.onPageFinished(view, url);
             }
         });
-        this.loadUrl(isLoginRequest);
-//        this.loadUrl("https://login.taobao.com");
+
+        this.loadUrl(URL_LOGIN);
     }
 
+    @Override
+    public void loadUrl(String url) {
+        super.loadUrl(url);
+    }
 
     final class InJavaScriptLocalObj {
         @JavascriptInterface
         public void showSource(String html) {
-            System.out.println(html);
+//            System.out.println(html);
         }
+    }
+
+    public String convertToString(InputStream inputStream) {
+        StringBuffer string = new StringBuffer();
+        BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
+        String line;
+        try {
+            while ((line = reader.readLine()) != null) {
+                string.append(line + "\n");
+            }
+        } catch (IOException e) {
+        }
+        return string.toString();
     }
 
     @Override

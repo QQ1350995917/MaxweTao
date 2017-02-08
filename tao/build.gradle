@@ -46,6 +46,8 @@ android {
             versionName "snapshot-1.0.4"
         }
     }
+
+    useLibrary 'org.apache.http.legacy'
 }
 
 dependencies {
