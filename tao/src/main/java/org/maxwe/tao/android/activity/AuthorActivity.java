@@ -1,16 +1,12 @@
 package org.maxwe.tao.android.activity;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.webkit.WebSettings;
-import android.webkit.WebView;
-import android.webkit.WebViewClient;
+import android.view.View;
 
 import org.maxwe.tao.android.R;
-import org.maxwe.tao.android.TaoApplication;
-import org.maxwe.tao.android.api.authorize.AuthorizeEntity;
 import org.xutils.view.annotation.ContentView;
+import org.xutils.view.annotation.Event;
 import org.xutils.view.annotation.ViewInject;
 
 
@@ -29,23 +25,31 @@ public class AuthorActivity extends BaseActivity {
     @ViewInject(R.id.wv_act_author)
     private AuthorWebView wv_act_author;
 
-
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        this.wv_act_author.setAuthorWebViewCallback(new AuthorWebView.AuthorWebViewCallback() {
+            @Override
+            public void onAuthorSuccess() {
+                onSuccessBack();
+            }
+        });
     }
 
-    private void onSuccessBack(AuthorizeEntity authorizeEntity) {
-//        Intent intent = new Intent();
-//        intent.putExtra(this.KEY_INTENT_OF_AUTHOR, authorizeEntity);
-//        this.setResult(CODE_RESULT_OF_AUTHOR_SUCCESS, intent);
-//        this.finish();
+    @Event(value = R.id.bt_act_author_back, type = View.OnClickListener.class)
+    private void onBackAction(View view) {
+        this.onBackPressed();
+    }
+
+    private void onSuccessBack() {
+        this.setResult(CODE_RESULT_OF_AUTHOR_SUCCESS);
+        this.finish();
     }
 
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-//        this.setResult(CODE_RESULT_OF_AUTHOR_FAIL);
-//        this.finish();
+        this.setResult(CODE_RESULT_OF_AUTHOR_FAIL);
+        this.finish();
     }
 }

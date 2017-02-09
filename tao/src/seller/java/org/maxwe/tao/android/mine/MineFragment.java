@@ -17,7 +17,6 @@ import org.maxwe.tao.android.activity.AuthorWebView;
 import org.maxwe.tao.android.activity.BrandActivity;
 import org.maxwe.tao.android.activity.LoginActivity;
 import org.maxwe.tao.android.activity.ModifyActivity;
-import org.maxwe.tao.android.api.authorize.AuthorizeEntity;
 import org.maxwe.tao.android.main.MainActivity;
 import org.maxwe.tao.android.utils.SharedPreferencesUtils;
 import org.xutils.common.Callback;
@@ -48,19 +47,17 @@ public class MineFragment extends BaseFragment {
             public void onSuccess(String result) {
                 Map rootMap = JSON.parseObject(result, Map.class);
                 Map<String, String> dataMap = (Map<String, String>) rootMap.get(AuthorWebView.KEY_DATA);
-                if (dataMap != null){
+                if (dataMap != null) {
                     if (dataMap.containsKey(AuthorWebView.KEY_NO_LOGIN)) {
                         Intent intent = new Intent(MineFragment.this.getContext(), AuthorActivity.class);
                         intent.putExtra(AuthorActivity.KEY_INTENT_OF_STATE_CODE, 1234);
                         MineFragment.this.startActivityForResult(intent, MineFragment.this.CODE_REQUEST_AUTHOR);
-                        Toast.makeText(MineFragment.this.getContext(),"没有登录",Toast.LENGTH_SHORT).show();
+                        Toast.makeText(MineFragment.this.getContext(), "没有登录", Toast.LENGTH_SHORT).show();
                     } else if (dataMap.containsKey(AuthorWebView.KEY_TB_TOKEN_)) {
                         Intent intent = new Intent(MineFragment.this.getContext(), BrandActivity.class);
-                        intent.putExtra(AuthorActivity.KEY_INTENT_OF_STATE_CODE, 1234);
-                        MineFragment.this.startActivityForResult(intent, MineFragment.this.CODE_REQUEST_AUTHOR);
-                        Toast.makeText(MineFragment.this.getContext(),"已经登录",Toast.LENGTH_SHORT).show();
+                        MineFragment.this.startActivity(intent);
                     } else {
-                        Toast.makeText(MineFragment.this.getContext(),"其他情况",Toast.LENGTH_SHORT).show();
+                        Toast.makeText(MineFragment.this.getContext(), "其他情况", Toast.LENGTH_SHORT).show();
                     }
                 }
             }
@@ -145,8 +142,8 @@ public class MineFragment extends BaseFragment {
         switch (requestCode) {
             case CODE_REQUEST_AUTHOR:
                 if (resultCode == AuthorActivity.CODE_RESULT_OF_AUTHOR_SUCCESS) {
-                    AuthorizeEntity serializableExtra = (AuthorizeEntity) data.getSerializableExtra(AuthorActivity.KEY_INTENT_OF_AUTHOR);
-                    SharedPreferencesUtils.saveAuthor(this.getContext(), serializableExtra);
+                    Intent intent = new Intent(MineFragment.this.getContext(), BrandActivity.class);
+                    MineFragment.this.startActivity(intent);
                 }
                 break;
             default:

@@ -2,23 +2,20 @@ package org.maxwe.tao.android.activity;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.os.Handler;
-import android.os.Message;
 import android.util.AttributeSet;
 import android.webkit.JavascriptInterface;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-
 /**
  * Created by Pengwei Ding on 2017-02-05 14:32.
  * Email: www.dingpengwei@foxmail.com www.dingpegnwei@gmail.com
  * Description: TODO
+ * <p/>
+ * {"data":{"loginUrlPrefix":"http://www.alimama.com/member/login.htm?forward=","noLogin":true},"info":{"message":null,"ok":true}}
+ * <p/>
+ * {"data":{"loginUrlPrefix":"http://www.alimama.com/member/login.htm?forward=","noLogin":true},"info":{"message":null,"ok":true}}
  * <p/>
  * {"data":{"loginUrlPrefix":"http://www.alimama.com/member/login.htm?forward=","noLogin":true},"info":{"message":null,"ok":true}}
  */
@@ -58,6 +55,10 @@ import java.io.InputStreamReader;
  * }
  */
 public class AuthorWebView extends WebView {
+    public interface AuthorWebViewCallback {
+        void onAuthorSuccess();
+    }
+
     // 返回数据的data关键字
     public static final String KEY_DATA = "data";
     // 返回数据的info关键字
@@ -102,7 +103,6 @@ public class AuthorWebView extends WebView {
     private static final String URL_LOGIN = "https://login.m.taobao.com/login.htm?redirectURL=http://login.taobao.com/member/taobaoke/login.htm?is_login=1&loginFrom=wap_alimama";
 
 
-    //                                           https://login.m.taobao.com/login.htm?redirectURL=http%3A%2F%2Flogin.taobao.com%2Fmember%2Ftaobaoke%2Flogin.htm%3Fis_login%3D1&loginFrom=wap_alimama
     private static final String main = "http://pub.alimama.com/myunion.htm";
     private static final String index2 = "https://login.m.taobao.com/login.htm?loginFrom=wap_tb";
     private static final String index3 = "http://h5.m.taobao.com/mlapp/mytaobao.html#mlapp-mytaobao";
@@ -122,16 +122,8 @@ public class AuthorWebView extends WebView {
     private static final String SCRIPT_SHOPPING_ADD_ACCOUNT = "javascript:(document.getElementsByName('account1')[0].value = '333333')";//新增导购推广的账号
     private static final String SCRIPT_SHOPPING_ADD_SUBMIT = "javascript:(document.getElementById('vf-dialog').childNodes[0].childNodes[7].childNodes[1].click())";//新增导购推广的提交事件
 
-    private boolean isLogin = false;
-    private boolean isUnion = false;
-    boolean isLoadUrl = false;
 
-    private Handler addNewShopping = new Handler() {
-        @Override
-        public void handleMessage(Message msg) {
-            super.handleMessage(msg);
-        }
-    };
+    private AuthorWebViewCallback authorWebViewCallback;
 
     public AuthorWebView(Context context) {
         super(context);
@@ -165,70 +157,8 @@ public class AuthorWebView extends WebView {
 //        this.getSettings().setUserAgentString("Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/56.0.2924.87 Safari/537.36");
 
         this.setWebViewClient(new WebViewClient() {
-
-//            @Override
-//            public boolean shouldOverrideUrlLoading(final WebView view, String url) {
-//                System.out.println("========执行了shouldOverrideUrlLoading=========");
-//
-//                String htmlContent = "";
-//                final HttpGet httpGet = new HttpGet(url);
-//                Thread theard = new Thread(new Runnable() {
-//                    @Override
-//                    public void run() {
-//                        try {
-//                            HttpResponse response;
-//                            String htmlContent;
-//                            HttpClient httpClient = new DefaultHttpClient();
-//                            response = httpClient.execute(httpGet);
-//                            if (response.getStatusLine().getStatusCode() == 200) {
-//                                Header[] headers = response.getAllHeaders();
-//                                for (Header header : headers) {
-//                                    String name = header.getName();
-//                                    String value = header.getValue();
-//                                }
-//                                HttpEntity entity = response.getEntity();
-//                                if (entity != null) {
-//                                    InputStream inputStream = entity.getContent();
-//                                    final String s = convertToString(inputStream);
-//                                    System.out.println(s);
-//                                    new Handler().post(new Runnable() {
-//                                        @Override
-//                                        public void run() {
-//                                            view.loadData(s, "text/html", "utf-8");
-//                                        }
-//                                    });
-//
-//                                }
-//                            }
-//                        } catch (Exception e) {
-//                            e.printStackTrace();
-//                        }
-//                    }
-//                });
-//                theard.start();
-//                return true;
-//            }
-
             @Override
             public void onPageStarted(WebView view, final String url, Bitmap favicon) {
-//                new Thread(new Runnable() {
-//                    @Override
-//                    public void run() {
-//                        URL local_url;
-//                        URLConnection connection;
-//                        try {
-//                            local_url = new URL(url);
-//                            connection = local_url.openConnection();
-//                            connection.setConnectTimeout(5000);
-//                            connection.connect();
-//                            InputStream inputStream = connection.getInputStream();
-//                            String convertToString = convertToString(inputStream);
-//                            System.out.println(convertToString);
-//                        } catch (Exception e) {
-//                            e.printStackTrace();
-//                        }
-//                    }
-//                }).start();
                 super.onPageStarted(view, url, favicon);
             }
 
@@ -236,6 +166,9 @@ public class AuthorWebView extends WebView {
             public void onPageFinished(final WebView view, String url) {
                 if (url.equals(URL_INDEX)) {
                     //view.loadUrl("javascript:window.local_obj.showSource(document.body)");
+                    if (AuthorWebView.this.authorWebViewCallback != null) {
+                        AuthorWebView.this.authorWebViewCallback.onAuthorSuccess();
+                    }
                 }
                 super.onPageFinished(view, url);
             }
@@ -252,21 +185,7 @@ public class AuthorWebView extends WebView {
     final class InJavaScriptLocalObj {
         @JavascriptInterface
         public void showSource(String html) {
-//            System.out.println(html);
         }
-    }
-
-    public String convertToString(InputStream inputStream) {
-        StringBuffer string = new StringBuffer();
-        BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
-        String line;
-        try {
-            while ((line = reader.readLine()) != null) {
-                string.append(line + "\n");
-            }
-        } catch (IOException e) {
-        }
-        return string.toString();
     }
 
     @Override
@@ -279,5 +198,9 @@ public class AuthorWebView extends WebView {
     public void onResume() {
         super.onResume();
         this.resumeTimers();
+    }
+
+    public void setAuthorWebViewCallback(AuthorWebViewCallback authorWebViewCallback) {
+        this.authorWebViewCallback = authorWebViewCallback;
     }
 }

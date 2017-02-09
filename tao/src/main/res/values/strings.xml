@@ -38,5 +38,16 @@
     <string name="string_new_version">发现新版本</string>
     <string name="string_new_version_upgrade">请您务必更新</string>
 
+    <string name="string_login_tao_bao">淘宝登录</string>
+    <string name="string_tao_promotion_info">导购推广信息</string>
+    <string name="string_tao_promotion">导购推广</string>
+    <string name="string_tao_position">导购推广位</string>
+    <string name="string_tao_promotion_position_create">创建导购推广位</string>
+    <string name="string_tao_wei_xin">请输入您的微信号码</string>
+    <string name="string_tao_tip">系统会自动帮您创建微信导购推广信息</string>
+    <string name="string_tao_create">一键创建</string>
+    <string name="string_tao_promotion_new_name">淘妈咪导购推广</string>
+    <string name="string_tao_position_new_name">淘妈咪微信导购推广位</string>
+
     <string name="platform" >Android</string>
 </resources>
