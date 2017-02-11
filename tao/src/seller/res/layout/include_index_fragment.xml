@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <RelativeLayout
+        android:id="@+id/rl_frg_search_container"
+        android:layout_width="match_parent"
+        android:layout_height="60dp">
+
+        <EditText
+            android:id="@+id/et_frg_index_search"
+            style="@style/editor"
+            android:focusable="false"/>
+
+        <Button
+            android:id="@+id/bt_frg_search"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignBaseline="@+id/et_frg_index_search"
+            android:layout_alignRight="@+id/et_frg_index_search"
+            android:layout_marginBottom="10dp"
+            android:text="@string/string_search"/>
+    </RelativeLayout>
+
+    <LinearLayout
+        android:id="@+id/ll_inc_index_frg_tools_bar"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:orientation="horizontal"
+        android:layout_below="@id/rl_frg_search_container">
+        <Button
+            android:id="@+id/ib_frg_coupon"
+            style="@style/index_block_item"
+            android:text="默认"/>
+        <Button
+            android:id="@+id/ib_frg_refine"
+            style="@style/index_block_item"
+            android:text="佣金"/>
+        <Button
+            android:id="@+id/ib_frg_live"
+            style="@style/index_block_item"
+            android:text="价格"/>
+        <Button
+            android:id="@+id/ib_frg_link"
+            style="@style/index_block_item"
+            android:text="销量"/>
+        <Button
+            android:id="@+id/ib_frg_newbie"
+            style="@style/index_block_item"
+            android:text="优惠券"/>
+    </LinearLayout>
+
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/srl_inc_index_frg_swipe_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/ll_inc_index_frg_tools_bar">
+
+        <ListView
+            android:id="@+id/lv_inc_index_frg_container"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"></ListView>
+    </android.support.v4.widget.SwipeRefreshLayout>
+</RelativeLayout>
