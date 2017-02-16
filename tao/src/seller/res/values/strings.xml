@@ -22,10 +22,11 @@
     <string name="string_request_error">获取信息失败</string>
     <string name="string_act_error">授权失败</string>
     <string name="string_act_success">授权成功</string>
+    <string name="string_goods_detail">商品详情</string>
 
 
     <!--<string name="string_url_domain">http://192.168.13.50:8080/tao</string>-->
-    <string name="string_url_domain">http://192.168.13.69:8080/tao</string>
+    <string name="string_url_domain">http://192.168.13.61:8080/tao</string>
     <string name="string_url_account_exist">/user/exist</string>
     <string name="string_url_account_lost">/user/lost</string>
     <string name="string_url_account_register">/user/register</string>
@@ -36,6 +37,8 @@
     <string name="string_url_account_active">/user/active</string>
     <string name="string_url_meta_smsCode">/meta/smsCode</string>
     <string name="string_url_version_version">/version/version</string>
+
+    <string name="string_url_goods_query">/goods/query</string>
 
     <integer name="integer_app_type">1</integer>
 

@@ -93,7 +93,7 @@ public class IndexFragment extends BaseFragment implements ViewPager.OnPageChang
 //                System.out.println("==========================");
 //            }
 //        });
-//        GoodsQueryEntity goodsQueryEntity = new GoodsQueryEntity("女装", GoodsQueryEntity.TOTAL_SALES_DES, 0, 20);
+//        GoodsEntity goodsQueryEntity = new GoodsEntity("女装", GoodsEntity.TOTAL_SALES_DES, 0, 20);
 //        GoodsManager.requestGoods(goodsQueryEntity, new TaoNetwork.OnRequestCallback() {
 //            @Override
 //            public void onSuccess(String text) {

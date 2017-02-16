@@ -100,6 +100,8 @@ public class ModifyActivity extends BaseActivity {
 
                 @Override
                 public void onLoginTimeout(String result) {
+                    SharedPreferencesUtils.clearSession(ModifyActivity.this);
+                    SharedPreferencesUtils.clearAuthor(ModifyActivity.this);
                     Toast.makeText(ModifyActivity.this, R.string.string_toast_timeout, Toast.LENGTH_SHORT).show();
                 }
 

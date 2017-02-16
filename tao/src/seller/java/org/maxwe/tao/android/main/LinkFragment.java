@@ -1,24 +1,25 @@
 package org.maxwe.tao.android.main;
 
 import android.content.Intent;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import com.umeng.socialize.ShareAction;
-import com.umeng.socialize.UMShareAPI;
 import com.umeng.socialize.UMShareListener;
 import com.umeng.socialize.bean.SHARE_MEDIA;
 
 import org.maxwe.tao.android.BaseFragment;
-import org.maxwe.tao.android.Constants;
 import org.maxwe.tao.android.R;
-import org.maxwe.tao.android.account.model.SessionModel;
 import org.maxwe.tao.android.activity.AuthorActivity;
-import org.maxwe.tao.android.api.authorize.AuthorizeEntity;
+import org.maxwe.tao.android.api.AuthorizeEntity;
+import org.maxwe.tao.android.api.Position;
 import org.maxwe.tao.android.utils.SharedPreferencesUtils;
 import org.xutils.view.annotation.ContentView;
 import org.xutils.view.annotation.Event;
+import org.xutils.view.annotation.ViewInject;
 
 /**
  * Created by Pengwei Ding on 2017-01-02 15:36.
@@ -28,6 +29,37 @@ import org.xutils.view.annotation.Event;
 @ContentView(R.layout.fragment_link)
 public class LinkFragment extends BaseFragment {
     private static final int CODE_REQUEST_AUTHOR = 0;
+
+    @ViewInject(R.id.et_frg_link_content)
+    private EditText et_frg_link_content;
+
+
+    @Event(value = R.id.et_frg_link_paste, type = View.OnClickListener.class)
+    private void paste(View view) {
+//        ClipboardManager systemService = (ClipboardManager) this.getContext().getSystemService(Context.CLIPBOARD_SERVICE);
+//        if (!systemService.hasPrimaryClip()) {
+//            Toast.makeText(this.getContext(), "粘贴板为空", Toast.LENGTH_SHORT).show();
+//        } else {
+//            ClipData clipData = systemService.getPrimaryClip();
+//            int count = clipData.getItemCount();
+//            String resultString = "";
+//            for (int i = 0; i < count; ++i) {
+//                ClipData.Item item = clipData.getItemAt(i);
+//                CharSequence str = item.coerceToText(this.getContext());
+//                resultString += str;
+//            }
+//            et_frg_link_content.setText(resultString);
+//        }
+        String currentKeeperId = SharedPreferencesUtils.getCurrentKeeperId(this.getContext());
+        Position currentPP = SharedPreferencesUtils.getCurrentPP(this.getContext());
+        if (TextUtils.isEmpty(currentKeeperId)) {
+            Toast.makeText(this.getContext(), "请登录", Toast.LENGTH_SHORT).show();
+        } else if (currentPP == null || TextUtils.isEmpty(currentPP.getId()) || TextUtils.isEmpty(currentPP.getSiteId())) {
+            Toast.makeText(this.getContext(), "请选择推广位", Toast.LENGTH_SHORT).show();
+        } else {
+            et_frg_link_content.setText("mm_" + currentKeeperId + "_" + currentPP.getSiteId() + "_" + currentPP.getId());
+        }
+    }
 
     private UMShareListener umShareListener = new UMShareListener() {
         @Override
@@ -70,8 +102,8 @@ public class LinkFragment extends BaseFragment {
         switch (requestCode) {
             case CODE_REQUEST_AUTHOR:
                 if (resultCode == AuthorActivity.CODE_RESULT_OF_AUTHOR_SUCCESS) {
-                    AuthorizeEntity serializableExtra = (AuthorizeEntity) data.getSerializableExtra(AuthorActivity.KEY_INTENT_OF_AUTHOR);
-                    SharedPreferencesUtils.saveAuthor(this.getContext(),serializableExtra);
+//                    AuthorizeEntity serializableExtra = (AuthorizeEntity) data.getSerializableExtra(AuthorActivity.KEY_INTENT_OF_AUTHOR);
+//                    SharedPreferencesUtils.saveAuthor(this.getContext(),serializableExtra);
                 }
                 break;
             default:

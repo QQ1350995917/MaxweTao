@@ -82,6 +82,13 @@ public class NetworkManager implements INetWorkManager {
         return cancelable;
     }
 
+    /**
+     * 服务器非加密接口
+     * @param url
+     * @param object
+     * @param onNetworkCallback
+     * @return
+     */
     public static Callback.Cancelable requestByPostNoCryption(String url, final Object object, final OnNetworkCallback onNetworkCallback) {
         final RequestParams requestParams = new RequestParams(url);
         String jsonParams = JSON.toJSONString(object);

@@ -42,6 +42,8 @@
 
         <activity android:name=".activity.BrandActivity"></activity>
 
+        <activity android:name=".index.IndexFragmentGoodsDetailActivity"></activity>
+
         <receiver android:name=".main.TaoReceiver">
             <intent-filter>
                 <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />

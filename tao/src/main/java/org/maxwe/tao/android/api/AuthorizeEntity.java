@@ -1,4 +1,4 @@
-package org.maxwe.tao.android.api.authorize;
+package org.maxwe.tao.android.api;
 
 import java.io.Serializable;
 

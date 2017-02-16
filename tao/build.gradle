@@ -58,6 +58,5 @@ dependencies {
     compile 'org.xutils:xutils:3.3.40'
     compile 'com.alibaba:fastjson:1.2.21'
     compile 'com.alibaba:fastjson:1.1.55.android'
-    compile files('libs/taobao-sdk-java-auto_1455552377940-20160607.jar')
-    compile files('libs/taobao-sdk-java-auto_1455552377940-20160607-source.jar')
+    compile 'com.facebook.fresco:fresco:1.0.1'
 }

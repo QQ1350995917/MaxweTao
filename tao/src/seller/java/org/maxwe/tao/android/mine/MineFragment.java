@@ -56,6 +56,7 @@ public class MineFragment extends BaseFragment {
                     } else if (dataMap.containsKey(AuthorWebView.KEY_TB_TOKEN_)) {
                         Intent intent = new Intent(MineFragment.this.getContext(), BrandActivity.class);
                         MineFragment.this.startActivity(intent);
+                        SharedPreferencesUtils.saveCurrentKeeperId(MineFragment.this.getContext(), (String.valueOf(dataMap.get("shopKeeperId"))));
                     } else {
                         Toast.makeText(MineFragment.this.getContext(), "其他情况", Toast.LENGTH_SHORT).show();
                     }
@@ -142,8 +143,7 @@ public class MineFragment extends BaseFragment {
         switch (requestCode) {
             case CODE_REQUEST_AUTHOR:
                 if (resultCode == AuthorActivity.CODE_RESULT_OF_AUTHOR_SUCCESS) {
-                    Intent intent = new Intent(MineFragment.this.getContext(), BrandActivity.class);
-                    MineFragment.this.startActivity(intent);
+                    onPromotionAction(null);
                 }
                 break;
             default:

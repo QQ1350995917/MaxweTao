@@ -4,9 +4,12 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import com.alibaba.fastjson.JSON;
+
 import org.maxwe.tao.android.R;
 import org.maxwe.tao.android.account.model.SessionModel;
-import org.maxwe.tao.android.api.authorize.AuthorizeEntity;
+import org.maxwe.tao.android.api.AuthorizeEntity;
+import org.maxwe.tao.android.api.Position;
 
 /**
  * Created by Pengwei Ding on 2017-01-11 10:07.
@@ -21,6 +24,9 @@ public class SharedPreferencesUtils {
     private static final String KEY_LOGIN_CELLPHONE = "LOGIN_CELLPHONE";
     private static final String KEY_TAO_AUTHOR = "TAO_AUTHOR";
     private static final String KEY_TAO_AUTHOR_CREATE_TIME = "KEY_TAO_AUTHOR_CREATE_TIME";
+
+    private static final String KEY_TAO_PP = "KEY_TAO_PP";
+    private static final String KEY_TAO_KEEPER_ID = "KEY_TAO_KEEPER_ID";
 
     public static String getLastLoginCellphone(Context context){
         SharedPreferences sharedPreferences = context.getSharedPreferences(KEY_SHARED_PREFERENCES_NAME, Activity.MODE_PRIVATE);
@@ -96,5 +102,54 @@ public class SharedPreferencesUtils {
         edit.remove(KEY_TAO_AUTHOR);
         edit.remove(KEY_TAO_AUTHOR_CREATE_TIME);
         edit.commit();
+    }
+
+
+    public static void saveCurrentPP(Context context,Position position){
+        SharedPreferences sharedPreferences = context.getSharedPreferences(KEY_SHARED_PREFERENCES_NAME, Activity.MODE_PRIVATE);
+        SharedPreferences.Editor edit = sharedPreferences.edit();
+        edit.putString(KEY_TAO_PP, position.toJsonString());
+        edit.commit();
+    }
+
+    public static Position getCurrentPP(Context context){
+        SharedPreferences sharedPreferences = context.getSharedPreferences(KEY_SHARED_PREFERENCES_NAME, Activity.MODE_PRIVATE);
+        String pp = sharedPreferences.getString(KEY_TAO_PP, null);
+        if (pp != null){
+            return  JSON.parseObject(pp,Position.class);
+        }
+        return null;
+    }
+
+    public static void clearCurrentPP(Context context){
+        SharedPreferences sharedPreferences = context.getSharedPreferences(KEY_SHARED_PREFERENCES_NAME, Activity.MODE_PRIVATE);
+        SharedPreferences.Editor edit = sharedPreferences.edit();
+        edit.remove(KEY_TAO_PP);
+        edit.commit();
+    }
+
+    public static void saveCurrentKeeperId(Context context,String keeperId){
+        SharedPreferences sharedPreferences = context.getSharedPreferences(KEY_SHARED_PREFERENCES_NAME, Activity.MODE_PRIVATE);
+        SharedPreferences.Editor edit = sharedPreferences.edit();
+        edit.putString(KEY_TAO_KEEPER_ID, keeperId);
+        edit.commit();
+    }
+
+    public static String getCurrentKeeperId(Context context){
+        SharedPreferences sharedPreferences = context.getSharedPreferences(KEY_SHARED_PREFERENCES_NAME, Activity.MODE_PRIVATE);
+        String pid = sharedPreferences.getString(KEY_TAO_KEEPER_ID, null);
+        return pid;
+    }
+
+    public static void clearCurrentKeeperId(Context context){
+        SharedPreferences sharedPreferences = context.getSharedPreferences(KEY_SHARED_PREFERENCES_NAME, Activity.MODE_PRIVATE);
+        SharedPreferences.Editor edit = sharedPreferences.edit();
+        edit.remove(KEY_TAO_KEEPER_ID);
+        edit.commit();
+    }
+
+    public static void onExistClear(Context context){
+        clearCurrentPP(context);
+        clearCurrentKeeperId(context);
     }
 }

@@ -1,5 +1,6 @@
 package org.maxwe.tao.android;
 
+import com.facebook.drawee.backends.pipeline.Fresco;
 import com.umeng.socialize.PlatformConfig;
 import com.umeng.socialize.UMShareAPI;
 
@@ -14,11 +15,11 @@ public class SellerApplication extends TaoApplication {
 
     public static UserEntity currentUserEntity = null;
 
-
     @Override
     public void onCreate() {
         super.onCreate();
         UMShareAPI.get(this);
+        Fresco.initialize(this);
         PlatformConfig.setWeixin("wx967daebe835fbeac", "5bb696d9ccd75a38c8a0bfe0675559b3");
         PlatformConfig.setSinaWeibo("1822462096", "5e10ac1205943d6ca705ad29e186a56b");
         PlatformConfig.setQQZone("1105614963", "loJZPmd3JonHncxw");

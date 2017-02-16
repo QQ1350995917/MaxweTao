@@ -13,6 +13,7 @@ import android.widget.BaseAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.ProgressBar;
+import android.widget.RadioButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -20,6 +21,9 @@ import android.widget.Toast;
 import com.alibaba.fastjson.JSON;
 
 import org.maxwe.tao.android.R;
+import org.maxwe.tao.android.api.Position;
+import org.maxwe.tao.android.api.Promotion;
+import org.maxwe.tao.android.utils.SharedPreferencesUtils;
 import org.xutils.common.Callback;
 import org.xutils.http.RequestParams;
 import org.xutils.view.annotation.ContentView;
@@ -39,88 +43,6 @@ import java.util.Map;
  */
 @ContentView(R.layout.activity_brand)
 public class BrandActivity extends BaseActivity {
-    public class Promotion {
-        private String siteId;
-        private String name;
-
-        public Promotion() {
-            super();
-        }
-
-        public Promotion(String siteId, String name) {
-            this.siteId = siteId;
-            this.name = name;
-        }
-
-        @Override
-        public boolean equals(Object o) {
-            if (o != null && o instanceof Promotion) {
-                Promotion promotion = (Promotion) o;
-                if (promotion.getSiteId().equals(this.getSiteId())) {
-                    return true;
-                } else {
-                    return false;
-                }
-            }
-            return super.equals(o);
-        }
-
-        public String getSiteId() {
-            return siteId;
-        }
-
-        public void setSiteId(String siteId) {
-            this.siteId = siteId;
-        }
-
-        public String getName() {
-            return name;
-        }
-
-        public void setName(String name) {
-            this.name = name;
-        }
-    }
-
-    public class Position {
-        private String siteId;
-        private String id;
-        private String name;
-
-        public Position() {
-            super();
-        }
-
-        public Position(String siteId, String id, String name) {
-            this.siteId = siteId;
-            this.id = id;
-            this.name = name;
-        }
-
-        public String getSiteId() {
-            return siteId;
-        }
-
-        public void setSiteId(String siteId) {
-            this.siteId = siteId;
-        }
-
-        public String getId() {
-            return id;
-        }
-
-        public void setId(String id) {
-            this.id = id;
-        }
-
-        public String getName() {
-            return name;
-        }
-
-        public void setName(String name) {
-            this.name = name;
-        }
-    }
 
     private Map<Promotion, LinkedList<Position>> promotionListMap = new LinkedHashMap<>();
     private LinkedList<Promotion> promotionList = new LinkedList<>();
@@ -165,7 +87,7 @@ public class BrandActivity extends BaseActivity {
 
             @Override
             public View getView(int position, View convertView, ViewGroup parent) {
-                View inflate = inflater.inflate(R.layout.activity_brand_item, null);
+                View inflate = inflater.inflate(R.layout.activity_brand_item1, null);
                 TextView name = (TextView) inflate.findViewById(R.id.tv_act_brand_item_name);
                 Promotion promotion = promotionList.get(position);
                 name.setText(promotion.getName());
@@ -199,10 +121,17 @@ public class BrandActivity extends BaseActivity {
 
             @Override
             public View getView(int position, View convertView, ViewGroup parent) {
-                View inflate = inflater.inflate(R.layout.activity_brand_item, null);
+                View inflate = inflater.inflate(R.layout.activity_brand_item2, null);
                 inflate.setBackgroundColor(Color.WHITE);
                 TextView name = (TextView) inflate.findViewById(R.id.tv_act_brand_item_name);
                 Position position1 = promotionListMap.get(currentPromotion).get(position);
+                RadioButton status = (RadioButton) inflate.findViewById(R.id.rb_act_brand_item_status);
+                Position currentPP = SharedPreferencesUtils.getCurrentPP(BrandActivity.this);
+                if (currentPP != null && position1.getId().equals(currentPP.getId())) {
+                    status.setChecked(true);
+                } else {
+                    status.setChecked(false);
+                }
                 name.setText(position1.getName());
                 return inflate;
             }
@@ -216,7 +145,22 @@ public class BrandActivity extends BaseActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 currentPromotion = promotionList.get(position);
                 positionAdapter.notifyDataSetChanged();
-
+            }
+        });
+        this.lv_act_brand_position.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                int childCount = parent.getChildCount();
+                for (int i = 0; i < childCount; i++) {
+                    View childAt = parent.getChildAt(i);
+                    RadioButton status = (RadioButton) childAt.findViewById(R.id.rb_act_brand_item_status);
+                    status.setChecked(false);
+                }
+                RadioButton status = (RadioButton) view.findViewById(R.id.rb_act_brand_item_status);
+                status.setChecked(true);
+                Position position1 = promotionListMap.get(currentPromotion).get(position);
+                position1.setPromotion(currentPromotion);
+                SharedPreferencesUtils.saveCurrentPP(BrandActivity.this, position1);
             }
         });
 
@@ -248,7 +192,7 @@ public class BrandActivity extends BaseActivity {
             List<Map<String, Object>> sub = (List<Map<String, Object>>) map.get("sub");
             Promotion promotion = new Promotion(id, name);
             LinkedList<Position> positions = new LinkedList<>();
-            if (sub != null){
+            if (sub != null) {
                 for (Map<String, Object> subMap : sub) {
                     String positionId = subMap.get("id").toString();
                     String positionName = subMap.get("name").toString();
