@@ -202,6 +202,7 @@ public class IndexFragmentTaoView extends IndexFragmentView {
 
     @Override
     protected void onBrokerageDefault(Button view) {
+        this.resetSortDefault();
         view.setText("佣金");
         this.goodsRequestModel.setSort(null);
         onRefresh();
@@ -209,6 +210,7 @@ public class IndexFragmentTaoView extends IndexFragmentView {
 
     @Override
     protected void onBrokerageDown(Button view) {
+        this.resetSortDefault();
         view.setText("佣金 ↓");
         this.goodsRequestModel.setSort(GoodsRequestModel.TK_RATE_DES);
         onRefresh();
@@ -216,6 +218,7 @@ public class IndexFragmentTaoView extends IndexFragmentView {
 
     @Override
     protected void onBrokerageUp(Button view) {
+        this.resetSortDefault();
         view.setText("佣金 ↑");
         this.goodsRequestModel.setSort(GoodsRequestModel.TK_RATE_ASC);
         onRefresh();
@@ -223,21 +226,25 @@ public class IndexFragmentTaoView extends IndexFragmentView {
 
     @Override
     protected void onPriceDefault(Button view) {
+        this.resetSortDefault();
         view.setText("价格");
     }
 
     @Override
     protected void onPriceDown(Button view) {
+        this.resetSortDefault();
         view.setText("价格 ↓");
     }
 
     @Override
     protected void onPriceUp(Button view) {
+        this.resetSortDefault();
         view.setText("价格 ↑");
     }
 
     @Override
     protected void onSaleDefault(Button view) {
+        this.resetSortDefault();
         view.setText("销量");
         this.goodsRequestModel.setSort(null);
         onRefresh();
@@ -245,6 +252,7 @@ public class IndexFragmentTaoView extends IndexFragmentView {
 
     @Override
     protected void onSaleDown(Button view) {
+        this.resetSortDefault();
         view.setText("销量 ↓");
         this.goodsRequestModel.setSort(GoodsRequestModel.TOTAL_SALES_DES);
         onRefresh();
@@ -252,24 +260,27 @@ public class IndexFragmentTaoView extends IndexFragmentView {
 
     @Override
     protected void onSaleUp(Button view) {
+        this.resetSortDefault();
         view.setText("销量 ↑");
         this.goodsRequestModel.setSort(GoodsRequestModel.TOTAL_SALES_ASC);
         onRefresh();
-
     }
 
     @Override
     protected void onTicketDefault(Button view) {
+        this.resetSortDefault();
         view.setText("优惠券");
     }
 
     @Override
     protected void onTicketDown(Button view) {
+        this.resetSortDefault();
         view.setText("优惠券 ↓");
     }
 
     @Override
     protected void onTicketUp(Button view) {
+        this.resetSortDefault();
         view.setText("优惠券 ↑");
     }
 }

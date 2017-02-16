@@ -33,6 +33,11 @@ public abstract class IndexFragmentView extends RelativeLayout implements SwipeR
     protected EditText et_frg_index_search;
     protected Button bt_frg_search;
 
+    protected Button brokerage;
+    protected Button price;
+    protected Button sale;
+    protected Button ticket;
+
     protected int brokerageStatus = 0;
     protected int priceStatus = 0;
     protected int saleStatus = 0;
@@ -134,14 +139,14 @@ public abstract class IndexFragmentView extends RelativeLayout implements SwipeR
         this.bt_frg_search = (Button) inflate.findViewById(R.id.bt_frg_search);
         this.bt_frg_search.setOnClickListener(this);
 
-        Button brokerage = (Button) inflate.findViewById(R.id.ib_frg_index_brokerage);
-        brokerage.setOnClickListener(this);
-        Button price = (Button) inflate.findViewById(R.id.ib_frg_index_price);
-        price.setOnClickListener(this);
-        Button sale = (Button) inflate.findViewById(R.id.ib_frg_index_sale);
-        sale.setOnClickListener(this);
-        Button ticket = (Button) inflate.findViewById(R.id.ib_frg_index_ticket);
-        ticket.setOnClickListener(this);
+        this.brokerage = (Button) inflate.findViewById(R.id.ib_frg_index_brokerage);
+        this.brokerage.setOnClickListener(this);
+        this.price = (Button) inflate.findViewById(R.id.ib_frg_index_price);
+        this.price.setOnClickListener(this);
+        this.sale = (Button) inflate.findViewById(R.id.ib_frg_index_sale);
+        this.sale.setOnClickListener(this);
+        this.ticket = (Button) inflate.findViewById(R.id.ib_frg_index_ticket);
+        this.ticket.setOnClickListener(this);
 
         this.rl_frg_search_container = (RelativeLayout) inflate.findViewById(R.id.rl_frg_search_container);
         this.ll_inc_index_frg_tools_bar = (LinearLayout) inflate.findViewById(R.id.ll_inc_index_frg_tools_bar);
@@ -176,6 +181,13 @@ public abstract class IndexFragmentView extends RelativeLayout implements SwipeR
         if (this.listAdapter != null) {
             this.lv_inc_index_frg_container.setAdapter(this.listAdapter);
         }
+    }
+
+    protected void resetSortDefault(){
+        this.brokerage.setText("佣金");
+        this.price.setText("价格");
+        this.sale.setText("销量");
+        this.ticket.setText("优惠券");
     }
 
     protected abstract void onQueryAction(Button view, String text);
