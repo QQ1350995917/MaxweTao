@@ -2,6 +2,7 @@ package org.maxwe.tao.android.index;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Paint;
 import android.net.Uri;
 import android.text.TextUtils;
 import android.util.AttributeSet;
@@ -30,6 +31,7 @@ import org.maxwe.tao.android.goods.GoodsResponseResults;
 import org.maxwe.tao.android.goods.GoodsResponseResultsEntity;
 import org.maxwe.tao.android.utils.SharedPreferencesUtils;
 
+import java.text.DecimalFormat;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -86,9 +88,18 @@ public class IndexFragmentTaoView extends IndexFragmentView {
                 SimpleDraweeView imageView = (SimpleDraweeView) view.findViewById(R.id.iv_inc_index_frg_item_goods_image);
                 TextView title = (TextView) view.findViewById(R.id.iv_inc_index_frg_item_goods_title);
                 TextView price = (TextView) view.findViewById(R.id.iv_inc_index_frg_item_goods_price);
+                TextView priceReserve = (TextView) view.findViewById(R.id.iv_inc_index_frg_item_goods_price_reserve);
+                priceReserve.getPaint().setFlags(Paint. STRIKE_THRU_TEXT_FLAG);
+                TextView brokerage = (TextView) view.findViewById(R.id.iv_inc_index_frg_item_brokerage);
+                TextView brokerageGot = (TextView) view.findViewById(R.id.iv_inc_index_frg_item_brokerage_got);
+                TextView sale = (TextView) view.findViewById(R.id.iv_inc_index_frg_item_sale);
                 imageView.setImageURI(Uri.parse(goodsEntity.getPict_url()));
                 title.setText(goodsEntity.getTitle());
-                price.setText("￥" + goodsEntity.getReserve_price());
+                price.setText("￥" + goodsEntity.getZk_final_price());
+                priceReserve.setText("￥" + goodsEntity.getReserve_price());
+                brokerage.setText("18%");
+                brokerageGot.setText("赚" + new DecimalFormat("###.00").format(Float.parseFloat(goodsEntity.getZk_final_price()) * 18 / 100)+"元");
+                sale.setText("月销:" + goodsEntity.getVolume());
                 return view;
             }
         };
@@ -137,7 +148,7 @@ public class IndexFragmentTaoView extends IndexFragmentView {
     }
 
     private void onRequestTaoGoods(GoodsRequestModel goodsRequestModel) {
-        String url = this.getContext().getString(R.string.string_url_domain) + this.getContext().getString(R.string.string_url_goods_query);
+        String url = this.getContext().getString(R.string.string_url_domain) + this.getContext().getString(R.string.string_url_tao_goods_query);
         SessionModel sessionModel = SharedPreferencesUtils.getSession(this.getContext());
         goodsRequestModel.setT(sessionModel.getT());
         goodsRequestModel.setMark(sessionModel.getMark());
@@ -226,20 +237,23 @@ public class IndexFragmentTaoView extends IndexFragmentView {
 
     @Override
     protected void onPriceDefault(Button view) {
-        this.resetSortDefault();
-        view.setText("价格");
+//        this.resetSortDefault();
+//        view.setText("价格");
+        Toast.makeText(this.getContext(),"开发中，敬请关注",Toast.LENGTH_SHORT).show();
     }
 
     @Override
     protected void onPriceDown(Button view) {
-        this.resetSortDefault();
-        view.setText("价格 ↓");
+//        this.resetSortDefault();
+//        view.setText("价格 ↓");
+        Toast.makeText(this.getContext(),"开发中，敬请关注",Toast.LENGTH_SHORT).show();
     }
 
     @Override
     protected void onPriceUp(Button view) {
-        this.resetSortDefault();
-        view.setText("价格 ↑");
+//        this.resetSortDefault();
+//        view.setText("价格 ↑");
+        Toast.makeText(this.getContext(),"开发中，敬请关注",Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -268,19 +282,22 @@ public class IndexFragmentTaoView extends IndexFragmentView {
 
     @Override
     protected void onTicketDefault(Button view) {
-        this.resetSortDefault();
-        view.setText("优惠券");
+//        this.resetSortDefault();
+//        view.setText("优惠券");
+        Toast.makeText(this.getContext(),"开发中，敬请关注",Toast.LENGTH_SHORT).show();
     }
 
     @Override
     protected void onTicketDown(Button view) {
-        this.resetSortDefault();
-        view.setText("优惠券 ↓");
+//        this.resetSortDefault();
+//        view.setText("优惠券 ↓");
+        Toast.makeText(this.getContext(),"开发中，敬请关注",Toast.LENGTH_SHORT).show();
     }
 
     @Override
     protected void onTicketUp(Button view) {
-        this.resetSortDefault();
-        view.setText("优惠券 ↑");
+//        this.resetSortDefault();
+//        view.setText("优惠券 ↑");
+        Toast.makeText(this.getContext(),"开发中，敬请关注",Toast.LENGTH_SHORT).show();
     }
 }

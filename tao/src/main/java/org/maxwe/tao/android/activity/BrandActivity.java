@@ -43,6 +43,8 @@ import java.util.Map;
  */
 @ContentView(R.layout.activity_brand)
 public class BrandActivity extends BaseActivity {
+    public static final int CODE_RESULT_SUCCESS = 0;
+    public static final int CODE_RESULT_FAIL = 1;
 
     private Map<Promotion, LinkedList<Position>> promotionListMap = new LinkedHashMap<>();
     private LinkedList<Promotion> promotionList = new LinkedList<>();
@@ -175,6 +177,12 @@ public class BrandActivity extends BaseActivity {
 
     @Override
     public void onBackPressed() {
+        Position currentPP = SharedPreferencesUtils.getCurrentPP(this);
+        if (currentPP == null) {
+            this.setResult(CODE_RESULT_FAIL);
+        } else {
+            this.setResult(CODE_RESULT_SUCCESS);
+        }
         super.onBackPressed();
     }
 

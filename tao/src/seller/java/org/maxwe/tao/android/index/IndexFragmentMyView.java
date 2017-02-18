@@ -7,7 +7,6 @@ import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.Button;
-import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
@@ -90,7 +89,7 @@ public class IndexFragmentMyView extends IndexFragmentView{
     }
 
     private void onRequestTaoGoods(GoodsRequestModel goodsRequestModel) {
-        String url = this.getContext().getString(R.string.string_url_domain) + this.getContext().getString(R.string.string_url_goods_query);
+        String url = this.getContext().getString(R.string.string_url_domain) + this.getContext().getString(R.string.string_url_tao_goods_query);
         goodsRequestModel.setApt(this.getResources().getInteger(R.integer.integer_app_type));
         NetworkManager.requestByPost(url, goodsRequestModel, new INetWorkManager.OnNetworkCallback() {
             @Override

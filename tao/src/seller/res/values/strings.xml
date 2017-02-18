@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">seller</string>
+    <string name="app_name">淘妈咪</string>
 
     <string name="string_index">首页</string>
     <string name="string_convert_link">转链工具</string>
@@ -38,7 +38,8 @@
     <string name="string_url_meta_smsCode">/meta/smsCode</string>
     <string name="string_url_version_version">/version/version</string>
 
-    <string name="string_url_goods_query">/goods/query</string>
+    <string name="string_url_tao_goods_query">/tao/query</string>
+    <string name="string_url_tao_pwd">/tao/pwd</string>
 
     <integer name="integer_app_type">1</integer>
 

@@ -52,7 +52,6 @@ public class MineFragment extends BaseFragment {
                         Intent intent = new Intent(MineFragment.this.getContext(), AuthorActivity.class);
                         intent.putExtra(AuthorActivity.KEY_INTENT_OF_STATE_CODE, 1234);
                         MineFragment.this.startActivityForResult(intent, MineFragment.this.CODE_REQUEST_AUTHOR);
-                        Toast.makeText(MineFragment.this.getContext(), "没有登录", Toast.LENGTH_SHORT).show();
                     } else if (dataMap.containsKey(AuthorWebView.KEY_TB_TOKEN_)) {
                         Intent intent = new Intent(MineFragment.this.getContext(), BrandActivity.class);
                         MineFragment.this.startActivity(intent);
