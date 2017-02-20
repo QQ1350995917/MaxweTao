@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="@drawable/selector_list_arrow">
+    android:background="@drawable/selector_list_item">
     <RadioButton
         android:id="@+id/rb_act_brand_item_status"
         android:layout_width="wrap_content"
@@ -18,5 +18,5 @@
         android:layout_marginLeft="10dp"
         android:gravity="center_vertical"
         android:minHeight="50dp"
-        android:textSize="18dp" />
+        android:textSize="14dp" />
 </LinearLayout>

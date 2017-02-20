@@ -5,44 +5,30 @@
     android:background="#FFFFFF"
     android:padding="10dp">
 
-
     <Button
         android:id="@+id/bt_frg_mine_promotion"
-        android:layout_width="match_parent"
-        android:layout_height="80dp"
+        style="@style/button_list_green"
         android:text="@string/string_promotion" />
 
     <Button
         android:id="@+id/bt_frg_mine_password"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        style="@style/button_list_green"
         android:layout_below="@+id/bt_frg_mine_promotion"
-        android:layout_marginTop="20dp"
         android:text="@string/string_modify_password" />
 
     <Button
-        android:id="@+id/bt_frg_mine_newbie"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/bt_frg_mine_password"
-        android:layout_marginTop="20dp"
-        android:text="@string/string_newbie" />
-
-    <Button
         android:id="@+id/bt_frg_mine_about_us"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/bt_frg_mine_newbie"
+        style="@style/button_list_green"
+        android:layout_below="@+id/bt_frg_mine_password"
         android:text="@string/string_about_us" />
 
     <Button
         android:id="@+id/bt_frg_mine_exit"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        style="@style/button_list_green"
+        android:textColor="@color/white"
         android:layout_below="@+id/bt_frg_mine_about_us"
         android:layout_marginTop="30dp"
-        android:background="#CC0000"
-        android:text="@string/string_exit"
-        android:textColor="#FFFFFF" />
+        android:background="@drawable/selector_button_list_red"
+        android:text="@string/string_exit"/>
 
 </RelativeLayout>

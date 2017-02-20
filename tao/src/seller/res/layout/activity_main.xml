@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:background="#FFFFFF"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="#FFFFFF">
 
     <FrameLayout
         android:id="@+id/fl_act_content"
@@ -12,31 +12,26 @@
     <RadioGroup
         android:id="@+id/rg_act_navigate"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
+        android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:background="#CCCCCC"
+        android:background="@color/white"
         android:orientation="horizontal">
-
         <RadioButton
             android:id="@+id/rb_act_main_index"
-            style="@style/navigate"
-            android:background="@drawable/menu_item_selector"
-            android:checked="true"
-            android:text="@string/string_index" />
+            style="@style/radio_group_md_blue"
+            android:text="@string/string_index"
+            android:checked="true" />
 
         <RadioButton
             android:id="@+id/rb_act_main_convert_link"
-            style="@style/navigate"
-            android:background="@drawable/menu_item_selector"
-            android:checked="false"
+            style="@style/radio_group_md_blue"
+            android:clickable="true"
             android:text="@string/string_link_convert" />
 
         <RadioButton
             android:id="@+id/rb_act_main_mine"
-            style="@style/navigate"
-            android:background="@drawable/menu_item_selector"
-            android:text="@string/string_mine"
-            android:checked="false"
-            android:textAlignment="center" />
+            style="@style/radio_group_md_blue"
+            android:clickable="true"
+            android:text="@string/string_mine" />
     </RadioGroup>
 </RelativeLayout>

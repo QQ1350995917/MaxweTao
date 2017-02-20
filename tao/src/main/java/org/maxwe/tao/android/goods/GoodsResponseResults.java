@@ -1,11 +1,13 @@
 package org.maxwe.tao.android.goods;
 
+import org.maxwe.tao.android.response.IResponse;
+
 /**
  * Created by Pengwei Ding on 2017-02-11 13:50.
  * Email: www.dingpengwei@foxmail.com www.dingpegnwei@gmail.com
  * Description: TODO
  */
-public class GoodsResponseResults {
+public class GoodsResponseResults implements IResponse {
     private GoodsResponseResultsEntity results;
     private String request_id;
     private int total_results;

@@ -24,7 +24,6 @@ import com.facebook.drawee.view.SimpleDraweeView;
 import com.umeng.socialize.ShareAction;
 import com.umeng.socialize.UMShareListener;
 import com.umeng.socialize.bean.SHARE_MEDIA;
-import com.umeng.socialize.media.UMImage;
 
 import org.maxwe.tao.android.INetWorkManager;
 import org.maxwe.tao.android.NetworkManager;
@@ -54,7 +53,7 @@ import java.util.Map;
  * Description: TODO
  */
 @ContentView(R.layout.activity_goods_detail)
-public class IndexFragmentGoodsDetailActivity extends BaseActivity {
+public class GoodsDetailActivity extends BaseActivity {
     public static final String KEY_GOODS = "goodsEntity";
     private static final int CODE_REQUEST_AUTHOR = 0;
     private static final int CODE_REQUEST_BRAND = 1;
@@ -86,12 +85,12 @@ public class IndexFragmentGoodsDetailActivity extends BaseActivity {
     private UMShareListener umShareListener = new UMShareListener() {
         @Override
         public void onResult(SHARE_MEDIA platform) {
-            Toast.makeText(IndexFragmentGoodsDetailActivity.this, platform + " 分享成功啦", Toast.LENGTH_SHORT).show();
+            Toast.makeText(GoodsDetailActivity.this, platform + " 分享成功啦", Toast.LENGTH_SHORT).show();
         }
 
         @Override
         public void onError(SHARE_MEDIA platform, Throwable t) {
-            Toast.makeText(IndexFragmentGoodsDetailActivity.this, platform + " 分享失败啦", Toast.LENGTH_SHORT).show();
+            Toast.makeText(GoodsDetailActivity.this, platform + " 分享失败啦", Toast.LENGTH_SHORT).show();
             if (t != null) {
                 Log.d("throw", "throw:" + t.getMessage());
             }
@@ -99,7 +98,7 @@ public class IndexFragmentGoodsDetailActivity extends BaseActivity {
 
         @Override
         public void onCancel(SHARE_MEDIA platform) {
-            Toast.makeText(IndexFragmentGoodsDetailActivity.this, platform + " 分享取消了", Toast.LENGTH_SHORT).show();
+            Toast.makeText(GoodsDetailActivity.this, platform + " 分享取消了", Toast.LENGTH_SHORT).show();
         }
     };
 
@@ -128,16 +127,16 @@ public class IndexFragmentGoodsDetailActivity extends BaseActivity {
                 Map<String, String> dataMap = (Map<String, String>) rootMap.get(AuthorWebView.KEY_DATA);
                 if (dataMap != null) {
                     if (dataMap.containsKey(AuthorWebView.KEY_NO_LOGIN)) {
-                        Intent intent = new Intent(IndexFragmentGoodsDetailActivity.this, AuthorActivity.class);
+                        Intent intent = new Intent(GoodsDetailActivity.this, AuthorActivity.class);
                         intent.putExtra(AuthorActivity.KEY_INTENT_OF_STATE_CODE, 1234);
-                        IndexFragmentGoodsDetailActivity.this.startActivityForResult(intent, IndexFragmentGoodsDetailActivity.this.CODE_REQUEST_AUTHOR);
+                        GoodsDetailActivity.this.startActivityForResult(intent, GoodsDetailActivity.this.CODE_REQUEST_AUTHOR);
                     } else {
-                        SharedPreferencesUtils.saveCurrentKeeperId(IndexFragmentGoodsDetailActivity.this, (String.valueOf(dataMap.get("shopKeeperId"))));
-                        Position currentPP = SharedPreferencesUtils.getCurrentPP(IndexFragmentGoodsDetailActivity.this);
+                        SharedPreferencesUtils.saveCurrentKeeperId(GoodsDetailActivity.this, (String.valueOf(dataMap.get("shopKeeperId"))));
+                        Position currentPP = SharedPreferencesUtils.getCurrentPP(GoodsDetailActivity.this);
                         if (currentPP == null || TextUtils.isEmpty(currentPP.getId()) || TextUtils.isEmpty(currentPP.getSiteId())) {
-                            Toast.makeText(IndexFragmentGoodsDetailActivity.this, "请选择推广位", Toast.LENGTH_SHORT).show();
-                            Intent intent = new Intent(IndexFragmentGoodsDetailActivity.this, BrandActivity.class);
-                            IndexFragmentGoodsDetailActivity.this.startActivityForResult(intent, IndexFragmentGoodsDetailActivity.this.CODE_REQUEST_BRAND);
+                            Toast.makeText(GoodsDetailActivity.this, "请选择推广位", Toast.LENGTH_SHORT).show();
+                            Intent intent = new Intent(GoodsDetailActivity.this, BrandActivity.class);
+                            GoodsDetailActivity.this.startActivityForResult(intent, GoodsDetailActivity.this.CODE_REQUEST_BRAND);
                         } else {
                             requestTaoPwd();
                         }
@@ -169,13 +168,13 @@ public class IndexFragmentGoodsDetailActivity extends BaseActivity {
             if (resultCode == AuthorActivity.CODE_RESULT_OF_AUTHOR_SUCCESS) {
                 onModifyGetLinkAction(null);
             } else {
-                Toast.makeText(IndexFragmentGoodsDetailActivity.this, "登录失败", Toast.LENGTH_SHORT).show();
+                Toast.makeText(GoodsDetailActivity.this, "登录失败", Toast.LENGTH_SHORT).show();
             }
         } else if (requestCode == this.CODE_REQUEST_BRAND) {
             if (resultCode == BrandActivity.CODE_RESULT_SUCCESS) {
                 requestTaoPwd();
             } else if (resultCode == BrandActivity.CODE_RESULT_FAIL) {
-                Toast.makeText(IndexFragmentGoodsDetailActivity.this, "您尚未请选择推广位,申请失败", Toast.LENGTH_SHORT).show();
+                Toast.makeText(GoodsDetailActivity.this, "您尚未请选择推广位,申请失败", Toast.LENGTH_SHORT).show();
             }
         }
         super.onActivityResult(requestCode, resultCode, data);
@@ -191,7 +190,7 @@ public class IndexFragmentGoodsDetailActivity extends BaseActivity {
 
     @Event(value = R.id.bt_act_goods_detail_share, type = View.OnClickListener.class)
     private void onShareAction(View view) {
-        new ShareAction(IndexFragmentGoodsDetailActivity.this).withTitle(this.taoPwdEntity.getPwd())
+        new ShareAction(GoodsDetailActivity.this).withTitle(this.taoPwdEntity.getPwd())
                 .withText(this.taoPwdEntity.getTitle())
                 .withTargetUrl(this.goodsEntity.getItem_url())
                 .setDisplayList(SHARE_MEDIA.SINA, SHARE_MEDIA.QQ, SHARE_MEDIA.WEIXIN)
@@ -224,7 +223,7 @@ public class IndexFragmentGoodsDetailActivity extends BaseActivity {
         this.tv_act_goods_detail_get_link_result.setVisibility(View.VISIBLE);
         this.ll_act_goods_detail_space_holder.setVisibility(View.VISIBLE);
         this.ll_act_goods_detail_action_holder.setVisibility(View.VISIBLE);
-        this.taoPwdEntity = new TaoPwdEntity(IndexFragmentGoodsDetailActivity.this.goodsEntity.getTitle(),
+        this.taoPwdEntity = new TaoPwdEntity(GoodsDetailActivity.this.goodsEntity.getTitle(),
                 "下单淘口令：" + taoPwd,
                 "价格：" + goodsEntity.getZk_final_price() + "元",
                 "复制淘口令，打开手机淘宝即可下单");
@@ -261,20 +260,20 @@ public class IndexFragmentGoodsDetailActivity extends BaseActivity {
 
                 @Override
                 public void onLoginTimeout(String result) {
-                    SharedPreferencesUtils.clearSession(IndexFragmentGoodsDetailActivity.this);
-                    SharedPreferencesUtils.clearAuthor(IndexFragmentGoodsDetailActivity.this);
-                    Toast.makeText(IndexFragmentGoodsDetailActivity.this, R.string.string_toast_timeout, Toast.LENGTH_SHORT).show();
+                    SharedPreferencesUtils.clearSession(GoodsDetailActivity.this);
+                    SharedPreferencesUtils.clearAuthor(GoodsDetailActivity.this);
+                    Toast.makeText(GoodsDetailActivity.this, R.string.string_toast_timeout, Toast.LENGTH_SHORT).show();
                 }
 
                 @Override
                 public void onError(Throwable ex, boolean isOnCallback) {
-                    Toast.makeText(IndexFragmentGoodsDetailActivity.this, R.string.string_toast_network_error, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(GoodsDetailActivity.this, R.string.string_toast_network_error, Toast.LENGTH_SHORT).show();
                     onResponseTaoPwdError();
                 }
 
                 @Override
                 public void onOther(int code, String result) {
-                    Toast.makeText(IndexFragmentGoodsDetailActivity.this, R.string.string_toast_reset_password_error, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(GoodsDetailActivity.this, R.string.string_toast_reset_password_error, Toast.LENGTH_SHORT).show();
                     onResponseTaoPwdError();
                 }
             });

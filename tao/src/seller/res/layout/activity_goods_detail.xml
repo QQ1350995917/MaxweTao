@@ -156,36 +156,38 @@
                         android:id="@+id/tv_act_goods_detail_get_link_result"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:visibility="gone"
                         android:layout_margin="10dp"
-                        android:background="@drawable/shape_rect_bottom_line"
-                        android:textColor="#000000" />
+                        android:background="@drawable/shape_rect_board_grey"
+                        android:textColor="#000000"
+                        android:visibility="gone" />
 
                     <Button
                         android:id="@+id/bt_act_goods_detail_get_link"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="5dp"
-                        android:layout_marginRight="5dp"
-                        android:layout_marginTop="10dp"
-                        android:background="#FF4500"
+                        style="@style/button_list_green"
+                        android:layout_below="@+id/bt_frg_mine_about_us"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginRight="10dp"
+                        android:layout_marginTop="30dp"
+                        android:background="@drawable/selector_button_list_red"
                         android:text="一键申请"
-                        android:textColor="#FFFFFF" />
+                        android:textColor="@color/white" />
                 </LinearLayout>
 
                 <LinearLayout
                     android:id="@+id/ll_act_goods_detail_space_holder"
                     android:layout_width="match_parent"
-                    android:visibility="gone"
                     android:layout_height="wrap_content"
                     android:layout_alignParentBottom="true"
-                    android:orientation="horizontal">
+                    android:orientation="horizontal"
+                    android:visibility="gone">
+
                     <Button
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginRight="2dp"
                         android:layout_weight="1"
                         android:textColor="#FFFFFF" />
+
                     <Button
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -201,27 +203,29 @@
         android:id="@+id/ll_act_goods_detail_action_holder"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:visibility="gone"
         android:layout_alignParentBottom="true"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:visibility="gone">
 
         <Button
             android:id="@+id/bt_act_goods_detail_copy"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginRight="2dp"
+            style="@style/button_list_green"
+            android:layout_below="@+id/bt_frg_mine_about_us"
+            android:layout_margin="5dp"
+            android:layout_marginTop="30dp"
             android:layout_weight="1"
-            android:background="#FF4500"
+            android:background="@drawable/selector_button_list_red"
             android:text="复制"
             android:textColor="#FFFFFF" />
 
         <Button
             android:id="@+id/bt_act_goods_detail_share"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="2dp"
+            style="@style/button_list_green"
+            android:layout_below="@+id/bt_frg_mine_about_us"
+            android:layout_margin="5dp"
+            android:layout_marginTop="30dp"
             android:layout_weight="1"
-            android:background="#FF4500"
+            android:background="@drawable/selector_button_list_red"
             android:text="转发分享赚钱"
             android:textColor="#FFFFFF" />
     </LinearLayout>

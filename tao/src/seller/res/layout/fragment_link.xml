@@ -9,12 +9,17 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
         android:padding="10dp">
+
         <EditText
             android:id="@+id/et_frg_link_content"
             android:layout_width="match_parent"
             android:layout_height="200dp"
+            android:background="@drawable/selector_rect_board"
             android:gravity="top"/>
+
         <TextView
             android:id="@+id/et_frg_link_paste"
             android:layout_width="match_parent"
@@ -26,9 +31,12 @@
 
         <Button
             android:id="@+id/bt_act_link_action"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="立即获取淘口令" />
+            style="@style/button_list_green"
+            android:textColor="@color/white"
+            android:layout_below="@+id/bt_frg_mine_about_us"
+            android:layout_marginTop="30dp"
+            android:background="@drawable/selector_button_list_red"
+            android:text="立即获取淘口令"/>
 
     </LinearLayout>
 </LinearLayout>

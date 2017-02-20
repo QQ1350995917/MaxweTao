@@ -1,5 +1,7 @@
 package org.maxwe.tao.android.goods;
 
+import org.maxwe.tao.android.response.IResponse;
+
 import java.util.List;
 
 /**
@@ -7,7 +9,7 @@ import java.util.List;
  * Email: www.dingpengwei@foxmail.com www.dingpegnwei@gmail.com
  * Description: TODO
  */
-public class GoodsResponseResultsEntity {
+public class GoodsResponseResultsEntity implements IResponse {
     private List<GoodsEntity> n_tbk_item;
 
     public GoodsResponseResultsEntity() {

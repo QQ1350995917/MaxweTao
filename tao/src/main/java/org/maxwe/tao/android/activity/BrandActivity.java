@@ -366,8 +366,12 @@ public class BrandActivity extends BaseActivity {
             @Override
             public void onSuccess(String result) {
                 Map rootMap = JSON.parseObject(result, Map.class);
+                Map<String, Object> dataMap = (Map<String, Object>) rootMap.get(AuthorWebView.KEY_DATA);
                 Map<String, Object> infoMap = (Map<String, Object>) rootMap.get(AuthorWebView.KEY_INFO);
                 if (Boolean.parseBoolean(infoMap.get(AuthorWebView.KEY_OK).toString())) {
+                    Position position1 = new Position(dataMap.get("siteId").toString(),dataMap.get("adzoneId").toString(),"");
+                    position1.setPromotion(currentPromotion);
+                    SharedPreferencesUtils.saveCurrentPP(BrandActivity.this, position1);
                     getGuideList();
                 }
             }
