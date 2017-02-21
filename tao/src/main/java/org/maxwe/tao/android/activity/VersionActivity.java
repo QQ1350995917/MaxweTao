@@ -33,12 +33,12 @@ public class VersionActivity extends BaseActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.versionEntity = (VersionEntity) this.getIntent().getExtras().get(KEY_VERSION);
-        if (this.versionEntity.getUpgrade() == 1) {
-            this.setFinishOnTouchOutside(false);
-            this.tv_act_version_upgrade.setVisibility(View.VISIBLE);
-        } else {
+        if (this.versionEntity.getUpgrade() == 0) {
             this.setFinishOnTouchOutside(true);
             this.tv_act_version_upgrade.setVisibility(View.GONE);
+        } else {
+            this.setFinishOnTouchOutside(false);
+            this.tv_act_version_upgrade.setVisibility(View.VISIBLE);
         }
     }
 

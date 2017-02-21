@@ -61,6 +61,8 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
             Intent intent = new Intent(this, AccessActivity.class);
             this.startActivityForResult(intent, REQUEST_CODE_ACCESS_CHECK);
         }
+
+        this.onCheckNewVersion();
     }
 
     @Override
@@ -142,7 +144,6 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
             case REQUEST_CODE_ACCESS_CHECK:
                 if (resultCode == LoginActivity.RESPONSE_CODE_SUCCESS) {
                     onRequestMyInfoCallback((UserEntity) data.getSerializableExtra(Constants.KEY_INTENT_SESSION));
-                    this.onCheckNewVersion();
                 } else {
                     this.finish();
                 }

@@ -17,7 +17,7 @@ public class VersionEntity implements Serializable {
     private String appName;
     private String information;
     private String url;
-    private int upgrade; // 1强制升级 其他不强制
+    private int upgrade; // 0不强制升级 其他强制
     private String createTime;
     private String updateTime;
 

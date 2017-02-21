@@ -23,7 +23,7 @@ public class SellerApplication extends TaoApplication {
         Fresco.initialize(this);
         PlatformConfig.setWeixin("wx967daebe835fbeac", "5bb696d9ccd75a38c8a0bfe0675559b3");
         PlatformConfig.setSinaWeibo("3773570447", "101f664cd7cde741b2c57a978fb49bbd");
-        PlatformConfig.setQQZone("1105614963", "loJZPmd3JonHncxw");
+        PlatformConfig.setQQZone("1105924933", "c0QsAczmqTW4Fu9i");
 
         CrashReport.initCrashReport(getApplicationContext(), "d5d328146a", true);
     }
