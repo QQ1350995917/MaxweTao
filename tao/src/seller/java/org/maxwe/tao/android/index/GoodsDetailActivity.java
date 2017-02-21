@@ -16,6 +16,7 @@ import android.view.View;
 import android.webkit.CookieManager;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -37,6 +38,7 @@ import org.maxwe.tao.android.api.Position;
 import org.maxwe.tao.android.goods.GoodsEntity;
 import org.maxwe.tao.android.goods.TaoPwdRequestModel;
 import org.maxwe.tao.android.utils.SharedPreferencesUtils;
+import org.w3c.dom.Text;
 import org.xutils.common.Callback;
 import org.xutils.http.RequestParams;
 import org.xutils.view.annotation.ContentView;
@@ -65,10 +67,29 @@ public class GoodsDetailActivity extends BaseActivity {
     private TextView tv_act_goods_detail_brokerage;
     @ViewInject(R.id.tv_act_goods_detail_brokerage_got)
     private TextView tv_act_goods_detail_brokerage_got;
+
+    @ViewInject(R.id.iv_act_goods_detail_coupon_container)
+    private RelativeLayout iv_act_goods_detail_coupon_container;
+    @ViewInject(R.id.iv_act_goods_detail_coupon_price)
+    private TextView iv_act_goods_detail_coupon_price;
+
     @ViewInject(R.id.tv_act_goods_detail_final_price)
     private TextView tv_act_goods_detail_final_price;
     @ViewInject(R.id.tv_act_goods_detail_sale)
     private TextView tv_act_goods_detail_sale;
+
+    @ViewInject(R.id.tv_act_goods_detail_coupon_counter)
+    private TextView tv_act_goods_detail_coupon_counter;
+
+    @ViewInject(R.id.tv_act_goods_detail_coupon_get)
+    private TextView tv_act_goods_detail_coupon_get;
+
+    @ViewInject(R.id.tv_act_goods_detail_coupon_left)
+    private TextView tv_act_goods_detail_coupon_left;
+
+    @ViewInject(R.id.tv_act_goods_detail_coupon_time_line)
+    private TextView tv_act_goods_detail_coupon_time_line;
+
     @ViewInject(R.id.bt_act_goods_detail_get_link)
     private Button bt_act_goods_detail_get_link;
     @ViewInject(R.id.tv_act_goods_detail_get_link_result)
@@ -108,14 +129,22 @@ public class GoodsDetailActivity extends BaseActivity {
         this.goodsEntity = (GoodsEntity) this.getIntent().getExtras().get(KEY_GOODS);
         this.iv_act_goods_detail_image.setImageURI(Uri.parse(goodsEntity.getPict_url()));
         this.tv_act_goods_detail_title.setText(goodsEntity.getTitle());
-        this.tv_act_goods_detail_brokerage.setText("18%");
-        this.tv_act_goods_detail_brokerage_got.setText(" 赚" + new DecimalFormat("###.00").format(Float.parseFloat(goodsEntity.getZk_final_price()) * 18 / 100) + "元");
+        this.tv_act_goods_detail_brokerage.setText(goodsEntity.getCommission_rate() + "%");
+        this.tv_act_goods_detail_brokerage_got.setText("赚" + new DecimalFormat("###.00").format(Float.parseFloat(goodsEntity.getZk_final_price()) * Float.parseFloat(goodsEntity.getCommission_rate()) / 100) + "元");
+        if (Long.parseLong(goodsEntity.getCoupon_info()) > 0){
+            iv_act_goods_detail_coupon_container.setVisibility(View.VISIBLE);
+            iv_act_goods_detail_coupon_price.setText(Long.parseLong(goodsEntity.getCoupon_info()) + "元");
+        }
         this.tv_act_goods_detail_final_price.setText("￥" + goodsEntity.getZk_final_price());
         this.tv_act_goods_detail_sale.setText("月销:" + goodsEntity.getVolume());
+        this.tv_act_goods_detail_coupon_counter.setText(goodsEntity.getCoupon_total_count() + "");
+        this.tv_act_goods_detail_coupon_get.setText((goodsEntity.getCoupon_total_count() - goodsEntity.getCoupon_remain_cou()) + "");
+        this.tv_act_goods_detail_coupon_left.setText(goodsEntity.getCoupon_remain_cou() + "");
+        this.tv_act_goods_detail_coupon_time_line.setText(goodsEntity.getCoupon_end_time());
     }
 
     @Event(value = R.id.bt_act_goods_detail_get_link, type = View.OnClickListener.class)
-    private void onModifyGetLinkAction(View view) {
+    private void onTaoPwdAction(View view) {
         RequestParams requestParams = new RequestParams(AuthorWebView.URL_LOGIN_MESSAGE);
         CookieManager cookieManager = CookieManager.getInstance();
         String CookieStr = cookieManager.getCookie(AuthorWebView.URL_LOGIN_MESSAGE);
@@ -166,7 +195,7 @@ public class GoodsDetailActivity extends BaseActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == this.CODE_REQUEST_AUTHOR) {
             if (resultCode == AuthorActivity.CODE_RESULT_OF_AUTHOR_SUCCESS) {
-                onModifyGetLinkAction(null);
+                onTaoPwdAction(null);
             } else {
                 Toast.makeText(GoodsDetailActivity.this, "登录失败", Toast.LENGTH_SHORT).show();
             }
@@ -174,7 +203,7 @@ public class GoodsDetailActivity extends BaseActivity {
             if (resultCode == BrandActivity.CODE_RESULT_SUCCESS) {
                 requestTaoPwd();
             } else if (resultCode == BrandActivity.CODE_RESULT_FAIL) {
-                Toast.makeText(GoodsDetailActivity.this, "您尚未请选择推广位,申请失败", Toast.LENGTH_SHORT).show();
+                Toast.makeText(GoodsDetailActivity.this, "您尚未请选择推广位,请您选择推广位", Toast.LENGTH_SHORT).show();
             }
         }
         super.onActivityResult(requestCode, resultCode, data);

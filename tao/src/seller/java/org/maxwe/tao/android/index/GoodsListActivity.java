@@ -9,7 +9,6 @@ import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.SearchView;
 import android.text.TextUtils;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,8 +31,6 @@ import org.maxwe.tao.android.activity.BaseActivity;
 import org.maxwe.tao.android.goods.GoodsEntity;
 import org.maxwe.tao.android.goods.GoodsRequestModel;
 import org.maxwe.tao.android.goods.GoodsResponseModel;
-import org.maxwe.tao.android.goods.GoodsResponseResults;
-import org.maxwe.tao.android.goods.GoodsResponseResultsEntity;
 import org.maxwe.tao.android.utils.SharedPreferencesUtils;
 import org.xutils.view.annotation.ContentView;
 import org.xutils.view.annotation.ViewInject;
@@ -93,7 +90,17 @@ public class GoodsListActivity extends BaseActivity implements SwipeRefreshLayou
                 View view = inflater.inflate(R.layout.include_index_fragment_goods, null);
                 SimpleDraweeView imageView = (SimpleDraweeView) view.findViewById(R.id.iv_inc_index_frg_item_goods_image);
                 TextView title = (TextView) view.findViewById(R.id.iv_inc_index_frg_item_goods_title);
+                TextView hasCoupon = (TextView) view.findViewById(R.id.iv_inc_index_frg_item_goods_is_coupon);
                 TextView price = (TextView) view.findViewById(R.id.iv_inc_index_frg_item_goods_price);
+                TextView coupon = (TextView) view.findViewById(R.id.iv_inc_index_frg_item_goods_coupon);
+                TextView couponPrice = (TextView) view.findViewById(R.id.iv_inc_index_frg_item_goods_coupon_price);
+                if (Long.parseLong(goodsEntity.getCoupon_info()) > 0){
+                    hasCoupon.setVisibility(View.VISIBLE);
+                    coupon.setVisibility(View.VISIBLE);
+                    couponPrice.setVisibility(View.VISIBLE);
+                    couponPrice.setText(Long.parseLong(goodsEntity.getCoupon_info()) + "元");
+                }
+
                 TextView priceReserve = (TextView) view.findViewById(R.id.iv_inc_index_frg_item_goods_price_reserve);
                 priceReserve.getPaint().setFlags(Paint.STRIKE_THRU_TEXT_FLAG);
                 TextView brokerage = (TextView) view.findViewById(R.id.iv_inc_index_frg_item_brokerage);
@@ -103,8 +110,8 @@ public class GoodsListActivity extends BaseActivity implements SwipeRefreshLayou
                 title.setText(goodsEntity.getTitle());
                 price.setText("￥" + goodsEntity.getZk_final_price());
                 priceReserve.setText("￥" + goodsEntity.getReserve_price());
-                brokerage.setText("18%");
-                brokerageGot.setText("赚" + new DecimalFormat("###.00").format(Float.parseFloat(goodsEntity.getZk_final_price()) * 18 / 100) + "元");
+                brokerage.setText(goodsEntity.getCommission_rate() + "%");
+                brokerageGot.setText("赚" + new DecimalFormat("###.00").format(Float.parseFloat(goodsEntity.getZk_final_price()) * Float.parseFloat(goodsEntity.getCommission_rate()) / 100) + "元");
                 sale.setText("月销:" + goodsEntity.getVolume());
                 return view;
             }
@@ -216,15 +223,15 @@ public class GoodsListActivity extends BaseActivity implements SwipeRefreshLayou
                 public void onSuccess(String result) {
                     GoodsResponseModel responseModel = JSON.parseObject(result, GoodsResponseModel.class);
                     if (responseModel != null) {
-                        GoodsResponseResults tbk_item_get_response = responseModel.getTbk_item_get_response();
-                        if (tbk_item_get_response != null) {
-                            GoodsResponseResultsEntity results = tbk_item_get_response.getResults();
-                            if (results != null) {
-                                List<GoodsEntity> n_tbk_item = results.getN_tbk_item();
-                                onRequestFinishBySuccess(n_tbk_item);
-                            }
-                        }
+                        LinkedList<GoodsEntity> goodsEntities = responseModel.getGoodsEntities();
+                        onRequestFinishBySuccess(goodsEntities);
                     }
+                }
+
+                @Override
+                public void onEmptyResult(String result) {
+                    super.onEmptyResult(result);
+                    Toast.makeText(GoodsListActivity.this,"没有数据了",Toast.LENGTH_SHORT).show();
                 }
 
                 @Override

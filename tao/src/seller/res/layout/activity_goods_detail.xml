@@ -67,11 +67,12 @@
                     android:layout_height="match_parent"
                     android:background="#FFFFFF"
                     android:orientation="vertical">
-
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="horizontal">
+                        android:orientation="horizontal"
+                        android:layout_marginLeft="5dp"
+                        android:layout_marginRight="5dp">
 
                         <ImageView
                             android:layout_width="20dp"
@@ -84,7 +85,7 @@
                             android:layout_height="wrap_content"
                             android:textColor="#ABABAB" />
                     </LinearLayout>
-
+                    <!--佣金-->
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -117,8 +118,33 @@
                             android:gravity="center_horizontal|bottom"
                             android:textColor="#FF4500"
                             android:textSize="12dp" />
-                    </LinearLayout>
+                        <RelativeLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/iv_act_goods_detail_coupon_container">
+                            <TextView
+                                android:id="@+id/iv_act_goods_detail_coupon_price"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_alignParentRight="true"
+                                android:gravity="center_horizontal|bottom"
+                                android:textColor="#CCCCCC"
+                                android:textSize="12dp"
+                                android:visibility="gone" />
 
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_toLeftOf="@+id/iv_act_goods_detail_coupon_price"
+                                android:background="#FF4500"
+                                android:gravity="center_horizontal|bottom"
+                                android:text="优惠券"
+                                android:textColor="#FFFFFF"
+                                android:textSize="12dp"
+                                android:visibility="gone" />
+                        </RelativeLayout>
+                    </LinearLayout>
+                    <!--价格-->
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -135,7 +161,7 @@
                             android:textColor="#FF4500"
                             android:textSize="20dp" />
                     </LinearLayout>
-
+                    <!--月销-->
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -150,6 +176,78 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:textColor="#7A7A7A" />
+                    </LinearLayout>
+
+                    <!--券数量情况-->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="5dp"
+                        android:layout_marginRight="5dp"
+                        android:layout_marginTop="5dp"
+                        android:background="#FFFFFF"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="优惠券总数量："
+                            android:textColor="#7A7A7A" />
+
+                        <TextView
+                            android:id="@+id/tv_act_goods_detail_coupon_counter"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="#7A7A7A" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="已领取："
+                            android:textColor="#7A7A7A" />
+
+                        <TextView
+                            android:id="@+id/tv_act_goods_detail_coupon_get"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="#7A7A7A" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="还剩余："
+                            android:textColor="#7A7A7A" />
+
+                        <TextView
+                            android:id="@+id/tv_act_goods_detail_coupon_left"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="#7A7A7A" />
+
+                    </LinearLayout>
+
+                    <!--券时间情况-->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="5dp"
+                        android:layout_marginRight="5dp"
+                        android:layout_marginTop="5dp"
+                        android:background="#FFFFFF"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="#7A7A7A"
+                            android:text="领券结束时间："/>
+
+                        <TextView
+                            android:id="@+id/tv_act_goods_detail_coupon_time_line"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="#7A7A7A" />
+
                     </LinearLayout>
 
                     <TextView
@@ -179,21 +277,24 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentBottom="true"
                     android:orientation="horizontal"
-                    android:visibility="gone">
+                    android:visibility="gone"
+                    android:background="#FFFFFF">
 
                     <Button
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginRight="2dp"
                         android:layout_weight="1"
-                        android:textColor="#FFFFFF" />
+                        android:background="#00FFFFFF"
+                        android:textColor="#00FFFFFF" />
 
                     <Button
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="2dp"
                         android:layout_weight="1"
-                        android:textColor="#FFFFFF" />
+                        android:background="#00000000"
+                        android:textColor="#00FFFFFF" />
                 </LinearLayout>
             </LinearLayout>
         </ScrollView>
