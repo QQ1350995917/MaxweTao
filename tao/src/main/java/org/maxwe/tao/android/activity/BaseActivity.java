@@ -40,5 +40,7 @@ public class BaseActivity extends AppCompatActivity {
         return null;
     }
 
-
+    public static String getEMOJIStringByUnicode(int unicode){
+        return new String(Character.toChars(unicode));
+    }
 }

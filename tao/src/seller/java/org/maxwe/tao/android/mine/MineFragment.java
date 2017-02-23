@@ -12,9 +12,8 @@ import org.maxwe.tao.android.INetWorkManager;
 import org.maxwe.tao.android.NetworkManager;
 import org.maxwe.tao.android.R;
 import org.maxwe.tao.android.account.model.SessionModel;
-import org.maxwe.tao.android.activity.AuthorActivity;
-import org.maxwe.tao.android.activity.AuthorWebView;
-import org.maxwe.tao.android.activity.BrandActivity;
+import org.maxwe.tao.android.author.AuthorActivity;
+import org.maxwe.tao.android.author.BrandActivity;
 import org.maxwe.tao.android.activity.LoginActivity;
 import org.maxwe.tao.android.activity.ModifyActivity;
 import org.maxwe.tao.android.main.MainActivity;
@@ -38,46 +37,31 @@ public class MineFragment extends BaseFragment {
 
     @Event(value = R.id.bt_frg_mine_promotion, type = View.OnClickListener.class)
     private void onPromotionAction(View view) {
-        RequestParams requestParams = new RequestParams(AuthorWebView.URL_LOGIN_MESSAGE);
-        CookieManager cookieManager = CookieManager.getInstance();
-        String CookieStr = cookieManager.getCookie(AuthorWebView.URL_LOGIN_MESSAGE);
-        requestParams.addHeader("Cookie", CookieStr);
-        Callback.Cancelable cancelable = x.http().post(requestParams, new Callback.CommonCallback<String>() {
+        AuthorActivity.requestTaoLoginStatus(this.getContext(), new AuthorActivity.TaoLoginStatusCallback() {
             @Override
-            public void onSuccess(String result) {
-                Map rootMap = JSON.parseObject(result, Map.class);
-                Map<String, String> dataMap = (Map<String, String>) rootMap.get(AuthorWebView.KEY_DATA);
-                if (dataMap != null) {
-                    if (dataMap.containsKey(AuthorWebView.KEY_NO_LOGIN)) {
-                        Intent intent = new Intent(MineFragment.this.getContext(), AuthorActivity.class);
-                        intent.putExtra(AuthorActivity.KEY_INTENT_OF_STATE_CODE, 1234);
-                        MineFragment.this.startActivityForResult(intent, MineFragment.this.CODE_REQUEST_AUTHOR);
-                    } else if (dataMap.containsKey(AuthorWebView.KEY_TB_TOKEN_)) {
-                        Intent intent = new Intent(MineFragment.this.getContext(), BrandActivity.class);
-                        MineFragment.this.startActivity(intent);
-                        SharedPreferencesUtils.saveCurrentKeeperId(MineFragment.this.getContext(), (String.valueOf(dataMap.get("shopKeeperId"))));
-                    } else {
-                        Toast.makeText(MineFragment.this.getContext(), "其他情况", Toast.LENGTH_SHORT).show();
-                    }
-                }
+            public void onNeedLoginCallback() {
+                Intent intent = new Intent(MineFragment.this.getContext(), AuthorActivity.class);
+                intent.putExtra(AuthorActivity.KEY_INTENT_OF_STATE_CODE, 1234);
+                MineFragment.this.startActivityForResult(intent, MineFragment.this.CODE_REQUEST_AUTHOR);
             }
 
             @Override
-            public void onError(Throwable ex, boolean isOnCallback) {
-                ex.printStackTrace();
+            public void onNeedBrandCallback() {
+                Intent intent = new Intent(MineFragment.this.getContext(), BrandActivity.class);
+                MineFragment.this.startActivity(intent);
             }
 
             @Override
-            public void onCancelled(CancelledException cex) {
-
+            public void onNeedOkCallback() {
+                Intent intent = new Intent(MineFragment.this.getContext(), BrandActivity.class);
+                MineFragment.this.startActivity(intent);
             }
 
             @Override
-            public void onFinished() {
+            public void onNeedErrorCallback() {
 
             }
         });
-
     }
 
     @Event(value = R.id.bt_frg_mine_password, type = View.OnClickListener.class)

@@ -25,6 +25,8 @@ public class GoodsRequestModel extends SessionModel {
     public static final String TK_TOTAL_COMMI_DES = TK_TOTAL_COMMI + ASC;
     public static final String TK_TOTAL_COMMI_ASC = TK_TOTAL_COMMI + ASC;
 
+    private int goodsType = 0;// 商品的类型 0：全部商品，1：
+
     // 查询关键字
     private String q;
     // 排序_des（降序），排序_asc（升序），销量（total_sales），淘客佣金比率（tk_rate）， 累计推广量（tk_total_sales），总支出佣金（tk_total_commi）
@@ -51,6 +53,7 @@ public class GoodsRequestModel extends SessionModel {
     private int end_tk_rate = 9999;// 否
 
     public GoodsRequestModel() {
+
     }
 
     public GoodsRequestModel(int page_no, int page_size) {

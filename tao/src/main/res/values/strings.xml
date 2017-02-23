@@ -49,5 +49,13 @@
     <string name="string_tao_promotion_new_name">淘妈咪导购推广</string>
     <string name="string_tao_position_new_name">淘妈咪微信导购推广位</string>
 
+    <integer name="integer_emoji_pointer_left">0x1F448</integer>
+    <integer name="integer_emoji_pointer_right">0x1F449</integer>
+    <integer name="integer_emoji_pointer_up">0x1F446</integer>
+    <integer name="integer_emoji_hand_clap">0x1F44F</integer>
+    <integer name="integer_emoji_hand_victor">0x270C</integer>
+    <integer name="integer_emoji_phone">0x1F4F1</integer>
+    <integer name="integer_emoji_paper_clip">0x1F4CE</integer>
+
     <string name="platform" >Android</string>
 </resources>

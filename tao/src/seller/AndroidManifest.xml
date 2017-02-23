@@ -38,9 +38,9 @@
             android:theme="@style/AppTheme_activity_dialog"></activity>
 
         <activity
-            android:name=".activity.AuthorActivity" android:launchMode="singleInstance"></activity>
+            android:name=".author.AuthorActivity" android:launchMode="singleInstance"></activity>
 
-        <activity android:name=".activity.BrandActivity"></activity>
+        <activity android:name=".author.BrandActivity"></activity>
 
         <activity android:name=".index.GoodsDetailActivity"></activity>
 

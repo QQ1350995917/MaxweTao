@@ -1,63 +1,100 @@
-package org.maxwe.tao.android.activity;
+package org.maxwe.tao.android.author;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.util.AttributeSet;
+import android.os.Bundle;
+import android.support.annotation.Nullable;
+import android.text.TextUtils;
+import android.view.View;
+import android.webkit.CookieManager;
 import android.webkit.JavascriptInterface;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.Toast;
+
+import com.alibaba.fastjson.JSON;
+
+import org.maxwe.tao.android.R;
+import org.maxwe.tao.android.activity.BaseActivity;
+import org.maxwe.tao.android.api.Position;
+import org.maxwe.tao.android.utils.SharedPreferencesUtils;
+import org.xutils.common.Callback;
+import org.xutils.http.RequestParams;
+import org.xutils.view.annotation.ContentView;
+import org.xutils.view.annotation.Event;
+import org.xutils.view.annotation.ViewInject;
+import org.xutils.x;
+
+import java.util.Map;
+
 
 /**
- * Created by Pengwei Ding on 2017-02-05 14:32.
+ * Created by Pengwei Ding on 2017-01-22 14:46.
  * Email: www.dingpengwei@foxmail.com www.dingpegnwei@gmail.com
  * Description: TODO
- * <p/>
- * {"data":{"loginUrlPrefix":"http://www.alimama.com/member/login.htm?forward=","noLogin":true},"info":{"message":null,"ok":true}}
- * <p/>
- * {"data":{"loginUrlPrefix":"http://www.alimama.com/member/login.htm?forward=","noLogin":true},"info":{"message":null,"ok":true}}
- * <p/>
- * {"data":{"loginUrlPrefix":"http://www.alimama.com/member/login.htm?forward=","noLogin":true},"info":{"message":null,"ok":true}}
  */
+@ContentView(R.layout.activity_author)
+public class AuthorActivity extends BaseActivity {
+    public interface TaoLoginStatusCallback {
+        void onNeedLoginCallback();
 
-/**
- * {"data":{"loginUrlPrefix":"http://www.alimama.com/member/login.htm?forward=","noLogin":true},"info":{"message":null,"ok":true}}
- */
+        void onNeedBrandCallback();
 
-/**
- * {
- * "data": {
- * "isTmallHKSeller": false,
- * "isShowMaterial": false,
- * "nickname": "www_ding",
- * "isB2C": false,
- * "isInCPADebtWhiteList": false,
- * "isJoinedCps": false,
- * "isEarnedSeller": false,
- * "env": "product",
- * "frozen": 0,
- * "logname": "www.dingpengwei@foxmail.com",
- * "taobaoNumberID": 837058645,
- * "isEarnedSellerEvaluatePermitted": true,
- * "isShopKeeperOwningMoney": false,
- * "infoCompleteUrl": null,
- * "isBigShopKeeper": false,
- * "shopKeeperId": 120134623,
- * "isEarnedSellerShopPermitted": false,
- * "_tb_token_": "HP1B1kCmnFLq",
- * "isInCPAWhiteList": false,
- * "newItemEventCount": 0
- * },
- * "info": {
- * "message": null,
- * "ok": true
- * }
- * }
- */
-public class AuthorWebView extends WebView {
-    public interface AuthorWebViewCallback {
-        void onAuthorSuccess();
+        void onNeedOkCallback();
+
+        void onNeedErrorCallback();
     }
+
+    public static void requestTaoLoginStatus(final Context context, final TaoLoginStatusCallback taoLoginStatusCallback) {
+        RequestParams requestParams = new RequestParams(AuthorActivity.URL_LOGIN_MESSAGE);
+        CookieManager cookieManager = CookieManager.getInstance();
+        String CookieStr = cookieManager.getCookie(AuthorActivity.URL_LOGIN_MESSAGE);
+        requestParams.addHeader("Cookie", CookieStr);
+        Callback.Cancelable cancelable = x.http().post(requestParams, new Callback.CommonCallback<String>() {
+            @Override
+            public void onSuccess(String result) {
+                Map rootMap = JSON.parseObject(result, Map.class);
+                Map<String, String> dataMap = (Map<String, String>) rootMap.get(AuthorActivity.KEY_DATA);
+                if (dataMap != null) {
+                    if (dataMap.containsKey(AuthorActivity.KEY_NO_LOGIN)) {
+                        taoLoginStatusCallback.onNeedLoginCallback();
+                    } else {
+                        SharedPreferencesUtils.saveCurrentKeeperId(context, (String.valueOf(dataMap.get("shopKeeperId"))));
+                        Position currentPP = SharedPreferencesUtils.getCurrentPP(context);
+                        if (currentPP == null || TextUtils.isEmpty(currentPP.getId()) || TextUtils.isEmpty(currentPP.getSiteId())) {
+                            Toast.makeText(context, "请选择推广位", Toast.LENGTH_SHORT).show();
+                            taoLoginStatusCallback.onNeedBrandCallback();
+                        } else {
+                            taoLoginStatusCallback.onNeedOkCallback();
+                        }
+                    }
+                }
+            }
+
+            @Override
+            public void onError(Throwable ex, boolean isOnCallback) {
+                taoLoginStatusCallback.onNeedErrorCallback();
+                ex.printStackTrace();
+            }
+
+            @Override
+            public void onCancelled(CancelledException cex) {
+
+            }
+
+            @Override
+            public void onFinished() {
+
+            }
+        });
+    }
+
+    public static final String KEY_INTENT_OF_STATE_CODE = "KEY_INTENT_OF_STATE_CODE";
+    public static final String KEY_INTENT_OF_AUTHOR = "KEY_INTENT_OF_AUTHOR";
+    public static final int CODE_RESULT_OF_AUTHOR_FAIL = 0;
+    public static final int CODE_RESULT_OF_AUTHOR_SUCCESS = 1;
+
 
     // 返回数据的data关键字
     public static final String KEY_DATA = "data";
@@ -123,40 +160,28 @@ public class AuthorWebView extends WebView {
     private static final String SCRIPT_SHOPPING_ADD_SUBMIT = "javascript:(document.getElementById('vf-dialog').childNodes[0].childNodes[7].childNodes[1].click())";//新增导购推广的提交事件
 
 
-    private AuthorWebViewCallback authorWebViewCallback;
+    @ViewInject(R.id.wv_act_author)
+    private WebView wv_act_author;
 
-    public AuthorWebView(Context context) {
-        super(context);
-        this.init();
-    }
+    @Override
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        this.wv_act_author.setWebContentsDebuggingEnabled(true);
+        this.wv_act_author.setScrollContainer(false);
+        this.wv_act_author.addJavascriptInterface(new InJavaScriptLocalObj(), "local_obj");
+        this.wv_act_author.getSettings().setDefaultTextEncodingName("UTF-8");
+        this.wv_act_author.getSettings().setJavaScriptEnabled(true);
+        this.wv_act_author.getSettings().setJavaScriptCanOpenWindowsAutomatically(true);
+        this.wv_act_author.getSettings().setLayoutAlgorithm(WebSettings.LayoutAlgorithm.SINGLE_COLUMN);
+        this.wv_act_author.getSettings().setCacheMode(WebSettings.LOAD_NO_CACHE);
+        this.wv_act_author.getSettings().setLoadsImagesAutomatically(true);
+        this.wv_act_author.getSettings().setAllowFileAccess(true);
+        this.wv_act_author.getSettings().setAppCacheEnabled(true);
+        this.wv_act_author.getSettings().setDatabaseEnabled(true);
+        this.wv_act_author.getSettings().setDomStorageEnabled(true);
 
-    public AuthorWebView(Context context, AttributeSet attrs) {
-        super(context, attrs);
-        this.init();
-    }
 
-    public AuthorWebView(Context context, AttributeSet attrs, int defStyleAttr) {
-        super(context, attrs, defStyleAttr);
-        this.init();
-    }
-
-    private void init() {
-        this.setWebContentsDebuggingEnabled(true);
-        this.setScrollContainer(false);
-        this.addJavascriptInterface(new InJavaScriptLocalObj(), "local_obj");
-        this.getSettings().setDefaultTextEncodingName("UTF-8");
-        this.getSettings().setJavaScriptEnabled(true);
-        this.getSettings().setJavaScriptCanOpenWindowsAutomatically(true);
-        this.getSettings().setLayoutAlgorithm(WebSettings.LayoutAlgorithm.SINGLE_COLUMN);
-        this.getSettings().setCacheMode(WebSettings.LOAD_NO_CACHE);
-        this.getSettings().setLoadsImagesAutomatically(true);
-        this.getSettings().setAllowFileAccess(true);
-        this.getSettings().setAppCacheEnabled(true);
-        this.getSettings().setDatabaseEnabled(true);
-        this.getSettings().setDomStorageEnabled(true);
-//        this.getSettings().setUserAgentString("Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/56.0.2924.87 Safari/537.36");
-
-        this.setWebViewClient(new WebViewClient() {
+        this.wv_act_author.setWebViewClient(new WebViewClient() {
             @Override
             public void onPageStarted(WebView view, final String url, Bitmap favicon) {
                 super.onPageStarted(view, url, favicon);
@@ -166,20 +191,18 @@ public class AuthorWebView extends WebView {
             public void onPageFinished(final WebView view, String url) {
                 if (url.equals(URL_INDEX)) {
                     //view.loadUrl("javascript:window.local_obj.showSource(document.body)");
-                    if (AuthorWebView.this.authorWebViewCallback != null) {
-                        AuthorWebView.this.authorWebViewCallback.onAuthorSuccess();
-                    }
+                    onSuccessBack();
                 }
                 super.onPageFinished(view, url);
             }
         });
 
-        this.loadUrl(URL_LOGIN);
+        this.wv_act_author.loadUrl(URL_LOGIN);
     }
 
-    @Override
-    public void loadUrl(String url) {
-        super.loadUrl(url);
+    @Event(value = R.id.bt_act_author_back, type = View.OnClickListener.class)
+    private void onBackAction(View view) {
+        this.onBackPressed();
     }
 
     final class InJavaScriptLocalObj {
@@ -191,16 +214,24 @@ public class AuthorWebView extends WebView {
     @Override
     public void onPause() {
         super.onPause();
-        this.pauseTimers();
+        this.wv_act_author.pauseTimers();
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        this.resumeTimers();
+        this.wv_act_author.resumeTimers();
     }
 
-    public void setAuthorWebViewCallback(AuthorWebViewCallback authorWebViewCallback) {
-        this.authorWebViewCallback = authorWebViewCallback;
+    private void onSuccessBack() {
+        this.setResult(CODE_RESULT_OF_AUTHOR_SUCCESS);
+        this.finish();
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        this.setResult(CODE_RESULT_OF_AUTHOR_FAIL);
+        this.finish();
     }
 }

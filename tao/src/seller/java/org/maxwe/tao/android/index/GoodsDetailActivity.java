@@ -30,24 +30,21 @@ import org.maxwe.tao.android.INetWorkManager;
 import org.maxwe.tao.android.NetworkManager;
 import org.maxwe.tao.android.R;
 import org.maxwe.tao.android.account.model.SessionModel;
-import org.maxwe.tao.android.activity.AuthorActivity;
-import org.maxwe.tao.android.activity.AuthorWebView;
+import org.maxwe.tao.android.author.AuthorActivity;
 import org.maxwe.tao.android.activity.BaseActivity;
-import org.maxwe.tao.android.activity.BrandActivity;
+import org.maxwe.tao.android.author.BrandActivity;
 import org.maxwe.tao.android.api.Position;
+import org.maxwe.tao.android.goods.GoodsConvertResponseModel;
 import org.maxwe.tao.android.goods.GoodsEntity;
+import org.maxwe.tao.android.goods.TaoConvertRequestModel;
+import org.maxwe.tao.android.goods.TaoConvertResponseModel;
 import org.maxwe.tao.android.goods.TaoPwdRequestModel;
 import org.maxwe.tao.android.utils.SharedPreferencesUtils;
-import org.w3c.dom.Text;
-import org.xutils.common.Callback;
-import org.xutils.http.RequestParams;
 import org.xutils.view.annotation.ContentView;
 import org.xutils.view.annotation.Event;
 import org.xutils.view.annotation.ViewInject;
-import org.xutils.x;
 
 import java.text.DecimalFormat;
-import java.util.Map;
 
 /**
  * Created by Pengwei Ding on 2017-02-12 13:03.
@@ -145,50 +142,31 @@ public class GoodsDetailActivity extends BaseActivity {
 
     @Event(value = R.id.bt_act_goods_detail_get_link, type = View.OnClickListener.class)
     private void onTaoPwdAction(View view) {
-        RequestParams requestParams = new RequestParams(AuthorWebView.URL_LOGIN_MESSAGE);
-        CookieManager cookieManager = CookieManager.getInstance();
-        String CookieStr = cookieManager.getCookie(AuthorWebView.URL_LOGIN_MESSAGE);
-        requestParams.addHeader("Cookie", CookieStr);
-        Callback.Cancelable cancelable = x.http().post(requestParams, new Callback.CommonCallback<String>() {
+        AuthorActivity.requestTaoLoginStatus(this, new AuthorActivity.TaoLoginStatusCallback() {
             @Override
-            public void onSuccess(String result) {
-                Map rootMap = JSON.parseObject(result, Map.class);
-                Map<String, String> dataMap = (Map<String, String>) rootMap.get(AuthorWebView.KEY_DATA);
-                if (dataMap != null) {
-                    if (dataMap.containsKey(AuthorWebView.KEY_NO_LOGIN)) {
-                        Intent intent = new Intent(GoodsDetailActivity.this, AuthorActivity.class);
-                        intent.putExtra(AuthorActivity.KEY_INTENT_OF_STATE_CODE, 1234);
-                        GoodsDetailActivity.this.startActivityForResult(intent, GoodsDetailActivity.this.CODE_REQUEST_AUTHOR);
-                    } else {
-                        SharedPreferencesUtils.saveCurrentKeeperId(GoodsDetailActivity.this, (String.valueOf(dataMap.get("shopKeeperId"))));
-                        Position currentPP = SharedPreferencesUtils.getCurrentPP(GoodsDetailActivity.this);
-                        if (currentPP == null || TextUtils.isEmpty(currentPP.getId()) || TextUtils.isEmpty(currentPP.getSiteId())) {
-                            Toast.makeText(GoodsDetailActivity.this, "请选择推广位", Toast.LENGTH_SHORT).show();
-                            Intent intent = new Intent(GoodsDetailActivity.this, BrandActivity.class);
-                            GoodsDetailActivity.this.startActivityForResult(intent, GoodsDetailActivity.this.CODE_REQUEST_BRAND);
-                        } else {
-                            requestTaoPwd();
-                        }
-                    }
-                }
+            public void onNeedLoginCallback() {
+                Intent intent = new Intent(GoodsDetailActivity.this, AuthorActivity.class);
+                intent.putExtra(AuthorActivity.KEY_INTENT_OF_STATE_CODE, 1234);
+                GoodsDetailActivity.this.startActivityForResult(intent, GoodsDetailActivity.this.CODE_REQUEST_AUTHOR);
             }
 
             @Override
-            public void onError(Throwable ex, boolean isOnCallback) {
-                ex.printStackTrace();
+            public void onNeedBrandCallback() {
+                Toast.makeText(GoodsDetailActivity.this, "请选择推广位", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(GoodsDetailActivity.this, BrandActivity.class);
+                GoodsDetailActivity.this.startActivityForResult(intent, GoodsDetailActivity.this.CODE_REQUEST_BRAND);
             }
 
             @Override
-            public void onCancelled(CancelledException cex) {
-
+            public void onNeedOkCallback() {
+                requestTaoPwd();
             }
 
             @Override
-            public void onFinished() {
+            public void onNeedErrorCallback() {
 
             }
         });
-
     }
 
     @Override
@@ -210,21 +188,8 @@ public class GoodsDetailActivity extends BaseActivity {
     }
 
 
-    @Event(value = R.id.bt_act_goods_detail_copy, type = View.OnClickListener.class)
-    private void onCopyAction(View view) {
-        ClipboardManager cm = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
-        cm.setText(this.tv_act_goods_detail_get_link_result.getText());
-        Toast.makeText(this, "复制成功", Toast.LENGTH_LONG).show();
-    }
 
-    @Event(value = R.id.bt_act_goods_detail_share, type = View.OnClickListener.class)
-    private void onShareAction(View view) {
-        new ShareAction(GoodsDetailActivity.this).withTitle(this.taoPwdEntity.getPwd())
-                .withText(this.taoPwdEntity.getTitle())
-                .withTargetUrl(this.goodsEntity.getItem_url())
-                .setDisplayList(SHARE_MEDIA.SINA, SHARE_MEDIA.QQ, SHARE_MEDIA.WEIXIN)
-                .setCallback(umShareListener).open();
-    }
+
 
     @Event(value = R.id.bt_act_goods_detail_back, type = View.OnClickListener.class)
     private void onModifyBackAction(View view) {
@@ -246,45 +211,116 @@ public class GoodsDetailActivity extends BaseActivity {
         this.bt_act_goods_detail_get_link.setClickable(true);
     }
 
-    private void onResponseTaoPwdSuccess(String taoPwd) {
+    /**
+     * 长按复制淘口令
+     * @param view
+     * @return
+     */
+    @Event(value = R.id.tv_act_goods_detail_get_link_result, type = View.OnLongClickListener.class)
+    private boolean onLinkPwdCopyAction(View view) {
+        ClipboardManager cm = (ClipboardManager) this.getSystemService(Context.CLIPBOARD_SERVICE);
+        // 将文本内容放到系统剪贴板里。
+        if (view.getTag() != null) {
+            cm.setText(tv_act_goods_detail_get_link_result.getTag().toString());
+            Toast.makeText(this, "复制成功", Toast.LENGTH_SHORT).show();
+        }
+        return true;
+    }
+
+    /**
+     * 复制全部文案
+     * @param view
+     * @return
+     */
+    @Event(value = R.id.bt_act_goods_detail_copy, type = View.OnClickListener.class)
+    private void onCopyAction(View view) {
+        ClipboardManager cm = (ClipboardManager) this.getSystemService(Context.CLIPBOARD_SERVICE);
+        // 将文本内容放到系统剪贴板里。
+        cm.setText(tv_act_goods_detail_get_link_result.getText());
+        Toast.makeText(this, "复制成功", Toast.LENGTH_SHORT).show();
+
+        Intent intent = new Intent(Intent.ACTION_VIEW);    //为Intent设置Action属性
+        intent.setData(Uri.parse(this.goodsEntity.getCoupon_click_url())); //为Intent设置DATA属性
+        startActivity(intent);
+    }
+
+
+    /**
+     * 分享
+     * @param view
+     * @return
+     */
+    @Event(value = R.id.bt_act_goods_detail_share, type = View.OnClickListener.class)
+    private void onShareAction(View view) {
+        new ShareAction(GoodsDetailActivity.this).withTitle(BaseActivity.getEMOJIStringByUnicode(0x1F4E7))
+                .withText(tv_act_goods_detail_get_link_result.getText().toString())
+                .withTargetUrl(this.goodsEntity.getItem_url())
+                .setDisplayList(SHARE_MEDIA.SINA, SHARE_MEDIA.QQ, SHARE_MEDIA.WEIXIN)
+                .setCallback(umShareListener).open();
+    }
+
+    private void onResponseTaoConvertSuccess(GoodsConvertResponseModel goodsConvertResponseModel) {
         this.bt_act_goods_detail_get_link.setClickable(false);
         this.bt_act_goods_detail_get_link.setVisibility(View.GONE);
         this.tv_act_goods_detail_get_link_result.setVisibility(View.VISIBLE);
         this.ll_act_goods_detail_space_holder.setVisibility(View.VISIBLE);
         this.ll_act_goods_detail_action_holder.setVisibility(View.VISIBLE);
-        this.taoPwdEntity = new TaoPwdEntity(GoodsDetailActivity.this.goodsEntity.getTitle(),
-                "下单淘口令：" + taoPwd,
-                "价格：" + goodsEntity.getZk_final_price() + "元",
-                "复制淘口令，打开手机淘宝即可下单");
-        String text = this.taoPwdEntity.getTitle() + "\r\n"
-                + this.taoPwdEntity.getPrice() + "\r\n"
-                + this.taoPwdEntity.getPwd() + "\r\n"
-                + this.taoPwdEntity.getDesc() + "\r\n";
-        this.tv_act_goods_detail_get_link_result.setText(text);
+
+        if (goodsConvertResponseModel != null) {
+            TaoConvertResponseModel convert = goodsConvertResponseModel.getConvert();
+            GoodsEntity goodsEntity = goodsConvertResponseModel.getGoodsEntity();
+            if (convert != null && goodsEntity != null) {
+                if (!TextUtils.isEmpty(convert.getShortLinkUrl()) &&
+                        !TextUtils.isEmpty(convert.getTaoToken())) {
+                    String copyText =
+                            BaseActivity.getEMOJIStringByUnicode(0x270C) + goodsEntity.getTitle() + "\r\n" +
+                                    "【领券】" + this.goodsEntity.getCoupon_click_url() + "\r\n" +
+                                    "【价格】￥" + goodsEntity.getZk_final_price() + "\r\n" +
+                                    BaseActivity.getEMOJIStringByUnicode(0x1F446) + "长按复制后打开" +
+                                    BaseActivity.getEMOJIStringByUnicode(0x1F4F1) + "淘宝" +
+                                    BaseActivity.getEMOJIStringByUnicode(0x1F449) +
+                                    convert.getTaoToken() +
+                                    BaseActivity.getEMOJIStringByUnicode(0x1F448) + "\r\n";
+                    tv_act_goods_detail_get_link_result.setText(copyText);
+                    tv_act_goods_detail_get_link_result.setTag(convert.getTaoToken());
+                } else {
+                    tv_act_goods_detail_get_link_result.setText("该链接不被支持或已经下架");
+                }
+            } else {
+                tv_act_goods_detail_get_link_result.setText("该链接不被支持或已经下架");
+            }
+        } else {
+            tv_act_goods_detail_get_link_result.setText("该链接不被支持或已经下架");
+        }
     }
 
     private void requestTaoPwd() {
         onRequestTaoPwd();
-        String currentKeeperId = SharedPreferencesUtils.getCurrentKeeperId(this);
+
         Position currentPP = SharedPreferencesUtils.getCurrentPP(this);
-        TaoPwdRequestModel taoPwdRequestModel = new TaoPwdRequestModel();
+        TaoConvertRequestModel taoConvertRequestModel = new TaoConvertRequestModel();
 
-        taoPwdRequestModel.setText(goodsEntity.getTitle());
-        taoPwdRequestModel.setUrl(goodsEntity.getItem_url() + "&pid=mm_" + currentKeeperId + "_" + currentPP.getSiteId() + "_" + currentPP.getId());
-        taoPwdRequestModel.setUser_id(Long.parseLong(currentKeeperId));
+        CookieManager cookieManager = CookieManager.getInstance();
+        String cookie = cookieManager.getCookie(AuthorActivity.URL_LOGIN_MESSAGE);
 
-        String url = this.getString(R.string.string_url_domain) + this.getString(R.string.string_url_tao_pwd);
+        taoConvertRequestModel.setCookie(cookie);
+        taoConvertRequestModel.setSiteid(currentPP.getSiteId());
+        taoConvertRequestModel.setAdzoneid(currentPP.getId());
+        taoConvertRequestModel.setPromotionURL(goodsEntity.getItem_url());
+
+        String url = this.getString(R.string.string_url_domain) + this.getString(R.string.string_url_tao_convert);
         SessionModel sessionModel = SharedPreferencesUtils.getSession(this);
-        taoPwdRequestModel.setT(sessionModel.getT());
-        taoPwdRequestModel.setMark(sessionModel.getMark());
-        taoPwdRequestModel.setCellphone(sessionModel.getCellphone());
-        taoPwdRequestModel.setApt(this.getResources().getInteger(R.integer.integer_app_type));
+        taoConvertRequestModel.setT(sessionModel.getT());
+        taoConvertRequestModel.setMark(sessionModel.getMark());
+        taoConvertRequestModel.setCellphone(sessionModel.getCellphone());
+        taoConvertRequestModel.setApt(this.getResources().getInteger(R.integer.integer_app_type));
         try {
-            taoPwdRequestModel.setSign(sessionModel.getEncryptSing());
-            NetworkManager.requestByPost(url, taoPwdRequestModel, new INetWorkManager.OnNetworkCallback() {
+            taoConvertRequestModel.setSign(sessionModel.getEncryptSing());
+            NetworkManager.requestByPost(url, taoConvertRequestModel, new INetWorkManager.OnNetworkCallback() {
                 @Override
                 public void onSuccess(String result) {
-                    onResponseTaoPwdSuccess(result);
+                    GoodsConvertResponseModel goodsConvertResponseModel = JSON.parseObject(result, GoodsConvertResponseModel.class);
+                    onResponseTaoConvertSuccess(goodsConvertResponseModel);
                 }
 
                 @Override
@@ -292,6 +328,11 @@ public class GoodsDetailActivity extends BaseActivity {
                     SharedPreferencesUtils.clearSession(GoodsDetailActivity.this);
                     SharedPreferencesUtils.clearAuthor(GoodsDetailActivity.this);
                     Toast.makeText(GoodsDetailActivity.this, R.string.string_toast_timeout, Toast.LENGTH_SHORT).show();
+                }
+
+                @Override
+                public void onEmptyResult(String result) {
+                    super.onEmptyResult(result);
                 }
 
                 @Override
@@ -308,9 +349,56 @@ public class GoodsDetailActivity extends BaseActivity {
             });
         } catch (Exception e) {
             onResponseTaoPwdError();
-            Toast.makeText(this, "请求失败", Toast.LENGTH_SHORT).show();
+            Toast.makeText(GoodsDetailActivity.this, "请求失败", Toast.LENGTH_SHORT).show();
             e.printStackTrace();
         }
+
+//        String currentKeeperId = SharedPreferencesUtils.getCurrentKeeperId(this);
+//        Position currentPP = SharedPreferencesUtils.getCurrentPP(this);
+//        TaoPwdRequestModel taoPwdRequestModel = new TaoPwdRequestModel();
+//
+//        taoPwdRequestModel.setText(goodsEntity.getTitle());
+//        taoPwdRequestModel.setUrl(goodsEntity.getItem_url() + "&pid=mm_" + currentKeeperId + "_" + currentPP.getSiteId() + "_" + currentPP.getId());
+//        taoPwdRequestModel.setUser_id(Long.parseLong(currentKeeperId));
+//
+//        String url = this.getString(R.string.string_url_domain) + this.getString(R.string.string_url_tao_pwd);
+//        SessionModel sessionModel = SharedPreferencesUtils.getSession(this);
+//        taoPwdRequestModel.setT(sessionModel.getT());
+//        taoPwdRequestModel.setMark(sessionModel.getMark());
+//        taoPwdRequestModel.setCellphone(sessionModel.getCellphone());
+//        taoPwdRequestModel.setApt(this.getResources().getInteger(R.integer.integer_app_type));
+//        try {
+//            taoPwdRequestModel.setSign(sessionModel.getEncryptSing());
+//            NetworkManager.requestByPost(url, taoPwdRequestModel, new INetWorkManager.OnNetworkCallback() {
+//                @Override
+//                public void onSuccess(String result) {
+//                    onResponseTaoPwdSuccess(result);
+//                }
+//
+//                @Override
+//                public void onLoginTimeout(String result) {
+//                    SharedPreferencesUtils.clearSession(GoodsDetailActivity.this);
+//                    SharedPreferencesUtils.clearAuthor(GoodsDetailActivity.this);
+//                    Toast.makeText(GoodsDetailActivity.this, R.string.string_toast_timeout, Toast.LENGTH_SHORT).show();
+//                }
+//
+//                @Override
+//                public void onError(Throwable ex, boolean isOnCallback) {
+//                    Toast.makeText(GoodsDetailActivity.this, R.string.string_toast_network_error, Toast.LENGTH_SHORT).show();
+//                    onResponseTaoPwdError();
+//                }
+//
+//                @Override
+//                public void onOther(int code, String result) {
+//                    Toast.makeText(GoodsDetailActivity.this, R.string.string_toast_reset_password_error, Toast.LENGTH_SHORT).show();
+//                    onResponseTaoPwdError();
+//                }
+//            });
+//        } catch (Exception e) {
+//            onResponseTaoPwdError();
+//            Toast.makeText(this, "请求失败", Toast.LENGTH_SHORT).show();
+//            e.printStackTrace();
+//        }
     }
 
 

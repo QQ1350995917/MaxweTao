@@ -18,14 +18,14 @@ import org.maxwe.tao.android.INetWorkManager;
 import org.maxwe.tao.android.NetworkManager;
 import org.maxwe.tao.android.R;
 import org.maxwe.tao.android.SellerApplication;
-import org.maxwe.tao.android.account.agent.AgentEntity;
 import org.maxwe.tao.android.account.model.SessionModel;
 import org.maxwe.tao.android.account.user.UserEntity;
 import org.maxwe.tao.android.activity.LoginActivity;
 import org.maxwe.tao.android.activity.VersionActivity;
+import org.maxwe.tao.android.author.AuthorActivity;
+import org.maxwe.tao.android.author.BrandActivity;
 import org.maxwe.tao.android.index.IndexFragment;
 import org.maxwe.tao.android.mine.MineFragment;
-import org.maxwe.tao.android.response.IResponse;
 import org.maxwe.tao.android.utils.SharedPreferencesUtils;
 import org.maxwe.tao.android.version.VersionEntity;
 import org.xutils.view.annotation.ContentView;
@@ -40,6 +40,8 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     public static final int REQUEST_CODE_MODIFY_PASSWORD = 3;
     public static final int REQUEST_CODE_ACCESS_CHECK = 4;
     public static final int REQUEST_CODE_LOGIN_TIME_OUT = 5;
+    private static final int CODE_REQUEST_AUTHOR = 6;
+    private static final int CODE_REQUEST_BRAND = 7;
 
     private Fragment indexFragment;
     private Fragment linkFragment;
@@ -58,11 +60,34 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         this.setCurrentFragment(R.id.rb_act_main_index);
 
         if (SellerApplication.currentUserEntity == null || SellerApplication.currentUserEntity.getActCode() == null) {
-            Intent intent = new Intent(this, AccessActivity.class);
-            this.startActivityForResult(intent, REQUEST_CODE_ACCESS_CHECK);
+//            Intent intent = new Intent(this, AccessActivity.class);
+//            this.startActivityForResult(intent, REQUEST_CODE_ACCESS_CHECK);
         }
+//        this.onCheckNewVersion();
 
-        this.onCheckNewVersion();
+        AuthorActivity.requestTaoLoginStatus(this, new AuthorActivity.TaoLoginStatusCallback() {
+            @Override
+            public void onNeedLoginCallback() {
+                Intent intent = new Intent(MainActivity.this, AuthorActivity.class);
+                intent.putExtra(AuthorActivity.KEY_INTENT_OF_STATE_CODE, 1234);
+                MainActivity.this.startActivityForResult(intent, MainActivity.this.CODE_REQUEST_AUTHOR);
+            }
+
+            @Override
+            public void onNeedBrandCallback() {
+
+            }
+
+            @Override
+            public void onNeedOkCallback() {
+
+            }
+
+            @Override
+            public void onNeedErrorCallback() {
+
+            }
+        });
     }
 
     @Override
@@ -154,6 +179,24 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
                 this.startActivity(intent);
                 this.finish();
                 break;
+
+            case CODE_REQUEST_AUTHOR:
+                if (resultCode == AuthorActivity.CODE_RESULT_OF_AUTHOR_SUCCESS) {
+
+                } else {
+                    Toast.makeText(this, "登录失败", Toast.LENGTH_SHORT).show();
+                }
+                break;
+
+
+            case CODE_REQUEST_BRAND:
+                if (resultCode == BrandActivity.CODE_RESULT_SUCCESS) {
+
+                } else if (resultCode == BrandActivity.CODE_RESULT_FAIL) {
+                    Toast.makeText(this, "您尚未请选择推广位,请您选择推广位", Toast.LENGTH_SHORT).show();
+
+                }
+                break;
             default:
                 break;
         }
@@ -172,8 +215,8 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 
     }
 
-    private void onResponseMineInfo(UserEntity userEntity){
-        if (userEntity == null || TextUtils.isEmpty(userEntity.getActCode())){
+    private void onResponseMineInfo(UserEntity userEntity) {
+        if (userEntity == null || TextUtils.isEmpty(userEntity.getActCode())) {
 
         }
     }

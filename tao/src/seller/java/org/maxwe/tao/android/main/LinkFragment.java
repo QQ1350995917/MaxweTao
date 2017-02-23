@@ -4,12 +4,14 @@ import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.webkit.CookieManager;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
@@ -23,14 +25,14 @@ import org.maxwe.tao.android.INetWorkManager;
 import org.maxwe.tao.android.NetworkManager;
 import org.maxwe.tao.android.R;
 import org.maxwe.tao.android.account.model.SessionModel;
-import org.maxwe.tao.android.activity.AuthorActivity;
-import org.maxwe.tao.android.activity.AuthorWebView;
-import org.maxwe.tao.android.activity.BrandActivity;
+import org.maxwe.tao.android.activity.BaseActivity;
 import org.maxwe.tao.android.api.Position;
+import org.maxwe.tao.android.author.AuthorActivity;
+import org.maxwe.tao.android.author.BrandActivity;
+import org.maxwe.tao.android.goods.GoodsConvertResponseModel;
+import org.maxwe.tao.android.goods.GoodsEntity;
 import org.maxwe.tao.android.goods.TaoConvertRequestModel;
 import org.maxwe.tao.android.goods.TaoConvertResponseModel;
-import org.maxwe.tao.android.goods.TaoPwdRequestModel;
-import org.maxwe.tao.android.index.TaoPwdEntity;
 import org.maxwe.tao.android.utils.SharedPreferencesUtils;
 import org.xutils.view.annotation.ContentView;
 import org.xutils.view.annotation.Event;
@@ -49,22 +51,19 @@ public class LinkFragment extends BaseFragment {
     @ViewInject(R.id.et_frg_link_content)
     private EditText et_frg_link_content;
 
-    @ViewInject(R.id.tv_frg_link_convert_short)
-    private TextView tv_frg_link_convert_short;
-    @ViewInject(R.id.tv_frg_link_convert_pwd)
-    private TextView tv_frg_link_convert_pwd;
+    @ViewInject(R.id.tv_frg_link_convert_result)
+    private Button tv_frg_link_convert_result;
+    @ViewInject(R.id.ll_frg_link_result_action)
+    private LinearLayout ll_frg_link_result_action;
     @ViewInject(R.id.tv_frg_link_convert_qr)
     private SimpleDraweeView tv_frg_link_convert_qr;
-
-    @ViewInject(R.id.et_frg_link_short_copy)
-    private TextView et_frg_link_short_copy;
-    @ViewInject(R.id.et_frg_link_pwd_copy)
-    private TextView et_frg_link_pwd_copy;
+    @ViewInject(R.id.bt_frg_link_convert_copy)
+    private Button bt_frg_link_convert_copy;
+    @ViewInject(R.id.bt_frg_link_convert_share)
+    private Button bt_frg_link_convert_share;
 
     @ViewInject(R.id.bt_act_link_action)
     private Button bt_act_link_action;
-
-    private TaoPwdEntity taoPwdEntity;
 
     private String url = null;
 
@@ -82,9 +81,14 @@ public class LinkFragment extends BaseFragment {
                 CharSequence str = item.coerceToText(this.getContext());
                 resultString += str;
             }
-            this.et_frg_link_content.setText(resultString);
+            if (resultString.startsWith("http")) {
+                this.et_frg_link_content.setText(resultString);
+            } else {
+                Toast.makeText(this.getContext(),"您粘贴板上的内容不符合转链要求",Toast.LENGTH_SHORT).show();
+            }
         }
     }
+
 
     private UMShareListener umShareListener = new UMShareListener() {
         @Override
@@ -107,31 +111,136 @@ public class LinkFragment extends BaseFragment {
     };
 
 
-    @Event(value = R.id.et_frg_link_short_copy, type = View.OnClickListener.class)
-    private void onLinkShortCopyAction(View view) {
+    @Event(value = R.id.tv_frg_link_convert_result, type = View.OnLongClickListener.class)
+    private boolean onLinkPwdCopyAction(View view) {
         ClipboardManager cm = (ClipboardManager) this.getContext().getSystemService(Context.CLIPBOARD_SERVICE);
         // 将文本内容放到系统剪贴板里。
-        cm.setText(tv_frg_link_convert_short.getText());
-        Toast.makeText(this.getContext(), "复制成功", Toast.LENGTH_SHORT).show();
+        if (view.getTag() != null) {
+            cm.setText(tv_frg_link_convert_result.getTag().toString());
+            Toast.makeText(this.getContext(), "复制成功", Toast.LENGTH_SHORT).show();
+        }
+        return true;
     }
 
-    @Event(value = R.id.et_frg_link_pwd_copy, type = View.OnClickListener.class)
-    private void onLinkPwdCopyAction(View view) {
+    @Event(value = R.id.bt_frg_link_convert_copy, type = View.OnClickListener.class)
+    private void onLinkAllCopyAction(View view) {
         ClipboardManager cm = (ClipboardManager) this.getContext().getSystemService(Context.CLIPBOARD_SERVICE);
         // 将文本内容放到系统剪贴板里。
-        cm.setText(tv_frg_link_convert_pwd.getText());
+        cm.setText(tv_frg_link_convert_result.getText());
         Toast.makeText(this.getContext(), "复制成功", Toast.LENGTH_SHORT).show();
+
+        Intent intent = new Intent(Intent.ACTION_VIEW);    //为Intent设置Action属性
+        intent.setData(Uri.parse(this.url)); //为Intent设置DATA属性
+        startActivity(intent);
+    }
+
+    @Event(value = R.id.bt_frg_link_convert_share, type = View.OnClickListener.class)
+    private void onLinkShareAction(View view) {
+        new ShareAction(LinkFragment.this.getActivity()).withTitle(BaseActivity.getEMOJIStringByUnicode(0x1F4E7))
+                .withText(tv_frg_link_convert_result.getText().toString())
+                .withTargetUrl(this.url)
+                .setDisplayList(SHARE_MEDIA.SINA, SHARE_MEDIA.QQ, SHARE_MEDIA.WEIXIN)
+                .setCallback(umShareListener).open();
     }
 
 
     @Event(value = R.id.bt_act_link_action, type = View.OnClickListener.class)
     private void onLinkConvertAction(View view) {
         this.url = et_frg_link_content.getText().toString();
+        if (TextUtils.isEmpty(this.url)) {
+            Toast.makeText(LinkFragment.this.getContext(), "请输入要转换的链接", Toast.LENGTH_SHORT).show();
+        } else {
+            AuthorActivity.requestTaoLoginStatus(this.getContext(), new AuthorActivity.TaoLoginStatusCallback() {
+                @Override
+                public void onNeedLoginCallback() {
+                    Intent intent = new Intent(LinkFragment.this.getContext(), AuthorActivity.class);
+                    intent.putExtra(AuthorActivity.KEY_INTENT_OF_STATE_CODE, 1234);
+                    LinkFragment.this.startActivityForResult(intent, LinkFragment.this.CODE_REQUEST_AUTHOR);
+                }
+
+                @Override
+                public void onNeedBrandCallback() {
+                    Intent intent = new Intent(LinkFragment.this.getContext(), BrandActivity.class);
+                    LinkFragment.this.startActivityForResult(intent, LinkFragment.CODE_REQUEST_BRAND);
+                }
+
+                @Override
+                public void onNeedOkCallback() {
+                    requestTaoConvert();
+                }
+
+                @Override
+                public void onNeedErrorCallback() {
+
+                }
+            });
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == this.CODE_REQUEST_AUTHOR) {
+            if (resultCode == AuthorActivity.CODE_RESULT_OF_AUTHOR_SUCCESS) {
+                onLinkConvertAction(null);
+            } else {
+                Toast.makeText(this.getContext(), "登录失败", Toast.LENGTH_SHORT).show();
+            }
+        } else if (requestCode == this.CODE_REQUEST_BRAND) {
+            if (resultCode == BrandActivity.CODE_RESULT_SUCCESS) {
+                requestTaoConvert();
+            } else if (resultCode == BrandActivity.CODE_RESULT_FAIL) {
+                Toast.makeText(this.getContext(), "您尚未请选择推广位,申请失败", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
+    private void onRequestTaoPwd() {
+        this.bt_act_link_action.setClickable(false);
+    }
+
+    private void onResponseTaoPwdError() {
+        this.bt_act_link_action.setClickable(true);
+    }
+
+    private void onResponseTaoConvertSuccess(GoodsConvertResponseModel goodsConvertResponseModel) {
+        this.bt_act_link_action.setClickable(true);
+        if (goodsConvertResponseModel != null) {
+            TaoConvertResponseModel convert = goodsConvertResponseModel.getConvert();
+            GoodsEntity goodsEntity = goodsConvertResponseModel.getGoodsEntity();
+            if (convert != null && goodsEntity != null) {
+                if (!TextUtils.isEmpty(convert.getShortLinkUrl()) &&
+                        !TextUtils.isEmpty(convert.getTaoToken())) {
+                    tv_frg_link_convert_result.setVisibility(View.VISIBLE);
+                    ll_frg_link_result_action.setVisibility(View.VISIBLE);
+                    String copyText =
+                            BaseActivity.getEMOJIStringByUnicode(0x270C) + goodsEntity.getTitle() + "\r\n" +
+                                    "【价格】￥" + goodsEntity.getZk_final_price() + "\r\n" +
+                                    BaseActivity.getEMOJIStringByUnicode(0x1F446) + "长按复制后打开" +
+                                    BaseActivity.getEMOJIStringByUnicode(0x1F4F1) + "淘宝" +
+                                    BaseActivity.getEMOJIStringByUnicode(0x1F449) +
+                                    convert.getTaoToken() +
+                                    BaseActivity.getEMOJIStringByUnicode(0x1F448) + "\r\n";
+                    tv_frg_link_convert_result.setText(copyText);
+                    tv_frg_link_convert_result.setTag(convert.getTaoToken());
+                } else {
+                    tv_frg_link_convert_result.setText("该链接不被支持或已经下架");
+                }
+            } else {
+                tv_frg_link_convert_result.setText("该链接不被支持或已经下架");
+            }
+        } else {
+            tv_frg_link_convert_result.setText("该链接不被支持或已经下架");
+        }
+    }
+
+
+    private void requestTaoConvert() {
         Position currentPP = SharedPreferencesUtils.getCurrentPP(this.getContext());
         TaoConvertRequestModel taoConvertRequestModel = new TaoConvertRequestModel();
 
         CookieManager cookieManager = CookieManager.getInstance();
-        String cookie = cookieManager.getCookie(AuthorWebView.URL_LOGIN_MESSAGE);
+        String cookie = cookieManager.getCookie(AuthorActivity.URL_LOGIN_MESSAGE);
 
         taoConvertRequestModel.setCookie(cookie);
         taoConvertRequestModel.setSiteid(currentPP.getSiteId());
@@ -149,13 +258,8 @@ public class LinkFragment extends BaseFragment {
             NetworkManager.requestByPost(url, taoConvertRequestModel, new INetWorkManager.OnNetworkCallback() {
                 @Override
                 public void onSuccess(String result) {
-                    TaoConvertResponseModel taoConvertResponseModel = JSON.parseObject(result, TaoConvertResponseModel.class);
-                    tv_frg_link_convert_short.setText(taoConvertResponseModel.getShortLinkUrl());
-                    tv_frg_link_convert_pwd.setText(taoConvertResponseModel.getTaoToken());
-                    tv_frg_link_convert_qr.setImageURI(taoConvertResponseModel.getQrCodeUrl());
-
-                    et_frg_link_short_copy.setVisibility(View.VISIBLE);
-                    et_frg_link_pwd_copy.setVisibility(View.VISIBLE);
+                    GoodsConvertResponseModel goodsConvertResponseModel = JSON.parseObject(result, GoodsConvertResponseModel.class);
+                    onResponseTaoConvertSuccess(goodsConvertResponseModel);
                 }
 
                 @Override
@@ -168,153 +272,6 @@ public class LinkFragment extends BaseFragment {
                 @Override
                 public void onEmptyResult(String result) {
                     super.onEmptyResult(result);
-                    Toast.makeText(LinkFragment.this.getContext(),"淘宝登录超时",Toast.LENGTH_SHORT).show();
-                }
-
-                @Override
-                public void onError(Throwable ex, boolean isOnCallback) {
-                    Toast.makeText(LinkFragment.this.getContext(), R.string.string_toast_network_error, Toast.LENGTH_SHORT).show();
-                    onResponseTaoPwdError();
-                }
-
-                @Override
-                public void onOther(int code, String result) {
-                    Toast.makeText(LinkFragment.this.getContext(), R.string.string_toast_reset_password_error, Toast.LENGTH_SHORT).show();
-                    onResponseTaoPwdError();
-                }
-            });
-        } catch (Exception e) {
-            onResponseTaoPwdError();
-            Toast.makeText(this.getContext(), "请求失败", Toast.LENGTH_SHORT).show();
-            e.printStackTrace();
-        }
-
-
-
-
-//        Position currentPP = SharedPreferencesUtils.getCurrentPP(this.getContext());
-//        RequestParams requestParams = new RequestParams("http://pub.alimama.com/urltrans/urltrans.json?" +
-//                "siteid=" + currentPP.getSiteId() + "&" +
-//                "adzoneid=" + currentPP.getId() + "&" +
-//                "promotionURL=" + this.url + "&" +
-//                "t=" + System.currentTimeMillis()+"&" +
-//                "_input_charset=utf-8"
-//        );
-//        CookieManager cookieManager = CookieManager.getInstance();
-//        String CookieStr = cookieManager.getCookie(AuthorWebView.URL_LOGIN_MESSAGE);
-//        requestParams.addHeader("Cookie", CookieStr);
-//        requestParams.addHeader("Content-type","application/json");
-//        requestParams.addHeader("User-Agent", "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_7_3) AppleWebKit/535.19 (KHTML, like Gecko) Chrome/18.0.1025.151 Safari/535.19");
-//        Callback.Cancelable cancelable = x.http().get(requestParams, new Callback.CommonCallback<String>() {
-//            @Override
-//            public void onSuccess(String result) {
-//                Map rootMap = JSON.parseObject(result, Map.class);
-//                Map<String, String> dataMap = (Map<String, String>) rootMap.get(AuthorWebView.KEY_DATA);
-//                if (dataMap != null) {
-//                    String shortLinkUrl = dataMap.get("shortLinkUrl").toString();
-//                    String pwd = dataMap.get("taoToken").toString();
-//                    String qrCodeUrl = dataMap.get("qrCodeUrl").toString();
-//                    tv_frg_link_convert_short.setText(shortLinkUrl);
-//                    tv_frg_link_convert_pwd.setText(pwd);
-//                    tv_frg_link_convert_qr.setImageURI(Uri.parse(qrCodeUrl));
-//                }
-//            }
-//
-//            @Override
-//            public void onError(Throwable ex, boolean isOnCallback) {
-//                ex.printStackTrace();
-//            }
-//
-//            @Override
-//            public void onCancelled(CancelledException cex) {
-//
-//            }
-//
-//            @Override
-//            public void onFinished() {
-//
-//            }
-//        });
-
-
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == this.CODE_REQUEST_AUTHOR) {
-            if (resultCode == AuthorActivity.CODE_RESULT_OF_AUTHOR_SUCCESS) {
-                onLinkConvertAction(null);
-            } else {
-                Toast.makeText(this.getContext(), "登录失败", Toast.LENGTH_SHORT).show();
-            }
-        } else if (requestCode == this.CODE_REQUEST_BRAND) {
-            if (resultCode == BrandActivity.CODE_RESULT_SUCCESS) {
-                requestTaoPwd();
-            } else if (resultCode == BrandActivity.CODE_RESULT_FAIL) {
-                Toast.makeText(this.getContext(), "您尚未请选择推广位,申请失败", Toast.LENGTH_SHORT).show();
-            }
-        }
-    }
-
-    private void onRequestTaoPwd() {
-        this.bt_act_link_action.setClickable(false);
-    }
-
-    private void onResponseTaoPwdError() {
-        this.bt_act_link_action.setClickable(true);
-    }
-
-
-    private void onResponseTaoPwdSuccess(String taoPwd) {
-        this.bt_act_link_action.setClickable(true);
-        this.taoPwdEntity = new TaoPwdEntity("淘宝送惊喜",
-                "下单淘口令：" + taoPwd,
-                "价格：元",
-                "复制淘口令，打开手机淘宝即可下单");
-        String text = this.taoPwdEntity.getTitle() + "\r\n"
-                + this.taoPwdEntity.getPrice() + "\r\n"
-                + this.taoPwdEntity.getPwd() + "\r\n"
-                + this.taoPwdEntity.getDesc() + "\r\n";
-        this.et_frg_link_content.setText(text);
-
-        new ShareAction(LinkFragment.this.getActivity()).withTitle(this.taoPwdEntity.getPwd())
-                .withText(this.taoPwdEntity.getTitle())
-                .withTargetUrl(this.url)
-                .setDisplayList(SHARE_MEDIA.SINA, SHARE_MEDIA.QQ, SHARE_MEDIA.WEIXIN)
-                .setCallback(umShareListener).open();
-    }
-
-
-    private void requestTaoPwd() {
-        onRequestTaoPwd();
-        String currentKeeperId = SharedPreferencesUtils.getCurrentKeeperId(this.getContext());
-        Position currentPP = SharedPreferencesUtils.getCurrentPP(this.getContext());
-        TaoPwdRequestModel taoPwdRequestModel = new TaoPwdRequestModel();
-
-        taoPwdRequestModel.setText("淘宝送惊喜");
-        taoPwdRequestModel.setUrl(this.et_frg_link_content.getText().toString() + "&pid=mm_" + currentKeeperId + "_" + currentPP.getSiteId() + "_" + currentPP.getId());
-        taoPwdRequestModel.setUser_id(Long.parseLong(currentKeeperId));
-
-        String url = this.getString(R.string.string_url_domain) + this.getString(R.string.string_url_tao_pwd);
-        SessionModel sessionModel = SharedPreferencesUtils.getSession(this.getContext());
-        taoPwdRequestModel.setT(sessionModel.getT());
-        taoPwdRequestModel.setMark(sessionModel.getMark());
-        taoPwdRequestModel.setCellphone(sessionModel.getCellphone());
-        taoPwdRequestModel.setApt(this.getResources().getInteger(R.integer.integer_app_type));
-        try {
-            taoPwdRequestModel.setSign(sessionModel.getEncryptSing());
-            NetworkManager.requestByPost(url, taoPwdRequestModel, new INetWorkManager.OnNetworkCallback() {
-                @Override
-                public void onSuccess(String result) {
-                    onResponseTaoPwdSuccess(result);
-                }
-
-                @Override
-                public void onLoginTimeout(String result) {
-                    SharedPreferencesUtils.clearSession(LinkFragment.this.getContext());
-                    SharedPreferencesUtils.clearAuthor(LinkFragment.this.getContext());
-                    Toast.makeText(LinkFragment.this.getContext(), R.string.string_toast_timeout, Toast.LENGTH_SHORT).show();
                 }
 
                 @Override
@@ -335,48 +292,6 @@ public class LinkFragment extends BaseFragment {
             e.printStackTrace();
         }
     }
+
+
 }
-//
-//        RequestParams requestParams = new RequestParams(AuthorWebView.URL_LOGIN_MESSAGE);
-//        CookieManager cookieManager = CookieManager.getInstance();
-//        String CookieStr = cookieManager.getCookie(AuthorWebView.URL_LOGIN_MESSAGE);
-//        requestParams.addHeader("Cookie", CookieStr);
-//        Callback.Cancelable cancelable = x.http().post(requestParams, new Callback.CommonCallback<String>() {
-//            @Override
-//            public void onSuccess(String result) {
-//                Map rootMap = JSON.parseObject(result, Map.class);
-//                Map<String, String> dataMap = (Map<String, String>) rootMap.get(AuthorWebView.KEY_DATA);
-//                if (dataMap != null) {
-//                    if (dataMap.containsKey(AuthorWebView.KEY_NO_LOGIN)) {
-//                        Intent intent = new Intent(LinkFragment.this.getContext(), AuthorActivity.class);
-//                        intent.putExtra(AuthorActivity.KEY_INTENT_OF_STATE_CODE, 1234);
-//                        LinkFragment.this.startActivityForResult(intent, LinkFragment.this.CODE_REQUEST_AUTHOR);
-//                    } else {
-//                        SharedPreferencesUtils.saveCurrentKeeperId(LinkFragment.this.getContext(), (String.valueOf(dataMap.get("shopKeeperId"))));
-//                        Position currentPP = SharedPreferencesUtils.getCurrentPP(LinkFragment.this.getContext());
-//                        if (currentPP == null || TextUtils.isEmpty(currentPP.getId()) || TextUtils.isEmpty(currentPP.getSiteId())) {
-//                            Toast.makeText(LinkFragment.this.getContext(), "请选择推广位", Toast.LENGTH_SHORT).show();
-//                            Intent intent = new Intent(LinkFragment.this.getContext(), BrandActivity.class);
-//                            LinkFragment.this.startActivityForResult(intent, LinkFragment.CODE_REQUEST_BRAND);
-//                        } else {
-//                            requestTaoPwd();
-//                        }
-//                    }
-//                }
-//            }
-//
-//            @Override
-//            public void onError(Throwable ex, boolean isOnCallback) {
-//                ex.printStackTrace();
-//            }
-//
-//            @Override
-//            public void onCancelled(CancelledException cex) {
-//
-//            }
-//
-//            @Override
-//            public void onFinished() {
-//
-//            }
-//        });

@@ -24,10 +24,10 @@
             android:text="@string/string_back" />
     </RelativeLayout>
 
-    <org.maxwe.tao.android.activity.AuthorWebView
+    <WebView
         android:id="@+id/wv_act_author"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-    </org.maxwe.tao.android.activity.AuthorWebView>
+    </WebView>
 
 </LinearLayout>

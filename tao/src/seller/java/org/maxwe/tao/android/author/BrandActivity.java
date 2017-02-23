@@ -1,4 +1,4 @@
-package org.maxwe.tao.android.activity;
+package org.maxwe.tao.android.author;
 
 import android.graphics.Color;
 import android.os.Bundle;
@@ -21,6 +21,7 @@ import android.widget.Toast;
 import com.alibaba.fastjson.JSON;
 
 import org.maxwe.tao.android.R;
+import org.maxwe.tao.android.activity.BaseActivity;
 import org.maxwe.tao.android.api.Position;
 import org.maxwe.tao.android.api.Promotion;
 import org.maxwe.tao.android.utils.SharedPreferencesUtils;
@@ -234,22 +235,22 @@ public class BrandActivity extends BaseActivity {
     }
 
     private void getGuideList() {
-        RequestParams requestParams = new RequestParams(AuthorWebView.URL_AD_ZONE);
+        RequestParams requestParams = new RequestParams(AuthorActivity.URL_AD_ZONE);
         CookieManager cookieManager = CookieManager.getInstance();
-        String CookieStr = cookieManager.getCookie(AuthorWebView.URL_LOGIN_MESSAGE);
+        String CookieStr = cookieManager.getCookie(AuthorActivity.URL_LOGIN_MESSAGE);
         requestParams.addHeader("Cookie", CookieStr);
         Callback.Cancelable cancelable = x.http().get(requestParams, new Callback.CommonCallback<String>() {
             @Override
             public void onSuccess(String result) {
                 Map rootMap = JSON.parseObject(result, Map.class);
-                Map<String, Object> dataMap = (Map<String, Object>) rootMap.get(AuthorWebView.KEY_DATA);
-                List<Map<String, Object>> adZoneList = (List<Map<String, Object>>) dataMap.get(AuthorWebView.KEY_OTHER_ADZONES);
+                Map<String, Object> dataMap = (Map<String, Object>) rootMap.get(AuthorActivity.KEY_DATA);
+                List<Map<String, Object>> adZoneList = (List<Map<String, Object>>) dataMap.get(AuthorActivity.KEY_OTHER_ADZONES);
                 if (adZoneList != null && adZoneList.size() > 0) {
 //                    Map<String, Object> stringObjectMap = adZoneList.get(0);
-//                    String name = stringObjectMap.get(AuthorWebView.KEY_NAME).toString();
-//                    List<Map<String, Object>> maps = (List<Map<String, Object>>) stringObjectMap.get(AuthorWebView.KEY_SUB);
+//                    String name = stringObjectMap.get(AuthorActivity.KEY_NAME).toString();
+//                    List<Map<String, Object>> maps = (List<Map<String, Object>>) stringObjectMap.get(AuthorActivity.KEY_SUB);
 //                    if (maps != null && maps.size() > 0) {
-//                        String s = maps.get(0).get(AuthorWebView.KEY_NAME).toString();
+//                        String s = maps.get(0).get(AuthorActivity.KEY_NAME).toString();
 //                    }
                     guideListSuccess(adZoneList);
                 } else {
@@ -276,19 +277,19 @@ public class BrandActivity extends BaseActivity {
     }
 
     private void createGuide(final String name, String account, final String positionName) {
-        RequestParams requestParams = new RequestParams(AuthorWebView.URL_ADD_GUIDE);
+        RequestParams requestParams = new RequestParams(AuthorActivity.URL_ADD_GUIDE);
         CookieManager cookieManager = CookieManager.getInstance();
-        String CookieStr = cookieManager.getCookie(AuthorWebView.URL_LOGIN_MESSAGE);
+        String CookieStr = cookieManager.getCookie(AuthorActivity.URL_LOGIN_MESSAGE);
         requestParams.addHeader("Cookie", CookieStr);
-        requestParams.addParameter(AuthorWebView.KEY_NAME, name);
-        requestParams.addParameter(AuthorWebView.KEY_CATEGORY_ID, 14);
-        requestParams.addParameter(AuthorWebView.KEY_ACCOUNT1, account);
+        requestParams.addParameter(AuthorActivity.KEY_NAME, name);
+        requestParams.addParameter(AuthorActivity.KEY_CATEGORY_ID, 14);
+        requestParams.addParameter(AuthorActivity.KEY_ACCOUNT1, account);
         Callback.Cancelable cancelable = x.http().post(requestParams, new Callback.CommonCallback<String>() {
             @Override
             public void onSuccess(String result) {
                 Map rootMap = JSON.parseObject(result, Map.class);
-                Map<String, Object> infoMap = (Map<String, Object>) rootMap.get(AuthorWebView.KEY_INFO);
-                if (Boolean.parseBoolean(infoMap.get(AuthorWebView.KEY_OK).toString())) {
+                Map<String, Object> infoMap = (Map<String, Object>) rootMap.get(AuthorActivity.KEY_INFO);
+                if (Boolean.parseBoolean(infoMap.get(AuthorActivity.KEY_OK).toString())) {
                     getNewGuideInfo(name, positionName);
                 }
             }
@@ -312,20 +313,20 @@ public class BrandActivity extends BaseActivity {
     }
 
     private void getNewGuideInfo(final String newGuideName, final String positionName) {
-        RequestParams requestParams = new RequestParams(AuthorWebView.URL_GUIDE_LIST);
+        RequestParams requestParams = new RequestParams(AuthorActivity.URL_GUIDE_LIST);
         CookieManager cookieManager = CookieManager.getInstance();
-        String CookieStr = cookieManager.getCookie(AuthorWebView.URL_LOGIN_MESSAGE);
+        String CookieStr = cookieManager.getCookie(AuthorActivity.URL_LOGIN_MESSAGE);
         requestParams.addHeader("Cookie", CookieStr);
         Callback.Cancelable cancelable = x.http().get(requestParams, new Callback.CommonCallback<String>() {
             @Override
             public void onSuccess(String result) {
                 Map rootMap = JSON.parseObject(result, Map.class);
-                Map<String, Object> dataMap = (Map<String, Object>) rootMap.get(AuthorWebView.KEY_DATA);
-                List<Map<String, Object>> adZoneList = (List<Map<String, Object>>) dataMap.get(AuthorWebView.KEY_GUIDE_LIST);
+                Map<String, Object> dataMap = (Map<String, Object>) rootMap.get(AuthorActivity.KEY_DATA);
+                List<Map<String, Object>> adZoneList = (List<Map<String, Object>>) dataMap.get(AuthorActivity.KEY_GUIDE_LIST);
                 if (adZoneList != null && adZoneList.size() > 0) {
                     Map<String, Object> stringObjectMap = adZoneList.get(0);
-                    String name = stringObjectMap.get(AuthorWebView.KEY_NAME).toString();
-                    String guideId = stringObjectMap.get(AuthorWebView.KEY_GUIDE_ID).toString();
+                    String name = stringObjectMap.get(AuthorActivity.KEY_NAME).toString();
+                    String guideId = stringObjectMap.get(AuthorActivity.KEY_GUIDE_ID).toString();
                     if (newGuideName.equals(name)) {
                         createADZone(guideId, positionName);
                     }
@@ -351,24 +352,24 @@ public class BrandActivity extends BaseActivity {
     }
 
     private void createADZone(String siteId, String positionName) {
-        RequestParams requestParams = new RequestParams(AuthorWebView.URL_ADD_AD_ZONE);
+        RequestParams requestParams = new RequestParams(AuthorActivity.URL_ADD_AD_ZONE);
         CookieManager cookieManager = CookieManager.getInstance();
-        String CookieStr = cookieManager.getCookie(AuthorWebView.URL_LOGIN_MESSAGE);
+        String CookieStr = cookieManager.getCookie(AuthorActivity.URL_LOGIN_MESSAGE);
         requestParams.addHeader("Cookie", CookieStr);
-        requestParams.addParameter(AuthorWebView.KEY_TAG, 29);
-        requestParams.addParameter(AuthorWebView.KEY_SITE_ID, siteId);
-        requestParams.addParameter(AuthorWebView.KEY_T, System.currentTimeMillis());
-        requestParams.addParameter(AuthorWebView.KEY_NEW_AD_ZONE_NAME, positionName);
-        requestParams.addParameter(AuthorWebView.KEY_GCID, 8);
-        requestParams.addParameter(AuthorWebView.KEY_TB_TOKEN_, getTaoBaoTokenFormCookie(CookieStr));
-        requestParams.addParameter(AuthorWebView.KEY_SELECT_ACT, "add");
+        requestParams.addParameter(AuthorActivity.KEY_TAG, 29);
+        requestParams.addParameter(AuthorActivity.KEY_SITE_ID, siteId);
+        requestParams.addParameter(AuthorActivity.KEY_T, System.currentTimeMillis());
+        requestParams.addParameter(AuthorActivity.KEY_NEW_AD_ZONE_NAME, positionName);
+        requestParams.addParameter(AuthorActivity.KEY_GCID, 8);
+        requestParams.addParameter(AuthorActivity.KEY_TB_TOKEN_, getTaoBaoTokenFormCookie(CookieStr));
+        requestParams.addParameter(AuthorActivity.KEY_SELECT_ACT, "add");
         Callback.Cancelable cancelable = x.http().post(requestParams, new Callback.CommonCallback<String>() {
             @Override
             public void onSuccess(String result) {
                 Map rootMap = JSON.parseObject(result, Map.class);
-                Map<String, Object> dataMap = (Map<String, Object>) rootMap.get(AuthorWebView.KEY_DATA);
-                Map<String, Object> infoMap = (Map<String, Object>) rootMap.get(AuthorWebView.KEY_INFO);
-                if (Boolean.parseBoolean(infoMap.get(AuthorWebView.KEY_OK).toString())) {
+                Map<String, Object> dataMap = (Map<String, Object>) rootMap.get(AuthorActivity.KEY_DATA);
+                Map<String, Object> infoMap = (Map<String, Object>) rootMap.get(AuthorActivity.KEY_INFO);
+                if (Boolean.parseBoolean(infoMap.get(AuthorActivity.KEY_OK).toString())) {
                     Position position1 = new Position(dataMap.get("siteId").toString(),dataMap.get("adzoneId").toString(),"");
                     position1.setPromotion(currentPromotion);
                     SharedPreferencesUtils.saveCurrentPP(BrandActivity.this, position1);
@@ -400,7 +401,7 @@ public class BrandActivity extends BaseActivity {
             String[] split = cookie.split(";");
             if (split != null) {
                 for (String item : split) {
-                    if (item.contains(AuthorWebView.KEY_TB_TOKEN_)) {
+                    if (item.contains(AuthorActivity.KEY_TB_TOKEN_)) {
                         String[] split1 = item.split("=");
                         if (split1.length > 1) {
                             taoBaoToken = split1[1];
