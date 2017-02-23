@@ -47,8 +47,8 @@ android {
 //        }
         seller {
             applicationId "org.maxwe.tao.seller.android"
-            versionCode 8
-            versionName "snapshot-1.0.7"
+            versionCode 9
+            versionName "snapshot-1.0.8"
         }
     }
 
