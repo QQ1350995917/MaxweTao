@@ -1,6 +1,12 @@
 package org.maxwe.tao.android.main;
 
+import android.app.ActivityManager;
+import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -22,8 +28,8 @@ import org.maxwe.tao.android.account.model.SessionModel;
 import org.maxwe.tao.android.account.user.UserEntity;
 import org.maxwe.tao.android.activity.LoginActivity;
 import org.maxwe.tao.android.activity.VersionActivity;
-import org.maxwe.tao.android.author.AuthorActivity;
-import org.maxwe.tao.android.author.BrandActivity;
+import org.maxwe.tao.android.common.AuthorActivity;
+import org.maxwe.tao.android.common.BrandActivity;
 import org.maxwe.tao.android.index.IndexFragment;
 import org.maxwe.tao.android.mine.MineFragment;
 import org.maxwe.tao.android.utils.SharedPreferencesUtils;
@@ -31,6 +37,8 @@ import org.maxwe.tao.android.version.VersionEntity;
 import org.xutils.view.annotation.ContentView;
 import org.xutils.view.annotation.ViewInject;
 import org.xutils.x;
+
+import java.util.List;
 
 @ContentView(R.layout.activity_main)
 public class MainActivity extends FragmentActivity implements View.OnClickListener {
@@ -64,6 +72,36 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 //            this.startActivityForResult(intent, REQUEST_CODE_ACCESS_CHECK);
         }
 //        this.onCheckNewVersion();
+
+//        getRunningActivityName();
+
+//        Intent intent = new Intent();
+//        intent.setAction("android.intent.action.VIEW");
+//        String url = "taobao://s.click.taobao.com/LsreO4x";
+//        Uri uri = Uri.parse(url);
+//        intent.setData(uri);
+//        startActivity(intent);
+
+//        Intent intent = new Intent(Intent.ACTION_MAIN);
+//        intent.addCategory(Intent.CATEGORY_LAUNCHER);
+//        Uri uri = Uri.parse("taobao://s.click.taobao.com/LsreO4x"); // 商品地址
+//        intent.setData(uri);
+//        ComponentName cn = new ComponentName("com.taobao.taobao", "com.taobao.tao.welcome.Welcome");
+//        intent.setComponent(cn);
+//        startActivity(intent);
+
+//        getRunningActivityName();
+
+//        doStartApplicationWithPackageName("com.taobao.taobao");
+
+
+//        Intent intent = new Intent();
+//        intent.setAction("Android.intent.action.VIEW");
+//        Uri uri = Uri.parse("taobao://s.click.taobao.com/LsreO4x"); // 商品地址
+//        intent.setData(uri);
+//        intent.setClassName("com.taobao.taobao", "com.taobao.tao.detail.activity.DetailActivity");
+//        startActivity(intent);
+
 
         AuthorActivity.requestTaoLoginStatus(this, new AuthorActivity.TaoLoginStatusCallback() {
             @Override
@@ -261,4 +299,69 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         return 0;
     }
 
+    private void getRunningActivityName() {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                boolean flag = true;
+                while (flag) {
+
+                    ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
+                    ActivityManager.RunningTaskInfo info = manager.getRunningTasks(1).get(0);
+                    String shortClassName = info.topActivity.getShortClassName();    //类名
+                    String className = info.topActivity.getClassName();              //完整类名
+                    String packageName = info.topActivity.getPackageName();          //包名
+
+                    System.out.println("站定信息" + className);
+
+                    try {
+                        Thread.sleep(1000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }).start();
+
+    }
+
+
+    private void doStartApplicationWithPackageName(String packagename) {
+        // 通过包名获取此APP详细信息，包括Activities、services、versioncode、name等等
+        PackageInfo packageinfo = null;
+        try {
+            packageinfo = getPackageManager().getPackageInfo(packagename, 0);
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
+        if (packageinfo == null) {
+            return;
+        }
+
+        // 创建一个类别为CATEGORY_LAUNCHER的该包名的Intent
+        Intent resolveIntent = new Intent(Intent.ACTION_MAIN, null);
+        resolveIntent.addCategory(Intent.CATEGORY_LAUNCHER);
+        resolveIntent.setPackage(packageinfo.packageName);
+
+        // 通过getPackageManager()的queryIntentActivities方法遍历
+        List<ResolveInfo> resolveinfoList = getPackageManager()
+                .queryIntentActivities(resolveIntent, 0);
+
+        ResolveInfo resolveinfo = resolveinfoList.iterator().next();
+        if (resolveinfo != null) {
+            // packagename = 参数packname
+            String packageName = resolveinfo.activityInfo.packageName;
+            // 这个就是我们要找的该APP的LAUNCHER的Activity[组织形式：packagename.mainActivityname]
+            String className = resolveinfo.activityInfo.name;
+            // LAUNCHER Intent
+            Intent intent = new Intent(Intent.ACTION_MAIN);
+            intent.addCategory(Intent.CATEGORY_LAUNCHER);
+
+            // 设置ComponentName参数1:packagename参数2:MainActivity路径
+            ComponentName cn = new ComponentName(packageName, className);
+
+            intent.setComponent(cn);
+            startActivity(intent);
+        }
+    }
 }

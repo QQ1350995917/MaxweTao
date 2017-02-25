@@ -24,7 +24,6 @@
     <string name="string_act_success">授权成功</string>
     <string name="string_goods_detail">商品详情</string>
 
-
     <!--<string name="string_url_domain">http://192.168.10.81:8080/tao</string>-->
     <string name="string_url_domain">http://101.200.56.221:8080/tao</string>
     <!--<string name="string_url_domain">http://192.168.0.112:8080/tao</string>-->
@@ -42,6 +41,13 @@
     <string name="string_url_tao_goods_query">/tao/query</string>
     <string name="string_url_tao_pwd">/tao/pwd</string>
     <string name="string_url_tao_convert">/tao/convert</string>
+    <string name="string_url_ali_goods_search">/tao/search</string>
+    <string name="string_url_ali_goods_convert">/tao/auction</string>
+
+    <string name="string_url_system_aboutus">/webapp/widgets/static/aboutus.html</string>
+    <string name="string_url_system_readme">/webapp/widgets/static/readme.html</string>
+    <string name="string_url_system_introduction">/webapp/widgets/static/introduction.html</string>
+    <string name="string_url_system_tutorial">/webapp/widgets/static/tutorial.html</string>
 
     <integer name="integer_app_type">1</integer>
 

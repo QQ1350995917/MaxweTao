@@ -1,4 +1,4 @@
-package org.maxwe.tao.android.author;
+package org.maxwe.tao.android.common;
 
 import android.graphics.Color;
 import android.os.Bundle;
@@ -146,6 +146,12 @@ public class BrandActivity extends BaseActivity {
         this.lv_act_brand_promotion.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                int childCount = parent.getChildCount();
+                for (int i = 0; i < childCount; i++) {
+                    View childAt = parent.getChildAt(i);
+                    childAt.setBackground(BrandActivity.this.getResources().getDrawable(R.color.transparent));
+                }
+                view.setBackground(BrandActivity.this.getResources().getDrawable(R.drawable.shape_rect_bg_shadow));
                 currentPromotion = promotionList.get(position);
                 positionAdapter.notifyDataSetChanged();
             }
@@ -214,6 +220,8 @@ public class BrandActivity extends BaseActivity {
         }
 
         this.promotionAdapter.notifyDataSetChanged();
+
+        this.currentPromotion = promotionList.get(0);
         this.positionAdapter.notifyDataSetChanged();
     }
 

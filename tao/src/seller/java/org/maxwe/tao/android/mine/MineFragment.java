@@ -2,29 +2,22 @@ package org.maxwe.tao.android.mine;
 
 import android.content.Intent;
 import android.view.View;
-import android.webkit.CookieManager;
 import android.widget.Toast;
-
-import com.alibaba.fastjson.JSON;
 
 import org.maxwe.tao.android.BaseFragment;
 import org.maxwe.tao.android.INetWorkManager;
 import org.maxwe.tao.android.NetworkManager;
 import org.maxwe.tao.android.R;
 import org.maxwe.tao.android.account.model.SessionModel;
-import org.maxwe.tao.android.author.AuthorActivity;
-import org.maxwe.tao.android.author.BrandActivity;
 import org.maxwe.tao.android.activity.LoginActivity;
 import org.maxwe.tao.android.activity.ModifyActivity;
+import org.maxwe.tao.android.activity.WebViewActivity;
+import org.maxwe.tao.android.common.AuthorActivity;
+import org.maxwe.tao.android.common.BrandActivity;
 import org.maxwe.tao.android.main.MainActivity;
 import org.maxwe.tao.android.utils.SharedPreferencesUtils;
-import org.xutils.common.Callback;
-import org.xutils.http.RequestParams;
 import org.xutils.view.annotation.ContentView;
 import org.xutils.view.annotation.Event;
-import org.xutils.x;
-
-import java.util.Map;
 
 /**
  * Created by Pengwei Ding on 2016-12-24 10:12.
@@ -72,7 +65,12 @@ public class MineFragment extends BaseFragment {
 
     @Event(value = R.id.bt_frg_mine_about_us, type = View.OnClickListener.class)
     private void onAboutUsAction(View view) {
-        Toast.makeText(MineFragment.this.getActivity(), "开发中，敬请关注...", Toast.LENGTH_SHORT).show();
+        Intent intent = new Intent(this.getContext(), WebViewActivity.class);
+        intent.putExtra(WebViewActivity.INTENT_KEY_PAGE_URL,
+                this.getString(R.string.string_url_domain) +
+                        this.getString(R.string.string_url_system_aboutus)
+        );
+        this.startActivity(intent);
     }
 
     @Event(value = R.id.bt_frg_mine_exit, type = View.OnClickListener.class)

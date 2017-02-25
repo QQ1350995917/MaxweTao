@@ -4,17 +4,9 @@
     android:layout_height="match_parent"
     android:background="#FAFAFA">
 
-    <android.support.v7.widget.SearchView
-        android:id="@+id/sv_frg_index_search"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:iconifiedByDefault="false"
-        android:queryHint="请输入搜索内容" />
-
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@+id/sv_frg_index_search">
+        android:layout_height="match_parent">
 
         <LinearLayout
             android:id="@+id/ll_act_frg_index_goods_container"
@@ -71,14 +63,17 @@
                 android:paddingRight="5dp">
 
                 <Button
+                    android:id="@+id/bt_frg_index_tutorial"
                     style="@style/button_list_green"
                     android:text="新手教程" />
 
                 <Button
+                    android:id="@+id/bt_frg_index_readme"
                     style="@style/button_list_green"
                     android:text="用户必看" />
 
                 <Button
+                    android:id="@+id/bt_frg_index_introduction"
                     style="@style/button_list_green"
                     android:text="功能介绍" />
 

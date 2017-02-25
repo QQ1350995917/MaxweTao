@@ -1,4 +1,4 @@
-package org.maxwe.tao.android.author;
+package org.maxwe.tao.android.common;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -11,6 +11,7 @@ import android.webkit.JavascriptInterface;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
@@ -32,7 +33,7 @@ import java.util.Map;
 /**
  * Created by Pengwei Ding on 2017-01-22 14:46.
  * Email: www.dingpengwei@foxmail.com www.dingpegnwei@gmail.com
- * Description: TODO
+ * Description: 登录淘宝进行授权登录
  */
 @ContentView(R.layout.activity_author)
 public class AuthorActivity extends BaseActivity {
@@ -162,6 +163,9 @@ public class AuthorActivity extends BaseActivity {
 
     @ViewInject(R.id.wv_act_author)
     private WebView wv_act_author;
+
+    @ViewInject(R.id.pb_act_author_progress)
+    private ProgressBar pb_act_author_progress;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {

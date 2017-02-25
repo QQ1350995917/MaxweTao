@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.Paint;
 import android.graphics.PixelFormat;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
@@ -16,7 +17,6 @@ import android.view.View;
 import android.webkit.CookieManager;
 import android.widget.Button;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -30,15 +30,10 @@ import org.maxwe.tao.android.INetWorkManager;
 import org.maxwe.tao.android.NetworkManager;
 import org.maxwe.tao.android.R;
 import org.maxwe.tao.android.account.model.SessionModel;
-import org.maxwe.tao.android.author.AuthorActivity;
 import org.maxwe.tao.android.activity.BaseActivity;
-import org.maxwe.tao.android.author.BrandActivity;
 import org.maxwe.tao.android.api.Position;
-import org.maxwe.tao.android.goods.GoodsConvertResponseModel;
-import org.maxwe.tao.android.goods.GoodsEntity;
-import org.maxwe.tao.android.goods.TaoConvertRequestModel;
-import org.maxwe.tao.android.goods.TaoConvertResponseModel;
-import org.maxwe.tao.android.goods.TaoPwdRequestModel;
+import org.maxwe.tao.android.common.AuthorActivity;
+import org.maxwe.tao.android.common.BrandActivity;
 import org.maxwe.tao.android.utils.SharedPreferencesUtils;
 import org.xutils.view.annotation.ContentView;
 import org.xutils.view.annotation.Event;
@@ -60,18 +55,24 @@ public class GoodsDetailActivity extends BaseActivity {
     private SimpleDraweeView iv_act_goods_detail_image;
     @ViewInject(R.id.tv_act_goods_detail_title)
     private TextView tv_act_goods_detail_title;
+    @ViewInject(R.id.tv_act_goods_detail_nick)
+    private TextView tv_act_goods_detail_nick;
     @ViewInject(R.id.tv_act_goods_detail_brokerage)
     private TextView tv_act_goods_detail_brokerage;
     @ViewInject(R.id.tv_act_goods_detail_brokerage_got)
     private TextView tv_act_goods_detail_brokerage_got;
 
-    @ViewInject(R.id.iv_act_goods_detail_coupon_container)
-    private RelativeLayout iv_act_goods_detail_coupon_container;
+    @ViewInject(R.id.iv_act_goods_detail_coupon_info)
+    private TextView iv_act_goods_detail_coupon_info;
     @ViewInject(R.id.iv_act_goods_detail_coupon_price)
     private TextView iv_act_goods_detail_coupon_price;
+    @ViewInject(R.id.iv_act_goods_detail_coupon_price_label)
+    private TextView iv_act_goods_detail_coupon_price_label;
 
     @ViewInject(R.id.tv_act_goods_detail_final_price)
     private TextView tv_act_goods_detail_final_price;
+    @ViewInject(R.id.tv_act_goods_detail_price)
+    private TextView tv_act_goods_detail_price;
     @ViewInject(R.id.tv_act_goods_detail_sale)
     private TextView tv_act_goods_detail_sale;
 
@@ -96,7 +97,7 @@ public class GoodsDetailActivity extends BaseActivity {
     @ViewInject(R.id.ll_act_goods_detail_action_holder)
     private LinearLayout ll_act_goods_detail_action_holder;
 
-    private GoodsEntity goodsEntity = null;
+    private AliGoodsEntity goodsEntity = null;
     private TaoPwdEntity taoPwdEntity = null;
 
 
@@ -123,21 +124,27 @@ public class GoodsDetailActivity extends BaseActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        this.goodsEntity = (GoodsEntity) this.getIntent().getExtras().get(KEY_GOODS);
-        this.iv_act_goods_detail_image.setImageURI(Uri.parse(goodsEntity.getPict_url()));
+        this.goodsEntity = (AliGoodsEntity) this.getIntent().getExtras().get(KEY_GOODS);
+        this.iv_act_goods_detail_image.setImageURI(Uri.parse(goodsEntity.getPictUrl()));
         this.tv_act_goods_detail_title.setText(goodsEntity.getTitle());
-        this.tv_act_goods_detail_brokerage.setText(goodsEntity.getCommission_rate() + "%");
-        this.tv_act_goods_detail_brokerage_got.setText("赚" + new DecimalFormat("###.00").format(Float.parseFloat(goodsEntity.getZk_final_price()) * Float.parseFloat(goodsEntity.getCommission_rate()) / 100) + "元");
-        if (Long.parseLong(goodsEntity.getCoupon_info()) > 0){
-            iv_act_goods_detail_coupon_container.setVisibility(View.VISIBLE);
-            iv_act_goods_detail_coupon_price.setText(Long.parseLong(goodsEntity.getCoupon_info()) + "元");
+        this.tv_act_goods_detail_nick.setText(goodsEntity.getNick());
+        this.tv_act_goods_detail_brokerage.setText(goodsEntity.getHightestBrokage() + "%");
+        this.tv_act_goods_detail_brokerage_got.setText("赚" + new DecimalFormat("###.00").format((goodsEntity.getZkPrice() - goodsEntity.getCouponAmount()) * goodsEntity.getHightestBrokage() / 100) + "元");
+        if (goodsEntity.getCouponAmount() > 0) {
+            iv_act_goods_detail_coupon_info.setVisibility(View.VISIBLE);
+            iv_act_goods_detail_coupon_info.setText(goodsEntity.getCouponInfo());
+            iv_act_goods_detail_coupon_price.setVisibility(View.VISIBLE);
+            iv_act_goods_detail_coupon_price.setText(goodsEntity.getCouponAmount() + "元 ");
+            iv_act_goods_detail_coupon_price_label.setVisibility(View.VISIBLE);
         }
-        this.tv_act_goods_detail_final_price.setText("￥" + goodsEntity.getZk_final_price());
-        this.tv_act_goods_detail_sale.setText("月销:" + goodsEntity.getVolume());
-        this.tv_act_goods_detail_coupon_counter.setText(goodsEntity.getCoupon_total_count() + "");
-        this.tv_act_goods_detail_coupon_get.setText((goodsEntity.getCoupon_total_count() - goodsEntity.getCoupon_remain_cou()) + "");
-        this.tv_act_goods_detail_coupon_left.setText(goodsEntity.getCoupon_remain_cou() + "");
-        this.tv_act_goods_detail_coupon_time_line.setText(goodsEntity.getCoupon_end_time());
+        this.tv_act_goods_detail_final_price.setText("￥" + (goodsEntity.getZkPrice() - goodsEntity.getCouponAmount()));
+        this.tv_act_goods_detail_price.setText("￥" + (goodsEntity.getZkPrice()));
+        this.tv_act_goods_detail_price.getPaint().setFlags(Paint.STRIKE_THRU_TEXT_FLAG);
+        this.tv_act_goods_detail_sale.setText("月销:" + goodsEntity.getBiz30day());
+        this.tv_act_goods_detail_coupon_counter.setText(goodsEntity.getCouponTotalCount() + "");
+        this.tv_act_goods_detail_coupon_get.setText((goodsEntity.getCouponTotalCount() - goodsEntity.getCouponLeftCount()) + "");
+        this.tv_act_goods_detail_coupon_left.setText(goodsEntity.getCouponLeftCount() + "");
+        this.tv_act_goods_detail_coupon_time_line.setText(goodsEntity.getCouponEffectiveEndTime());
     }
 
     @Event(value = R.id.bt_act_goods_detail_get_link, type = View.OnClickListener.class)
@@ -188,9 +195,6 @@ public class GoodsDetailActivity extends BaseActivity {
     }
 
 
-
-
-
     @Event(value = R.id.bt_act_goods_detail_back, type = View.OnClickListener.class)
     private void onModifyBackAction(View view) {
         this.onBackPressed();
@@ -213,6 +217,7 @@ public class GoodsDetailActivity extends BaseActivity {
 
     /**
      * 长按复制淘口令
+     *
      * @param view
      * @return
      */
@@ -229,6 +234,7 @@ public class GoodsDetailActivity extends BaseActivity {
 
     /**
      * 复制全部文案
+     *
      * @param view
      * @return
      */
@@ -239,14 +245,24 @@ public class GoodsDetailActivity extends BaseActivity {
         cm.setText(tv_act_goods_detail_get_link_result.getText());
         Toast.makeText(this, "复制成功", Toast.LENGTH_SHORT).show();
 
+
         Intent intent = new Intent(Intent.ACTION_VIEW);    //为Intent设置Action属性
-        intent.setData(Uri.parse(this.goodsEntity.getCoupon_click_url())); //为Intent设置DATA属性
+        if (TextUtils.isEmpty(this.aliConvertEntity.getCouponShortLinkUrl())){
+            String url = this.aliConvertEntity.getShortLinkUrl().replace("https","taobao");
+            Uri uri = Uri.parse(url);
+            intent.setData(uri);
+        }else{
+            String url = this.aliConvertEntity.getCouponShortLinkUrl().replace("https","taobao");
+            Uri uri = Uri.parse(url);
+            intent.setData(uri);
+        }
         startActivity(intent);
     }
 
 
     /**
      * 分享
+     *
      * @param view
      * @return
      */
@@ -254,40 +270,35 @@ public class GoodsDetailActivity extends BaseActivity {
     private void onShareAction(View view) {
         new ShareAction(GoodsDetailActivity.this).withTitle(BaseActivity.getEMOJIStringByUnicode(0x1F4E7))
                 .withText(tv_act_goods_detail_get_link_result.getText().toString())
-                .withTargetUrl(this.goodsEntity.getItem_url())
+                .withTargetUrl(this.aliConvertEntity.getCouponShortLinkUrl() == null ? this.aliConvertEntity.getShortLinkUrl() : this.aliConvertEntity.getCouponShortLinkUrl())
                 .setDisplayList(SHARE_MEDIA.SINA, SHARE_MEDIA.QQ, SHARE_MEDIA.WEIXIN)
                 .setCallback(umShareListener).open();
     }
 
-    private void onResponseTaoConvertSuccess(GoodsConvertResponseModel goodsConvertResponseModel) {
+    private AliConvertEntity aliConvertEntity = null;
+
+    private void onResponseTaoConvertSuccess(AliConvertEntity aliConvertEntity) {
         this.bt_act_goods_detail_get_link.setClickable(false);
         this.bt_act_goods_detail_get_link.setVisibility(View.GONE);
         this.tv_act_goods_detail_get_link_result.setVisibility(View.VISIBLE);
         this.ll_act_goods_detail_space_holder.setVisibility(View.VISIBLE);
         this.ll_act_goods_detail_action_holder.setVisibility(View.VISIBLE);
-
-        if (goodsConvertResponseModel != null) {
-            TaoConvertResponseModel convert = goodsConvertResponseModel.getConvert();
-            GoodsEntity goodsEntity = goodsConvertResponseModel.getGoodsEntity();
-            if (convert != null && goodsEntity != null) {
-                if (!TextUtils.isEmpty(convert.getShortLinkUrl()) &&
-                        !TextUtils.isEmpty(convert.getTaoToken())) {
-                    String copyText =
-                            BaseActivity.getEMOJIStringByUnicode(0x270C) + goodsEntity.getTitle() + "\r\n" +
-                                    "【领券】" + this.goodsEntity.getCoupon_click_url() + "\r\n" +
-                                    "【价格】￥" + goodsEntity.getZk_final_price() + "\r\n" +
-                                    BaseActivity.getEMOJIStringByUnicode(0x1F446) + "长按复制后打开" +
-                                    BaseActivity.getEMOJIStringByUnicode(0x1F4F1) + "淘宝" +
-                                    BaseActivity.getEMOJIStringByUnicode(0x1F449) +
-                                    convert.getTaoToken() +
-                                    BaseActivity.getEMOJIStringByUnicode(0x1F448) + "\r\n";
-                    tv_act_goods_detail_get_link_result.setText(copyText);
-                    tv_act_goods_detail_get_link_result.setTag(convert.getTaoToken());
-                } else {
-                    tv_act_goods_detail_get_link_result.setText("该链接不被支持或已经下架");
-                }
+        this.aliConvertEntity = aliConvertEntity;
+        if (aliConvertEntity != null) {
+            String copyText =
+                    BaseActivity.getEMOJIStringByUnicode(0x270C) + goodsEntity.getTitle() + "\r\n" +
+                            "【领券】" + this.goodsEntity.getCouponAmount() + "\r\n" +
+                            "【价格】￥" + (goodsEntity.getZkPrice() - goodsEntity.getCouponAmount()) + "\r\n" +
+                            BaseActivity.getEMOJIStringByUnicode(0x1F446) + "长按复制后打开" +
+                            BaseActivity.getEMOJIStringByUnicode(0x1F4F1) + "淘宝" +
+                            BaseActivity.getEMOJIStringByUnicode(0x1F449) +
+                            aliConvertEntity.getTaoToken() +
+                            BaseActivity.getEMOJIStringByUnicode(0x1F448) + "\r\n";
+            tv_act_goods_detail_get_link_result.setText(copyText);
+            if (TextUtils.isEmpty(aliConvertEntity.getCouponLinkTaoToken())) {
+                tv_act_goods_detail_get_link_result.setTag(aliConvertEntity.getTaoToken());
             } else {
-                tv_act_goods_detail_get_link_result.setText("该链接不被支持或已经下架");
+                tv_act_goods_detail_get_link_result.setTag(aliConvertEntity.getCouponLinkTaoToken());
             }
         } else {
             tv_act_goods_detail_get_link_result.setText("该链接不被支持或已经下架");
@@ -298,29 +309,29 @@ public class GoodsDetailActivity extends BaseActivity {
         onRequestTaoPwd();
 
         Position currentPP = SharedPreferencesUtils.getCurrentPP(this);
-        TaoConvertRequestModel taoConvertRequestModel = new TaoConvertRequestModel();
-
         CookieManager cookieManager = CookieManager.getInstance();
         String cookie = cookieManager.getCookie(AuthorActivity.URL_LOGIN_MESSAGE);
 
-        taoConvertRequestModel.setCookie(cookie);
-        taoConvertRequestModel.setSiteid(currentPP.getSiteId());
-        taoConvertRequestModel.setAdzoneid(currentPP.getId());
-        taoConvertRequestModel.setPromotionURL(goodsEntity.getItem_url());
+        AliConvertRequestModel aliConvertRequestModel = new AliConvertRequestModel();
 
-        String url = this.getString(R.string.string_url_domain) + this.getString(R.string.string_url_tao_convert);
+        aliConvertRequestModel.setCookie(cookie);
+        aliConvertRequestModel.setSiteid(Long.parseLong(currentPP.getSiteId()));
+        aliConvertRequestModel.setAdzoneid(Long.parseLong(currentPP.getId()));
+        aliConvertRequestModel.setAuctionid(goodsEntity.getAuctionId());
+
+        String url = this.getString(R.string.string_url_domain) + this.getString(R.string.string_url_ali_goods_convert);
         SessionModel sessionModel = SharedPreferencesUtils.getSession(this);
-        taoConvertRequestModel.setT(sessionModel.getT());
-        taoConvertRequestModel.setMark(sessionModel.getMark());
-        taoConvertRequestModel.setCellphone(sessionModel.getCellphone());
-        taoConvertRequestModel.setApt(this.getResources().getInteger(R.integer.integer_app_type));
+        aliConvertRequestModel.setT(sessionModel.getT());
+        aliConvertRequestModel.setMark(sessionModel.getMark());
+        aliConvertRequestModel.setCellphone(sessionModel.getCellphone());
+        aliConvertRequestModel.setApt(this.getResources().getInteger(R.integer.integer_app_type));
         try {
-            taoConvertRequestModel.setSign(sessionModel.getEncryptSing());
-            NetworkManager.requestByPost(url, taoConvertRequestModel, new INetWorkManager.OnNetworkCallback() {
+            aliConvertRequestModel.setSign(sessionModel.getEncryptSing());
+            NetworkManager.requestByPost(url, aliConvertRequestModel, new INetWorkManager.OnNetworkCallback() {
                 @Override
                 public void onSuccess(String result) {
-                    GoodsConvertResponseModel goodsConvertResponseModel = JSON.parseObject(result, GoodsConvertResponseModel.class);
-                    onResponseTaoConvertSuccess(goodsConvertResponseModel);
+                    AliConvertEntity aliConvertEntity = JSON.parseObject(result, AliConvertEntity.class);
+                    onResponseTaoConvertSuccess(aliConvertEntity);
                 }
 
                 @Override

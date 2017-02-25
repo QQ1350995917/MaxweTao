@@ -6,6 +6,7 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
 
+
     <application
         android:name=".SellerApplication"
         android:allowBackup="true"
@@ -38,13 +39,14 @@
             android:theme="@style/AppTheme_activity_dialog"></activity>
 
         <activity
-            android:name=".author.AuthorActivity" android:launchMode="singleInstance"></activity>
+            android:name=".common.AuthorActivity" android:launchMode="singleInstance"></activity>
 
-        <activity android:name=".author.BrandActivity"></activity>
+        <activity android:name=".common.BrandActivity"></activity>
 
         <activity android:name=".index.GoodsDetailActivity"></activity>
 
         <activity android:name=".index.GoodsListActivity"></activity>
+        <activity android:name=".activity.WebViewActivity" android:launchMode="singleInstance"></activity>
 
         <receiver android:name=".main.TaoReceiver">
             <intent-filter>

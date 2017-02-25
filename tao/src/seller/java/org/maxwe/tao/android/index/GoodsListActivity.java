@@ -13,9 +13,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
+import android.webkit.CookieManager;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -28,11 +30,10 @@ import org.maxwe.tao.android.NetworkManager;
 import org.maxwe.tao.android.R;
 import org.maxwe.tao.android.account.model.SessionModel;
 import org.maxwe.tao.android.activity.BaseActivity;
-import org.maxwe.tao.android.goods.GoodsEntity;
-import org.maxwe.tao.android.goods.GoodsRequestModel;
-import org.maxwe.tao.android.goods.GoodsResponseModel;
+import org.maxwe.tao.android.common.AuthorActivity;
 import org.maxwe.tao.android.utils.SharedPreferencesUtils;
 import org.xutils.view.annotation.ContentView;
+import org.xutils.view.annotation.Event;
 import org.xutils.view.annotation.ViewInject;
 
 import java.text.DecimalFormat;
@@ -45,24 +46,38 @@ import java.util.List;
  * Description: TODO
  */
 @ContentView(R.layout.activity_goods)
-public class GoodsListActivity extends BaseActivity implements SwipeRefreshLayout.OnRefreshListener, AbsListView.OnScrollListener, AdapterView.OnItemClickListener ,SearchView.OnQueryTextListener {
+public class GoodsListActivity extends BaseActivity implements SwipeRefreshLayout.OnRefreshListener, AbsListView.OnScrollListener, AdapterView.OnItemClickListener, SearchView.OnQueryTextListener {
+    public static final String INTENT_KEY_URL_TYPE = "urlType";
+    private int currentUrlType = 0;
+
     @ViewInject(R.id.sv_act_goods_search)
     private SearchView sv_act_goods_search;
+    @ViewInject(R.id.ib_act_goods_brokerage)
+    private Button ib_act_goods_brokerage;
+    @ViewInject(R.id.ib_act_goods_price)
+    private Button ib_act_goods_price;
+    @ViewInject(R.id.ib_act_goods_sale)
+    private Button ib_act_goods_sale;
+    @ViewInject(R.id.ib_act_goods_ticket)
+    private Button ib_act_goods_ticket;
     @ViewInject(R.id.srl_act_goods_swipe_container)
     private SwipeRefreshLayout srl_act_goods_swipe_container;
     @ViewInject(R.id.lv_act_goods_container)
     private ListView lv_act_goods_container;
 
-    private List<GoodsEntity> goodsEntities = new LinkedList<>();
+
+    private List<AliGoodsEntity> goodsEntities = new LinkedList<>();
     private BaseAdapter listAdapter = null;
     private int pageIndex = 0;
     private int pageSize = 20;
 
-    private GoodsRequestModel goodsRequestModel = new GoodsRequestModel();
+    private AliGoodsRequestModel goodsRequestModel = new AliGoodsRequestModel();
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        this.currentUrlType = this.getIntent().getIntExtra(INTENT_KEY_URL_TYPE, currentUrlType);
+        this.goodsRequestModel.setUrlType(this.currentUrlType);
         init();
     }
 
@@ -86,7 +101,7 @@ public class GoodsListActivity extends BaseActivity implements SwipeRefreshLayou
 
             @Override
             public View getView(int position, View convertView, ViewGroup parent) {
-                GoodsEntity goodsEntity = goodsEntities.get(position);
+                AliGoodsEntity goodsEntity = goodsEntities.get(position);
                 View view = inflater.inflate(R.layout.include_index_fragment_goods, null);
                 SimpleDraweeView imageView = (SimpleDraweeView) view.findViewById(R.id.iv_inc_index_frg_item_goods_image);
                 TextView title = (TextView) view.findViewById(R.id.iv_inc_index_frg_item_goods_title);
@@ -94,11 +109,11 @@ public class GoodsListActivity extends BaseActivity implements SwipeRefreshLayou
                 TextView price = (TextView) view.findViewById(R.id.iv_inc_index_frg_item_goods_price);
                 TextView coupon = (TextView) view.findViewById(R.id.iv_inc_index_frg_item_goods_coupon);
                 TextView couponPrice = (TextView) view.findViewById(R.id.iv_inc_index_frg_item_goods_coupon_price);
-                if (Long.parseLong(goodsEntity.getCoupon_info()) > 0){
+                if (goodsEntity.getCouponAmount() > 0) {
                     hasCoupon.setVisibility(View.VISIBLE);
                     coupon.setVisibility(View.VISIBLE);
                     couponPrice.setVisibility(View.VISIBLE);
-                    couponPrice.setText(Long.parseLong(goodsEntity.getCoupon_info()) + "元");
+                    couponPrice.setText(goodsEntity.getCouponAmount() + "元");
                 }
 
                 TextView priceReserve = (TextView) view.findViewById(R.id.iv_inc_index_frg_item_goods_price_reserve);
@@ -106,13 +121,13 @@ public class GoodsListActivity extends BaseActivity implements SwipeRefreshLayou
                 TextView brokerage = (TextView) view.findViewById(R.id.iv_inc_index_frg_item_brokerage);
                 TextView brokerageGot = (TextView) view.findViewById(R.id.iv_inc_index_frg_item_brokerage_got);
                 TextView sale = (TextView) view.findViewById(R.id.iv_inc_index_frg_item_sale);
-                imageView.setImageURI(Uri.parse(goodsEntity.getPict_url()));
+                imageView.setImageURI(Uri.parse(goodsEntity.getPictUrl()));
                 title.setText(goodsEntity.getTitle());
-                price.setText("￥" + goodsEntity.getZk_final_price());
-                priceReserve.setText("￥" + goodsEntity.getReserve_price());
-                brokerage.setText(goodsEntity.getCommission_rate() + "%");
-                brokerageGot.setText("赚" + new DecimalFormat("###.00").format(Float.parseFloat(goodsEntity.getZk_final_price()) * Float.parseFloat(goodsEntity.getCommission_rate()) / 100) + "元");
-                sale.setText("月销:" + goodsEntity.getVolume());
+                price.setText("￥" + (goodsEntity.getZkPrice() - goodsEntity.getCouponAmount()));
+                priceReserve.setText("￥" + goodsEntity.getZkPrice());
+                brokerage.setText(goodsEntity.getHightestBrokage() + "%");
+                brokerageGot.setText("赚" + new DecimalFormat("###.00").format((goodsEntity.getZkPrice() - goodsEntity.getCouponAmount()) * goodsEntity.getHightestBrokage() / 100) + "元");
+                sale.setText("月销:" + goodsEntity.getBiz30day());
                 return view;
             }
         };
@@ -135,7 +150,7 @@ public class GoodsListActivity extends BaseActivity implements SwipeRefreshLayou
         this.goodsRequestModel.setQ(query);
         onRefresh();
         InputMethodManager imm = (InputMethodManager) this.getSystemService(Context.INPUT_METHOD_SERVICE);
-        if (imm != null){
+        if (imm != null) {
             imm.hideSoftInputFromWindow(this.sv_act_goods_search.getWindowToken(), 0);
         }
         return false;
@@ -149,9 +164,9 @@ public class GoodsListActivity extends BaseActivity implements SwipeRefreshLayou
         if (TextUtils.isEmpty(this.sv_act_goods_search.getQuery().toString())) {
             this.goodsRequestModel.setQ(null);
         }
-        this.goodsRequestModel.setPage_no(this.pageIndex);
-        this.goodsRequestModel.setPage_size(this.pageSize);
-        this.onRequestTaoGoods(this.goodsRequestModel);
+        this.goodsRequestModel.setToPage(this.pageIndex);
+        this.goodsRequestModel.setPerPageSize(this.pageSize);
+        this.onRequestAliGoods(this.goodsRequestModel);
     }
 
     @Override
@@ -171,16 +186,16 @@ public class GoodsListActivity extends BaseActivity implements SwipeRefreshLayou
                 this.pageIndex++;
                 this.showLoading();
 
-                this.goodsRequestModel.setPage_no(this.pageIndex);
-                this.goodsRequestModel.setPage_size(this.pageSize);
-                this.onRequestTaoGoods(goodsRequestModel);
+                this.goodsRequestModel.setToPage(this.pageIndex);
+                this.goodsRequestModel.setPerPageSize(this.pageSize);
+                this.onRequestAliGoods(goodsRequestModel);
             }
         }
     }
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        GoodsEntity goodsEntity = this.goodsEntities.get(position);
+        AliGoodsEntity goodsEntity = this.goodsEntities.get(position);
         Intent intent = new Intent(this, GoodsDetailActivity.class);
         intent.putExtra(GoodsDetailActivity.KEY_GOODS, goodsEntity);
         this.startActivity(intent);
@@ -194,7 +209,13 @@ public class GoodsListActivity extends BaseActivity implements SwipeRefreshLayou
         this.srl_act_goods_swipe_container.setRefreshing(false);
     }
 
-    private void onRequestFinishBySuccess(List<GoodsEntity> goodsEntities) {
+    private void onRequestFinishBySuccess(List<AliGoodsEntity> goodsEntities) {
+        this.hiddenLoading();
+        this.goodsEntities.addAll(goodsEntities);
+        this.listAdapter.notifyDataSetChanged();
+    }
+
+    private void onRequestAliFinishBySuccess(List<AliGoodsEntity> goodsEntities) {
         this.hiddenLoading();
         this.goodsEntities.addAll(goodsEntities);
         this.listAdapter.notifyDataSetChanged();
@@ -209,29 +230,31 @@ public class GoodsListActivity extends BaseActivity implements SwipeRefreshLayou
         Toast.makeText(this, "呃 出错了", Toast.LENGTH_SHORT).show();
     }
 
-    private void onRequestTaoGoods(GoodsRequestModel goodsRequestModel) {
-        String url = this.getString(R.string.string_url_domain) + this.getString(R.string.string_url_tao_goods_query);
+    private void onRequestAliGoods(AliGoodsRequestModel aliGoodsRequestModel) {
+        String url = this.getString(R.string.string_url_domain) + this.getString(R.string.string_url_ali_goods_search);
         SessionModel sessionModel = SharedPreferencesUtils.getSession(this);
-        goodsRequestModel.setT(sessionModel.getT());
-        goodsRequestModel.setMark(sessionModel.getMark());
-        goodsRequestModel.setCellphone(sessionModel.getCellphone());
-        goodsRequestModel.setApt(this.getResources().getInteger(R.integer.integer_app_type));
+        aliGoodsRequestModel.setT(sessionModel.getT());
+        aliGoodsRequestModel.setMark(sessionModel.getMark());
+        aliGoodsRequestModel.setCellphone(sessionModel.getCellphone());
+        aliGoodsRequestModel.setApt(this.getResources().getInteger(R.integer.integer_app_type));
+        CookieManager cookieManager = CookieManager.getInstance();
+        String cookie = cookieManager.getCookie(AuthorActivity.URL_LOGIN_MESSAGE);
+        aliGoodsRequestModel.setCookie(cookie);
         try {
-            goodsRequestModel.setSign(sessionModel.getEncryptSing());
-            NetworkManager.requestByPost(url, goodsRequestModel, new INetWorkManager.OnNetworkCallback() {
+            aliGoodsRequestModel.setSign(sessionModel.getEncryptSing());
+            NetworkManager.requestByPost(url, aliGoodsRequestModel, new INetWorkManager.OnNetworkCallback() {
                 @Override
                 public void onSuccess(String result) {
-                    GoodsResponseModel responseModel = JSON.parseObject(result, GoodsResponseModel.class);
-                    if (responseModel != null) {
-                        LinkedList<GoodsEntity> goodsEntities = responseModel.getGoodsEntities();
-                        onRequestFinishBySuccess(goodsEntities);
+                    List<AliGoodsEntity> aliGoodsEntities = JSON.parseArray(result, AliGoodsEntity.class);
+                    if (aliGoodsEntities != null) {
+                        onRequestFinishBySuccess(aliGoodsEntities);
                     }
                 }
 
                 @Override
                 public void onEmptyResult(String result) {
                     super.onEmptyResult(result);
-                    Toast.makeText(GoodsListActivity.this,"没有数据了",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(GoodsListActivity.this, "没有数据了", Toast.LENGTH_SHORT).show();
                 }
 
                 @Override
@@ -252,97 +275,52 @@ public class GoodsListActivity extends BaseActivity implements SwipeRefreshLayou
         }
     }
 
+    private void resetAction(){
+        this.ib_act_goods_brokerage.setText("佣金");
+        this.ib_act_goods_price.setText("价格");
+        this.ib_act_goods_sale.setText("销量");
+        this.ib_act_goods_ticket.setText("优惠券");
+        this.ib_act_goods_brokerage.setSelected(false);
+        this.ib_act_goods_price.setSelected(false);
+        this.ib_act_goods_sale.setSelected(false);
+        this.ib_act_goods_ticket.setSelected(false);
+    }
 
+    @Event(value = R.id.ib_act_goods_brokerage, type = View.OnClickListener.class)
+    private void onBrokerageAction(Button view) {
+        this.resetAction();
+        this.ib_act_goods_brokerage.setSelected(true);
+        this.goodsRequestModel.setSortType(1);
+        onRefresh();
+    }
 
-//
-//    @Override
-//    protected void onBrokerageDefault(Button view) {
-//        this.resetSortDefault();
-//        view.setText("佣金");
-//        this.goodsRequestModel.setSort(null);
-//        onRefresh();
-//    }
-//
-//    @Override
-//    protected void onBrokerageDown(Button view) {
-//        this.resetSortDefault();
-//        view.setText("佣金 ↓");
-//        this.goodsRequestModel.setSort(GoodsRequestModel.TK_RATE_DES);
-//        onRefresh();
-//    }
-//
-//    @Override
-//    protected void onBrokerageUp(Button view) {
-//        this.resetSortDefault();
-//        view.setText("佣金 ↑");
-//        this.goodsRequestModel.setSort(GoodsRequestModel.TK_RATE_ASC);
-//        onRefresh();
-//    }
-//
-//    @Override
-//    protected void onPriceDefault(Button view) {
-////        this.resetSortDefault();
-////        view.setText("价格");
-//        Toast.makeText(this.getContext(),"开发中，敬请关注",Toast.LENGTH_SHORT).show();
-//    }
-//
-//    @Override
-//    protected void onPriceDown(Button view) {
-////        this.resetSortDefault();
-////        view.setText("价格 ↓");
-//        Toast.makeText(this.getContext(),"开发中，敬请关注",Toast.LENGTH_SHORT).show();
-//    }
-//
-//    @Override
-//    protected void onPriceUp(Button view) {
-////        this.resetSortDefault();
-////        view.setText("价格 ↑");
-//        Toast.makeText(this.getContext(),"开发中，敬请关注",Toast.LENGTH_SHORT).show();
-//    }
-//
-//    @Override
-//    protected void onSaleDefault(Button view) {
-//        this.resetSortDefault();
-//        view.setText("销量");
-//        this.goodsRequestModel.setSort(null);
-//        onRefresh();
-//    }
-//
-//    @Override
-//    protected void onSaleDown(Button view) {
-//        this.resetSortDefault();
-//        view.setText("销量 ↓");
-//        this.goodsRequestModel.setSort(GoodsRequestModel.TOTAL_SALES_DES);
-//        onRefresh();
-//    }
-//
-//    @Override
-//    protected void onSaleUp(Button view) {
-//        this.resetSortDefault();
-//        view.setText("销量 ↑");
-//        this.goodsRequestModel.setSort(GoodsRequestModel.TOTAL_SALES_ASC);
-//        onRefresh();
-//    }
+    @Event(value = R.id.ib_act_goods_price, type = View.OnClickListener.class)
+    private void onPriceAction(Button view) {
+        this.resetAction();
+        this.ib_act_goods_price.setSelected(true);
+        if (this.goodsRequestModel.getSortType() != 3) {
+            this.goodsRequestModel.setSortType(3);
+            view.setText("价格 ↓");
+        } else if (this.goodsRequestModel.getSortType() != 4) {
+            this.goodsRequestModel.setSortType(4);
+            view.setText("价格 ↑");
+        }
+        onRefresh();
+    }
 
-//    @Override
-//    protected void onTicketDefault(Button view) {
-////        this.resetSortDefault();
-////        view.setText("优惠券");
-//        Toast.makeText(this.getContext(),"开发中，敬请关注",Toast.LENGTH_SHORT).show();
-//    }
-//
-//    @Override
-//    protected void onTicketDown(Button view) {
-////        this.resetSortDefault();
-////        view.setText("优惠券 ↓");
-//        Toast.makeText(this.getContext(),"开发中，敬请关注",Toast.LENGTH_SHORT).show();
-//    }
-//
-//    @Override
-//    protected void onTicketUp(Button view) {
-////        this.resetSortDefault();
-////        view.setText("优惠券 ↑");
-//        Toast.makeText(this.getContext(),"开发中，敬请关注",Toast.LENGTH_SHORT).show();
-//    }
+    @Event(value = R.id.ib_act_goods_sale, type = View.OnClickListener.class)
+    private void onSaleAction(Button view) {
+        this.resetAction();
+        this.ib_act_goods_sale.setSelected(true);
+        this.goodsRequestModel.setSortType(9);
+        onRefresh();
+    }
 
+    @Event(value = R.id.ib_act_goods_ticket, type = View.OnClickListener.class)
+    private void onTicketAction(Button view) {
+        this.resetAction();
+        this.ib_act_goods_ticket.setSelected(true);
+        this.goodsRequestModel.setSortType(9);
+        onRefresh();
+    }
 }
