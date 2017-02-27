@@ -327,7 +327,7 @@ public class GoodsDetailActivity extends BaseActivity {
         String url = this.getString(R.string.string_url_domain) + this.getString(R.string.string_url_ali_goods_convert);
         SessionModel sessionModel = SharedPreferencesUtils.getSession(this);
         aliConvertRequestModel.setT(sessionModel.getT());
-        aliConvertRequestModel.setMark(sessionModel.getMark());
+        aliConvertRequestModel.setId(sessionModel.getId());
         aliConvertRequestModel.setCellphone(sessionModel.getCellphone());
         aliConvertRequestModel.setApt(this.getResources().getInteger(R.integer.integer_app_type));
         try {

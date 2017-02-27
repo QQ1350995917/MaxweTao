@@ -99,6 +99,15 @@ public class MineFragment extends BaseFragment {
                 }
 
                 @Override
+                public void onParamsError(String result) {
+                    SharedPreferencesUtils.clearSession(MineFragment.this.getContext());
+                    SharedPreferencesUtils.clearAuthor(MineFragment.this.getContext());
+                    Intent intent = new Intent(MineFragment.this.getContext(), LoginActivity.class);
+                    MineFragment.this.getActivity().startActivity(intent);
+                    MineFragment.this.getActivity().finish();
+                }
+
+                @Override
                 public void onError(Throwable ex, boolean isOnCallback) {
                     SharedPreferencesUtils.clearSession(MineFragment.this.getContext());
                     SharedPreferencesUtils.clearAuthor(MineFragment.this.getContext());

@@ -138,7 +138,7 @@ public class AuthorActivity extends BaseActivity {
     public static final String URL_GUIDE_LIST = "http://pub.alimama.com/common/site/generalize/guideList.json";
 
     // 登录页面,登陆成功后返回登录信息
-    private static final String URL_LOGIN = "https://login.m.taobao.com/login.htm?redirectURL=http://login.taobao.com/member/taobaoke/login.htm?is_login=1&loginFrom=wap_alimama";
+    private static final String URL_LOGIN = "https://login.m.taobao.com/login.htm?redirectURL=http://www.alimama.com/index.htm?is_login=1&loginFrom=wap_alimama";
 
 
     private static final String main = "http://pub.alimama.com/myunion.htm";
@@ -197,8 +197,6 @@ public class AuthorActivity extends BaseActivity {
                 if (url.equals(URL_INDEX)) {
                     //view.loadUrl("javascript:window.local_obj.showSource(document.body)");
                     onSuccessBack();
-                } else {
-                    onBackPressed();
                 }
                 ll_act_author_mask_login.setVisibility(View.GONE);
                 super.onPageFinished(view, url);

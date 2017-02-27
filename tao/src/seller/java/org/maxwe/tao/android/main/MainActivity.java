@@ -68,8 +68,8 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         this.setCurrentFragment(R.id.rb_act_main_index);
 
         if (SellerApplication.currentUserEntity == null || SellerApplication.currentUserEntity.getActCode() == null) {
-//            Intent intent = new Intent(this, AccessActivity.class);
-//            this.startActivityForResult(intent, REQUEST_CODE_ACCESS_CHECK);
+            Intent intent = new Intent(this, AccessActivity.class);
+            this.startActivityForResult(intent, REQUEST_CODE_ACCESS_CHECK);
         }
 //        this.onCheckNewVersion();
 
@@ -221,18 +221,16 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
             case CODE_REQUEST_AUTHOR:
                 if (resultCode == AuthorActivity.CODE_RESULT_OF_AUTHOR_SUCCESS) {
 
-                } else if (resultCode == AuthorActivity.CODE_RESULT_OF_AUTHOR_FAIL){
+                } else if (resultCode == AuthorActivity.CODE_RESULT_OF_AUTHOR_FAIL) {
                     Toast.makeText(this, "登录失败", Toast.LENGTH_SHORT).show();
                 }
                 break;
-
 
             case CODE_REQUEST_BRAND:
                 if (resultCode == BrandActivity.CODE_RESULT_SUCCESS) {
 
                 } else if (resultCode == BrandActivity.CODE_RESULT_FAIL) {
                     Toast.makeText(this, "您尚未请选择推广位,请您选择推广位", Toast.LENGTH_SHORT).show();
-
                 }
                 break;
             default:

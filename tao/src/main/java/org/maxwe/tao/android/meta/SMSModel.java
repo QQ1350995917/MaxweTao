@@ -1,7 +1,5 @@
 package org.maxwe.tao.android.meta;
 
-import org.maxwe.tao.android.utils.CellPhoneUtils;
-
 import java.io.Serializable;
 
 /**

@@ -42,13 +42,13 @@ android {
     productFlavors {
 //        agent {
 //            applicationId "org.maxwe.tao.agent.android"
-//            versionCode 7
-//            versionName "snapshot-1.0.6"
+//            versionCode 8
+//            versionName "snapshot-1.0.7"
 //        }
         seller {
             applicationId "org.maxwe.tao.seller.android"
-            versionCode 14
-            versionName "snapshot-1.0.13"
+            versionCode 15
+            versionName "snapshot-1.0.14"
         }
     }
 

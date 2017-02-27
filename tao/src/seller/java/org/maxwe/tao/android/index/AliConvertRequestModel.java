@@ -18,7 +18,7 @@ public class AliConvertRequestModel  extends SessionModel {
     }
 
     public AliConvertRequestModel(SessionModel sessionModel,long siteid, long auctionid, long adzoneid, String cookie) {
-        super(sessionModel.getT(), sessionModel.getMark(), sessionModel.getCellphone(), sessionModel.getApt());
+        super(sessionModel.getT(), sessionModel.getId(), sessionModel.getCellphone(), sessionModel.getApt());
         this.siteid = siteid;
         this.auctionid = auctionid;
         this.adzoneid = adzoneid;

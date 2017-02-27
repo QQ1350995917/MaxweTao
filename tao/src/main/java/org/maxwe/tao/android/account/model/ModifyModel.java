@@ -19,7 +19,7 @@ public class ModifyModel extends SessionModel {
     }
 
     public ModifyModel(SessionModel sessionModel, String oldPassword, String newPassword) {
-        super(sessionModel.getT(), sessionModel.getMark(), sessionModel.getCellphone(),sessionModel.getApt());
+        super(sessionModel.getT(), sessionModel.getId(), sessionModel.getCellphone(),sessionModel.getApt());
         this.oldPassword = oldPassword;
         this.newPassword = newPassword;
     }

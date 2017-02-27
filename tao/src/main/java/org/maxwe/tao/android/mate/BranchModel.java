@@ -22,7 +22,7 @@ public class BranchModel extends SessionModel {
     }
 
     public BranchModel(SessionModel sessionModel,int pageIndex,int pageSize) {
-        super(sessionModel.getT(),sessionModel.getMark(),sessionModel.getCellphone(),sessionModel.getApt());
+        super(sessionModel.getT(),sessionModel.getId(),sessionModel.getCellphone(),sessionModel.getApt());
         this.pageIndex = pageIndex;
         this.pageSize = pageSize;
     }

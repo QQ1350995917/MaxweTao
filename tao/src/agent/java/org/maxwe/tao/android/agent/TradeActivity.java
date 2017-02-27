@@ -84,7 +84,7 @@ public class TradeActivity extends BaseActivity implements View.OnFocusChangeLis
             this.rl_act_trade_container.setVisibility(View.VISIBLE);
             AgentEntity agentEntity = agentEntityModel.getAgentEntity();
             LevelEntity levelEntity = agentEntityModel.getLevelEntity();
-            this.tv_act_trade_id.setText("ID:" + agentEntity.getMark());
+            this.tv_act_trade_id.setText("ID:" + agentEntity.getId());
             this.tv_act_trade_level.setText(levelEntity.getName());
             this.tv_act_trade_haveCodes.setText(agentEntity.getHaveCodes() + "");
             this.tv_act_trade_leftCodes.setText(agentEntity.getLeftCodes() + "");
@@ -162,7 +162,7 @@ public class TradeActivity extends BaseActivity implements View.OnFocusChangeLis
             SessionModel session = SharedPreferencesUtils.getSession(this);
             TradeModel tradeModel = new TradeModel(session, 2, Integer.parseInt(number));
             tradeModel.setSign(session.getEncryptSing());
-            tradeModel.setTargetMark(this.agentEntityModel.getAgentEntity().getMark());
+            tradeModel.setTargetId(this.agentEntityModel.getAgentEntity().getId());
             String url = this.getString(R.string.string_url_domain) + this.getString(R.string.string_url_trade_trade);
             NetworkManager.requestByPost(url, tradeModel, new INetWorkManager.OnNetworkCallback() {
                 @Override

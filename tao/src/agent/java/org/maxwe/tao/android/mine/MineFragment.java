@@ -73,7 +73,7 @@ public class MineFragment extends BaseFragment {
                                 AgentApplication.currentAgentModel.getAgentEntity().getLeftCodes() + "/" +
                                 AgentApplication.currentAgentModel.getAgentEntity().getHaveCodes()
                 );
-                this.tv_frg_mine_id.setText("ID:" + AgentApplication.currentAgentModel.getAgentEntity().getMark());
+                this.tv_frg_mine_id.setText("ID:" + AgentApplication.currentAgentModel.getAgentEntity().getId());
             }
         } else {
             this.tv_frg_mine_number.setText("0/0/0");
@@ -127,6 +127,15 @@ public class MineFragment extends BaseFragment {
                 }
 
                 @Override
+                public void onParamsError(String result) {
+                    SharedPreferencesUtils.clearSession(MineFragment.this.getContext());
+                    SharedPreferencesUtils.clearAuthor(MineFragment.this.getContext());
+                    Intent intent = new Intent(MineFragment.this.getContext(), LoginActivity.class);
+                    MineFragment.this.getActivity().startActivity(intent);
+                    MineFragment.this.getActivity().finish();
+                }
+
+                @Override
                 public void onError(Throwable ex, boolean isOnCallback) {
                     SharedPreferencesUtils.clearSession(MineFragment.this.getContext());
                     Intent intent = new Intent(MineFragment.this.getContext(), LoginActivity.class);
@@ -145,7 +154,10 @@ public class MineFragment extends BaseFragment {
         } catch (Exception e) {
             view.setClickable(true);
             e.printStackTrace();
-            Toast.makeText(MineFragment.this.getContext(), "请求失败", Toast.LENGTH_SHORT).show();
+            SharedPreferencesUtils.clearSession(MineFragment.this.getContext());
+            Intent intent = new Intent(MineFragment.this.getContext(), LoginActivity.class);
+            MineFragment.this.getActivity().startActivity(intent);
+            MineFragment.this.getActivity().finish();
         }
     }
 

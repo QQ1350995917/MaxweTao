@@ -8,7 +8,7 @@ import java.io.Serializable;
  * Description: TODO
  */
 public class AccountEntity implements Serializable{
-    private String mark; // 用户ID
+    private int id; // 用户ID
     private String cellphone; //手机号码 唯一
     private String password; // 登录密码
     private String name; // 用户备注名字 数据库可为空
@@ -21,12 +21,12 @@ public class AccountEntity implements Serializable{
     }
 
 
-    public String getMark() {
-        return mark;
+    public int getId() {
+        return id;
     }
 
-    public void setMark(String mark) {
-        this.mark = mark;
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getCellphone() {
@@ -80,7 +80,6 @@ public class AccountEntity implements Serializable{
     @Override
     public String toString() {
         return "AccountEntity{" +
-                "mark='" + mark + '\'' +
                 ", cellphone='" + cellphone + '\'' +
                 ", password='" + password + '\'' +
                 ", name='" + name + '\'' +

@@ -50,7 +50,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
             this.rg_act_navigate.getChildAt(index).setOnClickListener(this);
         }
         this.setCurrentFragment(R.id.rb_act_main_active_code);
-        this.onCheckNewVersion();
+//        this.onCheckNewVersion();
     }
 
     @Override

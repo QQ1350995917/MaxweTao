@@ -166,7 +166,7 @@ public class ActCodeFragment extends BaseFragment {
                 @Override
                 public void onSuccess(String result) {
                     AgentModel responseModel = JSON.parseObject(result, AgentModel.class);
-                    if (responseModel.getAgentEntity().getReach() != 1) {
+                        if (responseModel.getAgentEntity().getReach() != 1) {
                         showUnReachView(responseModel);
                     } else {
                         showReachView(responseModel);
@@ -185,6 +185,10 @@ public class ActCodeFragment extends BaseFragment {
 //                    onResponseReAct(MainActivity.this.getString(R.string.string_toast_network_error));
                 }
 
+                @Override
+                public void onOther(int code, String result) {
+                    super.onOther(code, result);
+                }
             });
         } catch (Exception e) {
             e.printStackTrace();

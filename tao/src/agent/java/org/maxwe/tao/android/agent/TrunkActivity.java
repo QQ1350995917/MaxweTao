@@ -64,7 +64,7 @@ public class TrunkActivity extends BaseActivity {
         if (AgentApplication.currentAgentModel != null
                 && AgentApplication.currentAgentModel.getAgentEntity() != null
                 && AgentApplication.currentAgentModel.getAgentEntity().getReach() != 1
-                && TextUtils.isEmpty(AgentApplication.currentAgentModel.getAgentEntity().getpMark())) {
+                && AgentApplication.currentAgentModel.getAgentEntity().getpId() == 0) {
             showRequestLeader();
         }
 
@@ -72,7 +72,7 @@ public class TrunkActivity extends BaseActivity {
         if (AgentApplication.currentAgentModel != null
                 && AgentApplication.currentAgentModel.getAgentEntity() != null
                 && AgentApplication.currentAgentModel.getAgentEntity().getReach() != 1
-                && !TextUtils.isEmpty(AgentApplication.currentAgentModel.getAgentEntity().getpMark())) {
+                && AgentApplication.currentAgentModel.getAgentEntity().getpId() != 0) {
             onLeaderAction();
         }
 
@@ -104,18 +104,18 @@ public class TrunkActivity extends BaseActivity {
         this.tv_act_trunk_no_data.setVisibility(View.GONE);
         this.ll_act_trunk_before_status.setVisibility(View.GONE);
         this.ll_act_trunk_after_status.setVisibility(View.VISIBLE);
-        this.tv_act_trunk_leader_id.setText(this.getString(R.string.string_ID) + responseModel.getAgentEntity().getMark());
+        this.tv_act_trunk_leader_id.setText(this.getString(R.string.string_ID) + responseModel.getAgentEntity().getId());
         this.tv_act_trunk_leader_level.setText(this.getString(R.string.string_level) + responseModel.getLevelEntity().getName());
     }
 
     private void showReaching(AgentEntity agentEntity) {
         AgentApplication.currentAgentModel.getAgentEntity().setReach(0);
-        AgentApplication.currentAgentModel.getAgentEntity().setpMark(agentEntity.getMark());
+        AgentApplication.currentAgentModel.getAgentEntity().setId(agentEntity.getId());
         AgentApplication.currentAgentModel.getAgentEntity().setReachTime(agentEntity.getReachTime());
         this.tv_act_trunk_no_data.setVisibility(View.GONE);
         this.ll_act_trunk_before_status.setVisibility(View.GONE);
         this.ll_act_trunk_after_status.setVisibility(View.VISIBLE);
-        this.tv_act_trunk_leader_id.setText(this.getString(R.string.string_ID) + agentEntity.getMark());
+        this.tv_act_trunk_leader_id.setText(this.getString(R.string.string_ID) + agentEntity.getId());
         this.tv_act_trunk_leader_level.setText(R.string.string_reaching);
     }
 
@@ -127,15 +127,15 @@ public class TrunkActivity extends BaseActivity {
 
     @Event(value = R.id.et_act_trunk_action, type = View.OnClickListener.class)
     private void onBegConfirmAction(final View view) {
-        String leaderMark = et_act_trunk_leader_mark.getText().toString();
+        String leaderId = et_act_trunk_leader_mark.getText().toString();
         String password = et_act_trunk_password.getText().toString();
-        if (TextUtils.isEmpty(leaderMark)) {
+        if (TextUtils.isEmpty(leaderId)) {
             Toast.makeText(this, R.string.string_leader_mark, Toast.LENGTH_SHORT).show();
             return;
         }
 
         SessionModel session = SharedPreferencesUtils.getSession(this);
-        if (TextUtils.equals(session.getMark(), leaderMark)) {
+        if (TextUtils.equals(session.getId() + "", leaderId)) {
             Toast.makeText(this, R.string.string_leader_myself, Toast.LENGTH_SHORT).show();
             return;
         }
@@ -149,7 +149,7 @@ public class TrunkActivity extends BaseActivity {
         try {
             String url = this.getString(R.string.string_url_domain) + this.getString(R.string.string_url_mate_beg);
             session.setSign(session.getEncryptSing());
-            TrunkModel trunkModel = new TrunkModel(session, leaderMark);
+            TrunkModel trunkModel = new TrunkModel(session, Integer.parseInt(leaderId));
             trunkModel.setSign(session.getEncryptSing());
             NetworkManager.requestByPost(url, trunkModel, new INetWorkManager.OnNetworkCallback() {
                 @Override
@@ -198,7 +198,7 @@ public class TrunkActivity extends BaseActivity {
             SessionModel session = SharedPreferencesUtils.getSession(this);
             String url = this.getString(R.string.string_url_domain) + this.getString(R.string.string_url_mate_leader);
             session.setSign(session.getEncryptSing());
-            TrunkModel trunkModel = new TrunkModel(session, AgentApplication.currentAgentModel.getAgentEntity().getpMark());
+            TrunkModel trunkModel = new TrunkModel(session, AgentApplication.currentAgentModel.getAgentEntity().getId());
             trunkModel.setSign(session.getEncryptSing());
             NetworkManager.requestByPost(url, trunkModel, new INetWorkManager.OnNetworkCallback() {
                 @Override

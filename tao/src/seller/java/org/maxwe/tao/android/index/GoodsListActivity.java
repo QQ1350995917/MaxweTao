@@ -234,7 +234,7 @@ public class GoodsListActivity extends BaseActivity implements SwipeRefreshLayou
         String url = this.getString(R.string.string_url_domain) + this.getString(R.string.string_url_ali_goods_search);
         SessionModel sessionModel = SharedPreferencesUtils.getSession(this);
         aliGoodsRequestModel.setT(sessionModel.getT());
-        aliGoodsRequestModel.setMark(sessionModel.getMark());
+        aliGoodsRequestModel.setId(sessionModel.getId());
         aliGoodsRequestModel.setCellphone(sessionModel.getCellphone());
         aliGoodsRequestModel.setApt(this.getResources().getInteger(R.integer.integer_app_type));
         CookieManager cookieManager = CookieManager.getInstance();

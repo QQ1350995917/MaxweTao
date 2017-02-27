@@ -69,7 +69,7 @@ public class AgentFragment extends BaseFragment implements SwipeRefreshLayout.On
             TextView tv_frg_agent_item_level = (TextView) inflate.findViewById(R.id.tv_frg_agent_item_level);
             GrantButton bt_frg_agent_item_status = (GrantButton) inflate.findViewById(R.id.bt_frg_agent_item_status);
             AgentModel agentModel = agentEntities.get(position);
-            tv_frg_agent_item_id.setText("ID:" + agentModel.getAgentEntity().getMark());
+            tv_frg_agent_item_id.setText("ID:" + agentModel.getAgentEntity().getId());
             if (agentModel.getLevelEntity() != null) {
                 tv_frg_agent_item_level.setText(agentModel.getLevelEntity().getName());
             }

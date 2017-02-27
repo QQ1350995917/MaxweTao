@@ -180,7 +180,7 @@ public class LinkFragment extends BaseFragment {
         AliGoodsRequestModel aliGoodsRequestModel = new AliGoodsRequestModel();
         aliGoodsRequestModel.setQ(this.url);
         aliGoodsRequestModel.setT(sessionModel.getT());
-        aliGoodsRequestModel.setMark(sessionModel.getMark());
+        aliGoodsRequestModel.setId(sessionModel.getId());
         aliGoodsRequestModel.setCellphone(sessionModel.getCellphone());
         aliGoodsRequestModel.setApt(this.getResources().getInteger(R.integer.integer_app_type));
         CookieManager cookieManager = CookieManager.getInstance();

@@ -75,7 +75,7 @@ public class HistoryActivity extends BaseActivity implements SwipeRefreshLayout.
             tv_act_history_item_time.setText(historyEntity.getSwapTimeString());
             if (historyEntity.getType() == 1) {
                 tv_act_history_item_number.setText(historyEntity.getActCode());
-                if (historyEntity.getToMark() == null) {
+                if (historyEntity.getToId() == 0) {
                     tv_act_history_item_number.setClickable(true);
                     tv_act_history_item_number.setOnClickListener(new View.OnClickListener() {
                         @Override
@@ -90,7 +90,7 @@ public class HistoryActivity extends BaseActivity implements SwipeRefreshLayout.
             } else {
                 tv_act_history_item_number.setText(historyEntity.getCodeNum() + "");
             }
-            tv_act_history_item_to_id.setText(historyEntity.getToMark());
+            tv_act_history_item_to_id.setText(historyEntity.getToId() + "");
             return inflate;
         }
     }

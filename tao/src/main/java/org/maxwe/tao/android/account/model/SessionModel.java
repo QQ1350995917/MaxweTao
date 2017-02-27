@@ -7,7 +7,6 @@ import com.alibaba.fastjson.annotation.JSONField;
 
 import org.maxwe.tao.android.utils.CellPhoneUtils;
 import org.maxwe.tao.android.utils.CryptionUtils;
-import org.maxwe.tao.android.utils.MarkUtils;
 
 import java.io.Serializable;
 
@@ -18,7 +17,7 @@ import java.io.Serializable;
  */
 public class SessionModel implements Serializable {
     private String t;
-    private String mark;
+    private int id;
     private String cellphone;
     private int apt; //app 类型
     private String verification;//敏感操作的验证密码
@@ -28,9 +27,9 @@ public class SessionModel implements Serializable {
         super();
     }
 
-    public SessionModel(String t, String mark, String cellphone,int apt) {
+    public SessionModel(String t, int id, String cellphone, int apt) {
         this.t = t;
-        this.mark = mark;
+        this.id = id;
         this.cellphone = cellphone;
         this.apt = apt;
     }
@@ -43,12 +42,12 @@ public class SessionModel implements Serializable {
         this.t = t;
     }
 
-    public String getMark() {
-        return mark;
+    public int getId() {
+        return id;
     }
 
-    public void setMark(String mark) {
-        this.mark = mark;
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getCellphone() {
@@ -83,31 +82,30 @@ public class SessionModel implements Serializable {
         this.sign = sign;
     }
 
-    @JSONField(serialize=false)
+    @JSONField(serialize = false)
     public String getEncryptSing() throws Exception {
-        if (TextUtils.isEmpty(this.getMark()) || TextUtils.isEmpty(this.getCellphone())) {
+        if (this.getId() == 0 || !CellPhoneUtils.isCellphone(this.getCellphone())) {
             return null;
         }
-        String deMark = MarkUtils.deMark(this.getMark());
-        String password = (deMark + deMark).substring(0,16);
-        String content = this.getMark() + "-" + System.currentTimeMillis() + "-" + this.getCellphone();
+        String password = (this.getCellphone() + new StringBuffer(this.getCellphone()).reverse()).substring(1, 17);//生成的ID是11位，补全16位密码
+        String content = this.getId() + "-" + System.currentTimeMillis() + "-" + this.getCellphone();
         String encodeContent = new String(Base64.encodeToString(content.getBytes(), Base64.NO_WRAP));
         byte[] encryptResult = CryptionUtils.encryptCustomer(encodeContent, password);
         String encryptResultStr = CryptionUtils.parseByte2HexStr(encryptResult);
         return encryptResultStr;
     }
 
-    @JSONField(serialize=false)
+    @JSONField(serialize = false)
     public boolean isDecryptSignOK() throws Exception {
-        String password = MarkUtils.deMark(this.getMark());
+        String password = (this.getCellphone() + new StringBuffer(this.getCellphone()).reverse()).substring(1, 17);//生成的ID是11位，补全16位密码
         byte[] decryptResult = CryptionUtils.decryptCustomer(CryptionUtils.parseHexStr2Byte(this.getSign()), password);
         byte[] decode = Base64.decode(decryptResult, Base64.NO_WRAP);
         String[] split = new String(decode).split("-");
         if (split == null || split.length != 3) {
             return false;
         }
-        if (TextUtils.equals(split[0], this.getMark())
-                && System.currentTimeMillis() - Long.parseLong(split[1]) < 15000
+        if (TextUtils.equals(split[0], this.getId() + "")
+                && System.currentTimeMillis() - Long.parseLong(split[1]) < 60 * 1000
                 && TextUtils.equals(split[2], this.getCellphone())
                 ) {
             return true;
@@ -115,10 +113,10 @@ public class SessionModel implements Serializable {
         return false;
     }
 
-    @JSONField(serialize=false)
+    @JSONField(serialize = false)
     private boolean isSessionParamsOk() {
         if (!TextUtils.isEmpty(this.getT())
-                && !TextUtils.isEmpty(this.getMark())
+                && !TextUtils.isEmpty(this.getId() + "")
                 && CellPhoneUtils.isCellphone(this.getCellphone())) {
             return true;
         } else {
@@ -126,7 +124,7 @@ public class SessionModel implements Serializable {
         }
     }
 
-    @JSONField(serialize=false)
+    @JSONField(serialize = false)
     public boolean isParamsOk() {
         return isSessionParamsOk();
     }

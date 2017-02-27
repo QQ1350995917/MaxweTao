@@ -3,8 +3,6 @@ package org.maxwe.tao.android.utils;
 import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.webkit.CookieManager;
-import android.webkit.ValueCallback;
 
 import com.alibaba.fastjson.JSON;
 
@@ -12,7 +10,6 @@ import org.maxwe.tao.android.R;
 import org.maxwe.tao.android.account.model.SessionModel;
 import org.maxwe.tao.android.api.AuthorizeEntity;
 import org.maxwe.tao.android.api.Position;
-import org.maxwe.tao.android.common.AuthorActivity;
 
 /**
  * Created by Pengwei Ding on 2017-01-11 10:07.
@@ -23,7 +20,7 @@ public class SharedPreferencesUtils {
     private static final String KEY_SHARED_PREFERENCES_NAME = "ACCOUNT_SHARED_PREFERENCES_NAME";
     private static final String KEY_LAST_LOGIN_CELLPHONE = "LAST_LOGIN_CELLPHONE";
     private static final String KEY_LOGIN_T = "LOGIN_T";
-    private static final String KEY_LOGIN_MARK = "LOGIN_MARK";
+    private static final String KEY_LOGIN_ID = "LOGIN_ID";
     private static final String KEY_LOGIN_CELLPHONE = "LOGIN_CELLPHONE";
     private static final String KEY_TAO_AUTHOR = "TAO_AUTHOR";
     private static final String KEY_TAO_AUTHOR_CREATE_TIME = "KEY_TAO_AUTHOR_CREATE_TIME";
@@ -47,9 +44,9 @@ public class SharedPreferencesUtils {
     public static SessionModel getSession(Context context){
         SharedPreferences sharedPreferences = context.getSharedPreferences(KEY_SHARED_PREFERENCES_NAME, Activity.MODE_PRIVATE);
         String t = sharedPreferences.getString(KEY_LOGIN_T, null);
-        String mark = sharedPreferences.getString(KEY_LOGIN_MARK, null);
+        int id = sharedPreferences.getInt(KEY_LOGIN_ID, 0);
         String cellphone = sharedPreferences.getString(KEY_LOGIN_CELLPHONE, null);
-        SessionModel sessionModel = new SessionModel(t,mark,cellphone,context.getResources().getInteger(R.integer.integer_app_type));
+        SessionModel sessionModel = new SessionModel(t,id,cellphone,context.getResources().getInteger(R.integer.integer_app_type));
         boolean paramsOk = sessionModel.isParamsOk();
         if (paramsOk){
             return sessionModel;
@@ -64,7 +61,7 @@ public class SharedPreferencesUtils {
         SharedPreferences sharedPreferences = context.getSharedPreferences(KEY_SHARED_PREFERENCES_NAME, Activity.MODE_PRIVATE);
         SharedPreferences.Editor edit = sharedPreferences.edit();
         edit.putString(KEY_LOGIN_T, sessionModel.getT());
-        edit.putString(KEY_LOGIN_MARK, sessionModel.getMark());
+        edit.putInt(KEY_LOGIN_ID, sessionModel.getId());
         edit.putString(KEY_LOGIN_CELLPHONE, sessionModel.getCellphone());
         edit.commit();
     }
@@ -73,7 +70,7 @@ public class SharedPreferencesUtils {
         SharedPreferences sharedPreferences = context.getSharedPreferences(KEY_SHARED_PREFERENCES_NAME, Activity.MODE_PRIVATE);
         SharedPreferences.Editor edit = sharedPreferences.edit();
         edit.remove(KEY_LOGIN_T);
-        edit.remove(KEY_LOGIN_MARK);
+        edit.remove(KEY_LOGIN_ID);
         edit.remove(KEY_LOGIN_CELLPHONE);
         edit.commit();
     }

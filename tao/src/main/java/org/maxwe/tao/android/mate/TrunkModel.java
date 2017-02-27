@@ -10,7 +10,7 @@ import org.maxwe.tao.android.level.LevelEntity;
  * Description: TODO
  */
 public class TrunkModel extends SessionModel {
-    private String targetMark;
+    private int targetId;
     private AgentEntity agentEntity; // 相应字段
     private LevelEntity levelEntity; // 相应字段
 
@@ -18,17 +18,17 @@ public class TrunkModel extends SessionModel {
         super();
     }
 
-    public TrunkModel(SessionModel sessionModel, String targetMark) {
-        super(sessionModel.getT(), sessionModel.getMark(), sessionModel.getCellphone(), sessionModel.getApt());
-        this.targetMark = targetMark;
+    public TrunkModel(SessionModel sessionModel, int targetId) {
+        super(sessionModel.getT(), sessionModel.getId(), sessionModel.getCellphone(), sessionModel.getApt());
+        this.targetId = targetId;
     }
 
-    public String getTargetMark() {
-        return targetMark;
+    public int getTargetId() {
+        return targetId;
     }
 
-    public void setTargetMark(String targetMark) {
-        this.targetMark = targetMark;
+    public void setTargetId(int targetId) {
+        this.targetId = targetId;
     }
 
     public AgentEntity getAgentEntity() {
@@ -50,7 +50,6 @@ public class TrunkModel extends SessionModel {
     @Override
     public String toString() {
         return super.toString() + "TrunkModel{" +
-                "targetMark='" + targetMark + '\'' +
                 ", agentEntity=" + agentEntity +
                 '}';
     }

@@ -8,7 +8,7 @@ import org.maxwe.tao.android.account.model.SessionModel;
  * Description: TODO
  */
 public class TradeModel extends SessionModel {
-    private String targetMark;
+    private int targetId;
     private int type;
     private String actCode;
     private int codeNum;
@@ -18,18 +18,18 @@ public class TradeModel extends SessionModel {
     }
 
     public TradeModel(SessionModel sessionModel,int type,int codeNum) {
-        super(sessionModel.getT(),sessionModel.getMark(),sessionModel.getCellphone(),sessionModel.getApt());
+        super(sessionModel.getT(),sessionModel.getId(),sessionModel.getCellphone(),sessionModel.getApt());
         this.type = type;
         this.codeNum = codeNum;
     }
 
 
-    public String getTargetMark() {
-        return targetMark;
+    public int getTargetId() {
+        return targetId;
     }
 
-    public void setTargetMark(String targetMark) {
-        this.targetMark = targetMark;
+    public void setTargetId(int targetId) {
+        this.targetId = targetId;
     }
 
     public int getType() {
@@ -59,7 +59,6 @@ public class TradeModel extends SessionModel {
     @Override
     public String toString() {
         return super.toString() + "TradeModel{" +
-                "targetMark=" + targetMark +
                 ", type=" + type +
                 ", codeNum=" + codeNum +
                 '}';

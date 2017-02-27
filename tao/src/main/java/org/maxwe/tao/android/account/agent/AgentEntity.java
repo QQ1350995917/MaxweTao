@@ -10,8 +10,8 @@ import java.io.Serializable;
  * Description: TODO
  */
 public class AgentEntity extends AccountEntity {
+    private int pId;
     private int reach; // 就代理关系达成一致意见 数据库可为空，1达成，其他不达成
-    private String pMark; // 上级的显示ID
     private int haveCodes; // 累计购买
     private int spendCodes; // 已经消费
     private int leftCodes; // 当前剩余
@@ -24,20 +24,20 @@ public class AgentEntity extends AccountEntity {
         super();
     }
 
+    public int getpId() {
+        return pId;
+    }
+
+    public void setpId(int pId) {
+        this.pId = pId;
+    }
+
     public int getReach() {
         return reach;
     }
 
     public void setReach(int reach) {
         this.reach = reach;
-    }
-
-    public String getpMark() {
-        return pMark;
-    }
-
-    public void setpMark(String pMark) {
-        this.pMark = pMark;
     }
 
     public int getHaveCodes() {
@@ -105,7 +105,6 @@ public class AgentEntity extends AccountEntity {
     public String toString() {
         return super.toString() + "AgentEntity{" +
                 "reach='" + reach + '\'' +
-                ", pMark='" + pMark + '\'' +
                 ", haveCodes=" + haveCodes +
                 ", spendCodes=" + spendCodes +
                 ", leftCodes=" + leftCodes +

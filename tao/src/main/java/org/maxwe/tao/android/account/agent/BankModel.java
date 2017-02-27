@@ -19,7 +19,7 @@ public class BankModel extends SessionModel {
     }
 
     public BankModel(SessionModel sessionModel,String trueName,String zhifubao) {
-        super(sessionModel.getT(),sessionModel.getMark(),sessionModel.getCellphone(),sessionModel.getApt());
+        super(sessionModel.getT(),sessionModel.getId(),sessionModel.getCellphone(),sessionModel.getApt());
         this.trueName = trueName;
         this.zhifubao = zhifubao;
     }

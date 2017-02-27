@@ -20,7 +20,7 @@ public class AliGoodsRequestModel extends SessionModel {
     }
 
     public AliGoodsRequestModel(SessionModel sessionModel, long toPage, long perPageSize, String q, String cookie,int urlType) {
-        super(sessionModel.getT(), sessionModel.getMark(), sessionModel.getCellphone(), sessionModel.getApt());
+        super(sessionModel.getT(), sessionModel.getId(), sessionModel.getCellphone(), sessionModel.getApt());
         this.toPage = toPage;
         this.perPageSize = perPageSize;
         this.q = q;
