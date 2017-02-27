@@ -3,6 +3,8 @@ package org.maxwe.tao.android.utils;
 import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.webkit.CookieManager;
+import android.webkit.ValueCallback;
 
 import com.alibaba.fastjson.JSON;
 
@@ -10,6 +12,7 @@ import org.maxwe.tao.android.R;
 import org.maxwe.tao.android.account.model.SessionModel;
 import org.maxwe.tao.android.api.AuthorizeEntity;
 import org.maxwe.tao.android.api.Position;
+import org.maxwe.tao.android.common.AuthorActivity;
 
 /**
  * Created by Pengwei Ding on 2017-01-11 10:07.

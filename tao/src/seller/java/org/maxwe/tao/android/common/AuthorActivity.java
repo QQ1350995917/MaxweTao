@@ -11,7 +11,7 @@ import android.webkit.JavascriptInterface;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
-import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
@@ -93,8 +93,8 @@ public class AuthorActivity extends BaseActivity {
 
     public static final String KEY_INTENT_OF_STATE_CODE = "KEY_INTENT_OF_STATE_CODE";
     public static final String KEY_INTENT_OF_AUTHOR = "KEY_INTENT_OF_AUTHOR";
-    public static final int CODE_RESULT_OF_AUTHOR_FAIL = 0;
-    public static final int CODE_RESULT_OF_AUTHOR_SUCCESS = 1;
+    public static final int CODE_RESULT_OF_AUTHOR_FAIL = 1;
+    public static final int CODE_RESULT_OF_AUTHOR_SUCCESS = 2;
 
 
     // 返回数据的data关键字
@@ -164,8 +164,8 @@ public class AuthorActivity extends BaseActivity {
     @ViewInject(R.id.wv_act_author)
     private WebView wv_act_author;
 
-    @ViewInject(R.id.pb_act_author_progress)
-    private ProgressBar pb_act_author_progress;
+    @ViewInject(R.id.ll_act_author_mask_login)
+    private RelativeLayout ll_act_author_mask_login;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -189,6 +189,7 @@ public class AuthorActivity extends BaseActivity {
             @Override
             public void onPageStarted(WebView view, final String url, Bitmap favicon) {
                 super.onPageStarted(view, url, favicon);
+                ll_act_author_mask_login.setVisibility(View.VISIBLE);
             }
 
             @Override
@@ -196,11 +197,13 @@ public class AuthorActivity extends BaseActivity {
                 if (url.equals(URL_INDEX)) {
                     //view.loadUrl("javascript:window.local_obj.showSource(document.body)");
                     onSuccessBack();
+                } else {
+                    onBackPressed();
                 }
+                ll_act_author_mask_login.setVisibility(View.GONE);
                 super.onPageFinished(view, url);
             }
         });
-
         this.wv_act_author.loadUrl(URL_LOGIN);
     }
 

@@ -2,6 +2,7 @@ package org.maxwe.tao.android.common;
 
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -223,6 +224,13 @@ public class BrandActivity extends BaseActivity {
 
         this.currentPromotion = promotionList.get(0);
         this.positionAdapter.notifyDataSetChanged();
+//        new Handler().postDelayed(new Runnable() {
+//            @Override
+//            public void run() {
+//                View view = lv_act_brand_promotion.getAdapter().getView(0, null, null);
+//                view.setBackground(BrandActivity.this.getResources().getDrawable(R.drawable.shape_rect_bg_shadow));
+//            }
+//        },300);
     }
 
     private void guideListError() {
@@ -254,12 +262,6 @@ public class BrandActivity extends BaseActivity {
                 Map<String, Object> dataMap = (Map<String, Object>) rootMap.get(AuthorActivity.KEY_DATA);
                 List<Map<String, Object>> adZoneList = (List<Map<String, Object>>) dataMap.get(AuthorActivity.KEY_OTHER_ADZONES);
                 if (adZoneList != null && adZoneList.size() > 0) {
-//                    Map<String, Object> stringObjectMap = adZoneList.get(0);
-//                    String name = stringObjectMap.get(AuthorActivity.KEY_NAME).toString();
-//                    List<Map<String, Object>> maps = (List<Map<String, Object>>) stringObjectMap.get(AuthorActivity.KEY_SUB);
-//                    if (maps != null && maps.size() > 0) {
-//                        String s = maps.get(0).get(AuthorActivity.KEY_NAME).toString();
-//                    }
                     guideListSuccess(adZoneList);
                 } else {
                     onNoGuideList();

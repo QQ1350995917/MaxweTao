@@ -1,6 +1,7 @@
 package org.maxwe.tao.android.index;
 
 import android.content.ClipboardManager;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -10,6 +11,7 @@ import android.graphics.PixelFormat;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.util.Log;
@@ -17,6 +19,7 @@ import android.view.View;
 import android.webkit.CookieManager;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -51,6 +54,8 @@ public class GoodsDetailActivity extends BaseActivity {
     public static final String KEY_GOODS = "goodsEntity";
     private static final int CODE_REQUEST_AUTHOR = 0;
     private static final int CODE_REQUEST_BRAND = 1;
+    @ViewInject(R.id.sv_act_goods_detail_container)
+    private ScrollView sv_act_goods_detail_container;
     @ViewInject(R.id.iv_act_goods_detail_image)
     private SimpleDraweeView iv_act_goods_detail_image;
     @ViewInject(R.id.tv_act_goods_detail_title)
@@ -246,16 +251,9 @@ public class GoodsDetailActivity extends BaseActivity {
         Toast.makeText(this, "复制成功", Toast.LENGTH_SHORT).show();
 
 
-        Intent intent = new Intent(Intent.ACTION_VIEW);    //为Intent设置Action属性
-        if (TextUtils.isEmpty(this.aliConvertEntity.getCouponShortLinkUrl())){
-            String url = this.aliConvertEntity.getShortLinkUrl().replace("https","taobao");
-            Uri uri = Uri.parse(url);
-            intent.setData(uri);
-        }else{
-            String url = this.aliConvertEntity.getCouponShortLinkUrl().replace("https","taobao");
-            Uri uri = Uri.parse(url);
-            intent.setData(uri);
-        }
+        Intent intent = new Intent();    //为Intent设置Action属性
+        ComponentName componentName = new ComponentName("com.taobao.taobao", "com.taobao.tao.welcome.Welcome");
+        intent.setComponent(componentName);
         startActivity(intent);
     }
 
@@ -292,9 +290,16 @@ public class GoodsDetailActivity extends BaseActivity {
                             BaseActivity.getEMOJIStringByUnicode(0x1F446) + "长按复制后打开" +
                             BaseActivity.getEMOJIStringByUnicode(0x1F4F1) + "淘宝" +
                             BaseActivity.getEMOJIStringByUnicode(0x1F449) +
-                            aliConvertEntity.getTaoToken() +
+                            (TextUtils.isEmpty(aliConvertEntity.getCouponLinkTaoToken()) ?
+                                    aliConvertEntity.getTaoToken() : aliConvertEntity.getCouponLinkTaoToken()) +
                             BaseActivity.getEMOJIStringByUnicode(0x1F448) + "\r\n";
             tv_act_goods_detail_get_link_result.setText(copyText);
+            new Handler().post(new Runnable() {
+                @Override
+                public void run() {
+                    sv_act_goods_detail_container.fullScroll(ScrollView.FOCUS_DOWN);
+                }
+            });
             if (TextUtils.isEmpty(aliConvertEntity.getCouponLinkTaoToken())) {
                 tv_act_goods_detail_get_link_result.setTag(aliConvertEntity.getTaoToken());
             } else {
@@ -363,53 +368,6 @@ public class GoodsDetailActivity extends BaseActivity {
             Toast.makeText(GoodsDetailActivity.this, "请求失败", Toast.LENGTH_SHORT).show();
             e.printStackTrace();
         }
-
-//        String currentKeeperId = SharedPreferencesUtils.getCurrentKeeperId(this);
-//        Position currentPP = SharedPreferencesUtils.getCurrentPP(this);
-//        TaoPwdRequestModel taoPwdRequestModel = new TaoPwdRequestModel();
-//
-//        taoPwdRequestModel.setText(goodsEntity.getTitle());
-//        taoPwdRequestModel.setUrl(goodsEntity.getItem_url() + "&pid=mm_" + currentKeeperId + "_" + currentPP.getSiteId() + "_" + currentPP.getId());
-//        taoPwdRequestModel.setUser_id(Long.parseLong(currentKeeperId));
-//
-//        String url = this.getString(R.string.string_url_domain) + this.getString(R.string.string_url_tao_pwd);
-//        SessionModel sessionModel = SharedPreferencesUtils.getSession(this);
-//        taoPwdRequestModel.setT(sessionModel.getT());
-//        taoPwdRequestModel.setMark(sessionModel.getMark());
-//        taoPwdRequestModel.setCellphone(sessionModel.getCellphone());
-//        taoPwdRequestModel.setApt(this.getResources().getInteger(R.integer.integer_app_type));
-//        try {
-//            taoPwdRequestModel.setSign(sessionModel.getEncryptSing());
-//            NetworkManager.requestByPost(url, taoPwdRequestModel, new INetWorkManager.OnNetworkCallback() {
-//                @Override
-//                public void onSuccess(String result) {
-//                    onResponseTaoPwdSuccess(result);
-//                }
-//
-//                @Override
-//                public void onLoginTimeout(String result) {
-//                    SharedPreferencesUtils.clearSession(GoodsDetailActivity.this);
-//                    SharedPreferencesUtils.clearAuthor(GoodsDetailActivity.this);
-//                    Toast.makeText(GoodsDetailActivity.this, R.string.string_toast_timeout, Toast.LENGTH_SHORT).show();
-//                }
-//
-//                @Override
-//                public void onError(Throwable ex, boolean isOnCallback) {
-//                    Toast.makeText(GoodsDetailActivity.this, R.string.string_toast_network_error, Toast.LENGTH_SHORT).show();
-//                    onResponseTaoPwdError();
-//                }
-//
-//                @Override
-//                public void onOther(int code, String result) {
-//                    Toast.makeText(GoodsDetailActivity.this, R.string.string_toast_reset_password_error, Toast.LENGTH_SHORT).show();
-//                    onResponseTaoPwdError();
-//                }
-//            });
-//        } catch (Exception e) {
-//            onResponseTaoPwdError();
-//            Toast.makeText(this, "请求失败", Toast.LENGTH_SHORT).show();
-//            e.printStackTrace();
-//        }
     }
 
 

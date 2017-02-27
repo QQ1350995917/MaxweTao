@@ -221,7 +221,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
             case CODE_REQUEST_AUTHOR:
                 if (resultCode == AuthorActivity.CODE_RESULT_OF_AUTHOR_SUCCESS) {
 
-                } else {
+                } else if (resultCode == AuthorActivity.CODE_RESULT_OF_AUTHOR_FAIL){
                     Toast.makeText(this, "登录失败", Toast.LENGTH_SHORT).show();
                 }
                 break;
@@ -312,7 +312,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
                     String className = info.topActivity.getClassName();              //完整类名
                     String packageName = info.topActivity.getPackageName();          //包名
 
-                    System.out.println("站定信息" + className);
+                    System.out.println("栈顶信息" + className);
 
                     try {
                         Thread.sleep(1000);

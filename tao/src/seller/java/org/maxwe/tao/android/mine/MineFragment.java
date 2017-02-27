@@ -109,7 +109,11 @@ public class MineFragment extends BaseFragment {
             });
         } catch (Exception e) {
             e.printStackTrace();
-            Toast.makeText(this.getContext(), "请求失败", Toast.LENGTH_SHORT).show();
+            SharedPreferencesUtils.clearSession(MineFragment.this.getContext());
+            SharedPreferencesUtils.clearAuthor(MineFragment.this.getContext());
+            Intent intent = new Intent(MineFragment.this.getContext(), LoginActivity.class);
+            MineFragment.this.getActivity().startActivity(intent);
+            MineFragment.this.getActivity().finish();
         }
     }
 
