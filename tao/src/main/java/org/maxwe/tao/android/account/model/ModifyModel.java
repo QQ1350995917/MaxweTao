@@ -9,7 +9,7 @@ import com.alibaba.fastjson.annotation.JSONField;
  * Email: www.dingpengwei@foxmail.com www.dingpegnwei@gmail.com
  * Description: TODO
  */
-public class ModifyModel extends SessionModel {
+public class ModifyModel extends TokenModel {
 
     private String oldPassword;
     private String newPassword;
@@ -18,7 +18,7 @@ public class ModifyModel extends SessionModel {
         super();
     }
 
-    public ModifyModel(SessionModel sessionModel, String oldPassword, String newPassword) {
+    public ModifyModel(TokenModel sessionModel, String oldPassword, String newPassword) {
         super(sessionModel.getT(), sessionModel.getId(), sessionModel.getCellphone(),sessionModel.getApt());
         this.oldPassword = oldPassword;
         this.newPassword = newPassword;
@@ -40,10 +40,9 @@ public class ModifyModel extends SessionModel {
         this.newPassword = newPassword;
     }
 
-    @Override
     @JSONField(serialize=false)
     public boolean isParamsOk() {
-        boolean paramsOk = super.isParamsOk();
+        boolean paramsOk = super.isTokenParamsOk();
         if (!TextUtils.isEmpty(this.getOldPassword())
                 && !TextUtils.isEmpty(this.getNewPassword())
                 && this.getNewPassword().length() >= 6

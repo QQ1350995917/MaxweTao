@@ -1,8 +1,7 @@
 package org.maxwe.tao.android.mate;
 
-import org.maxwe.tao.android.account.agent.AgentEntity;
 import org.maxwe.tao.android.account.agent.AgentModel;
-import org.maxwe.tao.android.account.model.SessionModel;
+import org.maxwe.tao.android.account.model.TokenModel;
 
 import java.util.LinkedList;
 
@@ -11,7 +10,7 @@ import java.util.LinkedList;
  * Email: www.dingpengwei@foxmail.com www.dingpegnwei@gmail.com
  * Description: TODO
  */
-public class BranchModel extends SessionModel {
+public class BranchModel extends TokenModel {
     private int total;
     private int pageIndex;
     private int pageSize;
@@ -21,7 +20,7 @@ public class BranchModel extends SessionModel {
         super();
     }
 
-    public BranchModel(SessionModel sessionModel,int pageIndex,int pageSize) {
+    public BranchModel(TokenModel sessionModel, int pageIndex, int pageSize) {
         super(sessionModel.getT(),sessionModel.getId(),sessionModel.getCellphone(),sessionModel.getApt());
         this.pageIndex = pageIndex;
         this.pageSize = pageSize;
@@ -59,10 +58,9 @@ public class BranchModel extends SessionModel {
         this.agentEntities = agentEntities;
     }
 
-    @Override
     public boolean isParamsOk() {
         if (this.getPageIndex() >= 0 && this.getPageSize() > 0) {
-            return true && super.isParamsOk();
+            return true && super.isTokenParamsOk();
         }
         return false;
     }

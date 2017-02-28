@@ -15,7 +15,7 @@ import org.maxwe.tao.android.Constants;
 import org.maxwe.tao.android.INetWorkManager;
 import org.maxwe.tao.android.NetworkManager;
 import org.maxwe.tao.android.R;
-import org.maxwe.tao.android.account.model.SessionModel;
+import org.maxwe.tao.android.account.model.TokenModel;
 import org.maxwe.tao.android.activity.BaseActivity;
 import org.maxwe.tao.android.activity.LoginActivity;
 import org.maxwe.tao.android.response.IResponse;
@@ -74,7 +74,7 @@ public class GenCodeActivity extends BaseActivity {
         }
         view.setClickable(false);
         try {
-            SessionModel sessionModel = SharedPreferencesUtils.getSession(this);
+            TokenModel sessionModel = SharedPreferencesUtils.getSession(this);
             TradeModel tradeModel = new TradeModel(sessionModel,1,1);
             tradeModel.setVerification(password);
             tradeModel.setSign(sessionModel.getEncryptSing());

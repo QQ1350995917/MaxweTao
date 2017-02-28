@@ -20,7 +20,7 @@ import org.maxwe.tao.android.NetworkManager;
 import org.maxwe.tao.android.R;
 import org.maxwe.tao.android.account.agent.AgentEntity;
 import org.maxwe.tao.android.account.agent.AgentModel;
-import org.maxwe.tao.android.account.model.SessionModel;
+import org.maxwe.tao.android.account.model.TokenModel;
 import org.maxwe.tao.android.activity.BaseActivity;
 import org.maxwe.tao.android.level.LevelEntity;
 import org.maxwe.tao.android.response.IResponse;
@@ -159,7 +159,7 @@ public class TradeActivity extends BaseActivity implements View.OnFocusChangeLis
         }
         view.setClickable(false);
         try {
-            SessionModel session = SharedPreferencesUtils.getSession(this);
+            TokenModel session = SharedPreferencesUtils.getSession(this);
             TradeModel tradeModel = new TradeModel(session, 2, Integer.parseInt(number));
             tradeModel.setSign(session.getEncryptSing());
             tradeModel.setTargetId(this.agentEntityModel.getAgentEntity().getId());

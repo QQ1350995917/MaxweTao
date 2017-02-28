@@ -1,7 +1,7 @@
 package org.maxwe.tao.android.mate;
 
 import org.maxwe.tao.android.account.agent.AgentEntity;
-import org.maxwe.tao.android.account.model.SessionModel;
+import org.maxwe.tao.android.account.model.TokenModel;
 import org.maxwe.tao.android.level.LevelEntity;
 
 /**
@@ -9,7 +9,7 @@ import org.maxwe.tao.android.level.LevelEntity;
  * Email: www.dingpengwei@foxmail.com www.dingpegnwei@gmail.com
  * Description: TODO
  */
-public class TrunkModel extends SessionModel {
+public class TrunkModel extends TokenModel {
     private int targetId;
     private AgentEntity agentEntity; // 相应字段
     private LevelEntity levelEntity; // 相应字段
@@ -18,7 +18,7 @@ public class TrunkModel extends SessionModel {
         super();
     }
 
-    public TrunkModel(SessionModel sessionModel, int targetId) {
+    public TrunkModel(TokenModel sessionModel, int targetId) {
         super(sessionModel.getT(), sessionModel.getId(), sessionModel.getCellphone(), sessionModel.getApt());
         this.targetId = targetId;
     }

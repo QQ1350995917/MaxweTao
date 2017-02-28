@@ -21,7 +21,7 @@ import com.alibaba.fastjson.JSON;
 import org.maxwe.tao.android.INetWorkManager;
 import org.maxwe.tao.android.NetworkManager;
 import org.maxwe.tao.android.R;
-import org.maxwe.tao.android.account.model.SessionModel;
+import org.maxwe.tao.android.account.model.TokenModel;
 import org.maxwe.tao.android.activity.BaseActivity;
 import org.maxwe.tao.android.history.HistoryEntity;
 import org.maxwe.tao.android.history.HistoryModel;
@@ -193,7 +193,7 @@ public class HistoryActivity extends BaseActivity implements SwipeRefreshLayout.
     private void onRequestHistory() {
         this.srl_act_history_list_container.setRefreshing(true);
         try {
-            SessionModel session = SharedPreferencesUtils.getSession(this);
+            TokenModel session = SharedPreferencesUtils.getSession(this);
             HistoryModel historyModel = new HistoryModel(session, pageIndex, pageSize);
             historyModel.setSign(session.getEncryptSing());
             String url = this.getString(R.string.string_url_domain) + this.getString(R.string.string_url_history_history);

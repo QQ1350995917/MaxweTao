@@ -11,7 +11,7 @@ import org.maxwe.tao.android.utils.CellPhoneUtils;
  * Email: www.dingpengwei@foxmail.com www.dingpegnwei@gmail.com
  * Description: TODO
  */
-public class LoginModel extends SessionModel {
+public class LoginModel extends TokenModel {
 
     private String cellphone;
     private String password;

@@ -28,7 +28,7 @@ import com.facebook.drawee.view.SimpleDraweeView;
 import org.maxwe.tao.android.INetWorkManager;
 import org.maxwe.tao.android.NetworkManager;
 import org.maxwe.tao.android.R;
-import org.maxwe.tao.android.account.model.SessionModel;
+import org.maxwe.tao.android.account.model.TokenModel;
 import org.maxwe.tao.android.activity.BaseActivity;
 import org.maxwe.tao.android.common.AuthorActivity;
 import org.maxwe.tao.android.utils.SharedPreferencesUtils;
@@ -232,7 +232,7 @@ public class GoodsListActivity extends BaseActivity implements SwipeRefreshLayou
 
     private void onRequestAliGoods(AliGoodsRequestModel aliGoodsRequestModel) {
         String url = this.getString(R.string.string_url_domain) + this.getString(R.string.string_url_ali_goods_search);
-        SessionModel sessionModel = SharedPreferencesUtils.getSession(this);
+        TokenModel sessionModel = SharedPreferencesUtils.getSession(this);
         aliGoodsRequestModel.setT(sessionModel.getT());
         aliGoodsRequestModel.setId(sessionModel.getId());
         aliGoodsRequestModel.setCellphone(sessionModel.getCellphone());

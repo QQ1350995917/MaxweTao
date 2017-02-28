@@ -1,6 +1,6 @@
 package org.maxwe.tao.android.history;
 
-import org.maxwe.tao.android.account.model.SessionModel;
+import org.maxwe.tao.android.account.model.TokenModel;
 
 import java.util.LinkedList;
 
@@ -9,7 +9,7 @@ import java.util.LinkedList;
  * Email: www.dingpengwei@foxmail.com www.dingpegnwei@gmail.com
  * Description: TODO
  */
-public class HistoryModel extends SessionModel {
+public class HistoryModel extends TokenModel {
     private int total; // 响应字段
     private int pageIndex; // 请求字段
     private int pageSize; // 请求字段
@@ -20,7 +20,7 @@ public class HistoryModel extends SessionModel {
         super();
     }
 
-    public HistoryModel(SessionModel sessionModel,int pageIndex,int pageSize) {
+    public HistoryModel(TokenModel sessionModel, int pageIndex, int pageSize) {
         super(sessionModel.getT(),sessionModel.getId(),sessionModel.getCellphone(),sessionModel.getApt());
         this.pageIndex = pageIndex;
         this.pageSize = pageSize;

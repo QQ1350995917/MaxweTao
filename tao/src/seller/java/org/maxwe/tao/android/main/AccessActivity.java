@@ -18,7 +18,7 @@ import org.maxwe.tao.android.Constants;
 import org.maxwe.tao.android.INetWorkManager;
 import org.maxwe.tao.android.NetworkManager;
 import org.maxwe.tao.android.R;
-import org.maxwe.tao.android.account.model.SessionModel;
+import org.maxwe.tao.android.account.model.TokenModel;
 import org.maxwe.tao.android.account.user.ActiveModel;
 import org.maxwe.tao.android.account.user.UserEntity;
 import org.maxwe.tao.android.activity.BaseActivity;
@@ -105,7 +105,7 @@ public class AccessActivity extends BaseActivity {
         try {
             onRequestingView();
             String url = this.getString(R.string.string_url_domain) + this.getString(R.string.string_url_account_mine);
-            SessionModel session = SharedPreferencesUtils.getSession(this);
+            TokenModel session = SharedPreferencesUtils.getSession(this);
             session.setSign(session.getEncryptSing());
             NetworkManager.requestByPost(url, session, new INetWorkManager.OnNetworkCallback() {
                 @Override
@@ -162,7 +162,7 @@ public class AccessActivity extends BaseActivity {
 
         try {
             String url = this.getString(R.string.string_url_domain) + this.getString(R.string.string_url_account_active);
-            SessionModel session = SharedPreferencesUtils.getSession(this);
+            TokenModel session = SharedPreferencesUtils.getSession(this);
             ActiveModel activeModel = new ActiveModel(session, actCode);
             activeModel.setVerification(password);
             activeModel.setSign(session.getEncryptSing());
@@ -210,7 +210,7 @@ public class AccessActivity extends BaseActivity {
     @Event(value = R.id.bt_act_access_logout, type = View.OnClickListener.class)
     private void onLogoutAction(View view) {
         try {
-            SessionModel sessionModel = SharedPreferencesUtils.getSession(this);
+            TokenModel sessionModel = SharedPreferencesUtils.getSession(this);
             sessionModel.setSign(sessionModel.getEncryptSing());
             String url = this.getString(R.string.string_url_domain) + this.getString(R.string.string_url_account_logout);
             NetworkManager.requestByPost(url, sessionModel, new INetWorkManager.OnNetworkCallback() {

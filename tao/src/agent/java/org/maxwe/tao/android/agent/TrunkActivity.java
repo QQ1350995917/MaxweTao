@@ -16,7 +16,7 @@ import org.maxwe.tao.android.INetWorkManager;
 import org.maxwe.tao.android.NetworkManager;
 import org.maxwe.tao.android.R;
 import org.maxwe.tao.android.account.agent.AgentEntity;
-import org.maxwe.tao.android.account.model.SessionModel;
+import org.maxwe.tao.android.account.model.TokenModel;
 import org.maxwe.tao.android.activity.BaseActivity;
 import org.maxwe.tao.android.mate.TrunkModel;
 import org.maxwe.tao.android.response.IResponse;
@@ -134,7 +134,7 @@ public class TrunkActivity extends BaseActivity {
             return;
         }
 
-        SessionModel session = SharedPreferencesUtils.getSession(this);
+        TokenModel session = SharedPreferencesUtils.getSession(this);
         if (TextUtils.equals(session.getId() + "", leaderId)) {
             Toast.makeText(this, R.string.string_leader_myself, Toast.LENGTH_SHORT).show();
             return;
@@ -195,7 +195,7 @@ public class TrunkActivity extends BaseActivity {
 
     private void onLeaderAction() {
         try {
-            SessionModel session = SharedPreferencesUtils.getSession(this);
+            TokenModel session = SharedPreferencesUtils.getSession(this);
             String url = this.getString(R.string.string_url_domain) + this.getString(R.string.string_url_mate_leader);
             session.setSign(session.getEncryptSing());
             TrunkModel trunkModel = new TrunkModel(session, AgentApplication.currentAgentModel.getAgentEntity().getId());

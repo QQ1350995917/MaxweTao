@@ -6,14 +6,12 @@ import com.alibaba.fastjson.annotation.JSONField;
 
 import org.maxwe.tao.android.utils.CellPhoneUtils;
 
-import java.io.Serializable;
-
 /**
  * Created by Pengwei Ding on 2017-01-10 17:39.
  * Email: www.dingpengwei@foxmail.com www.dingpegnwei@gmail.com
  * Description: TODO
  */
-public class RegisterModel  extends SessionModel {
+public class RegisterModel  extends TokenModel {
 
     private String cellphone;
     private String smsCode;

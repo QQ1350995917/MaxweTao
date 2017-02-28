@@ -9,6 +9,7 @@ import android.widget.Toast;
 import org.maxwe.tao.android.BaseFragment;
 import org.maxwe.tao.android.R;
 import org.maxwe.tao.android.activity.WebViewActivity;
+import org.maxwe.tao.android.common.AuthorActivity;
 import org.xutils.view.annotation.ContentView;
 import org.xutils.view.annotation.Event;
 
@@ -30,9 +31,32 @@ public class IndexFragment extends BaseFragment {
      */
     @Event(value = R.id.bt_frg_index_tao_goods, type = View.OnClickListener.class)
     private void onTaoGoodsAction(View view) {
-        Intent intent = new Intent(IndexFragment.this.getContext(), GoodsListActivity.class);
-        intent.putExtra(GoodsListActivity.INTENT_KEY_URL_TYPE,0);
-        IndexFragment.this.startActivity(intent);
+        AuthorActivity.requestTaoLoginStatus(this.getContext(), new AuthorActivity.TaoLoginStatusCallback() {
+            @Override
+            public void onNeedLoginCallback() {
+                Intent intent = new Intent(IndexFragment.this.getContext(), AuthorActivity.class);
+                intent.putExtra(GoodsListActivity.INTENT_KEY_URL_TYPE,0);
+                IndexFragment.this.startActivity(intent);
+            }
+
+            @Override
+            public void onNeedBrandCallback() {
+
+            }
+
+            @Override
+            public void onNeedOkCallback() {
+                Intent intent = new Intent(IndexFragment.this.getContext(), GoodsListActivity.class);
+                intent.putExtra(GoodsListActivity.INTENT_KEY_URL_TYPE,0);
+                IndexFragment.this.startActivity(intent);
+            }
+
+            @Override
+            public void onNeedErrorCallback() {
+                Toast.makeText(IndexFragment.this.getContext(),"发生错误,请重试",Toast.LENGTH_SHORT).show();
+            }
+        });
+
     }
 
     /**
@@ -52,9 +76,32 @@ public class IndexFragment extends BaseFragment {
      */
     @Event(value = R.id.bt_frg_index_tao_money, type = View.OnClickListener.class)
     private void onMoneyAction(View view) {
-        Intent intent = new Intent(IndexFragment.this.getContext(), GoodsListActivity.class);
-        intent.putExtra(GoodsListActivity.INTENT_KEY_URL_TYPE,1);
-        IndexFragment.this.startActivity(intent);
+        AuthorActivity.requestTaoLoginStatus(this.getContext(), new AuthorActivity.TaoLoginStatusCallback() {
+            @Override
+            public void onNeedLoginCallback() {
+                Intent intent = new Intent(IndexFragment.this.getContext(), AuthorActivity.class);
+                intent.putExtra(GoodsListActivity.INTENT_KEY_URL_TYPE,0);
+                IndexFragment.this.startActivity(intent);
+            }
+
+            @Override
+            public void onNeedBrandCallback() {
+
+            }
+
+            @Override
+            public void onNeedOkCallback() {
+                Intent intent = new Intent(IndexFragment.this.getContext(), GoodsListActivity.class);
+                intent.putExtra(GoodsListActivity.INTENT_KEY_URL_TYPE,1);
+                IndexFragment.this.startActivity(intent);
+            }
+
+            @Override
+            public void onNeedErrorCallback() {
+                Toast.makeText(IndexFragment.this.getContext(),"发生错误,请重试",Toast.LENGTH_SHORT).show();
+            }
+        });
+
     }
 
     /**

@@ -1,6 +1,6 @@
 package org.maxwe.tao.android.account.agent;
 
-import org.maxwe.tao.android.account.model.SessionModel;
+import org.maxwe.tao.android.account.model.TokenModel;
 import org.maxwe.tao.android.level.LevelEntity;
 
 /**
@@ -8,7 +8,7 @@ import org.maxwe.tao.android.level.LevelEntity;
  * Email: www.dingpengwei@foxmail.com www.dingpegnwei@gmail.com
  * Description: TODO
  */
-public class AgentModel extends SessionModel {
+public class AgentModel extends TokenModel {
     private AgentEntity agentEntity; // 响应字段
     private LevelEntity levelEntity; // 响应字段
 

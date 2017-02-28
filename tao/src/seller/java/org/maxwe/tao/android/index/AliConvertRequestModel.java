@@ -1,13 +1,13 @@
 package org.maxwe.tao.android.index;
 
-import org.maxwe.tao.android.account.model.SessionModel;
+import org.maxwe.tao.android.account.model.TokenModel;
 
 /**
  * Created by Pengwei Ding on 2017-02-24 23:37.
  * Email: www.dingpengwei@foxmail.com www.dingpegnwei@gmail.com
  * Description: TODO
  */
-public class AliConvertRequestModel  extends SessionModel {
+public class AliConvertRequestModel  extends TokenModel {
     private long siteid;  // 21454360;
     private long auctionid;  // 521477762631; 商品ID
     private long adzoneid;  // 72044740;
@@ -17,7 +17,7 @@ public class AliConvertRequestModel  extends SessionModel {
         super();
     }
 
-    public AliConvertRequestModel(SessionModel sessionModel,long siteid, long auctionid, long adzoneid, String cookie) {
+    public AliConvertRequestModel(TokenModel sessionModel, long siteid, long auctionid, long adzoneid, String cookie) {
         super(sessionModel.getT(), sessionModel.getId(), sessionModel.getCellphone(), sessionModel.getApt());
         this.siteid = siteid;
         this.auctionid = auctionid;

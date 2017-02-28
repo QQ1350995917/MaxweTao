@@ -16,29 +16,25 @@
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:layout_alignParentBottom="true"
-        android:background="#CCCCCC"
+        android:background="@color/white"
         android:orientation="horizontal">
 
         <RadioButton
             android:id="@+id/rb_act_main_active_code"
-            style="@style/navigate"
-            android:background="@drawable/menu_item_selector"
-            android:checked="true"
-            android:text="@string/string_active_code" />
+            style="@style/radio_group_md_blue"
+            android:text="@string/string_active_code"
+            android:checked="true" />
 
         <RadioButton
             android:id="@+id/rb_act_main_agent"
-            style="@style/navigate"
-            android:background="@drawable/menu_item_selector"
-            android:checked="false"
+            style="@style/radio_group_md_blue"
+            android:clickable="true"
             android:text="@string/string_agent" />
 
         <RadioButton
             android:id="@+id/rb_act_main_mine"
-            style="@style/navigate"
-            android:background="@drawable/menu_item_selector"
-            android:checked="false"
-            android:text="@string/string_mine"
-            android:textAlignment="center" />
+            style="@style/radio_group_md_blue"
+            android:clickable="true"
+            android:text="@string/string_mine" />
     </RadioGroup>
 </RelativeLayout>

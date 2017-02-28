@@ -1,8 +1,6 @@
 package org.maxwe.tao.android.activity;
 
-import android.app.Activity;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.EditText;
@@ -15,9 +13,7 @@ import org.maxwe.tao.android.INetWorkManager;
 import org.maxwe.tao.android.R;
 import org.maxwe.tao.android.NetworkManager;
 import org.maxwe.tao.android.account.model.ModifyModel;
-import org.maxwe.tao.android.account.model.SessionModel;
-import org.maxwe.tao.android.response.IResponse;
-import org.maxwe.tao.android.response.Response;
+import org.maxwe.tao.android.account.model.TokenModel;
 import org.maxwe.tao.android.utils.SharedPreferencesUtils;
 import org.xutils.view.annotation.ContentView;
 import org.xutils.view.annotation.Event;
@@ -77,7 +73,7 @@ public class ModifyActivity extends BaseActivity {
 
         view.setClickable(false);
         String url = this.getString(R.string.string_url_domain) + this.getString(R.string.string_url_account_password);
-        SessionModel sessionModel = SharedPreferencesUtils.getSession(this);
+        TokenModel sessionModel = SharedPreferencesUtils.getSession(this);
         ModifyModel modifyModel = new ModifyModel(sessionModel, oldPassword, newPassword);
         modifyModel.setApt(this.getResources().getInteger(R.integer.integer_app_type));
         try {
@@ -85,7 +81,7 @@ public class ModifyActivity extends BaseActivity {
             NetworkManager.requestByPost(url, modifyModel, new INetWorkManager.OnNetworkCallback() {
                 @Override
                 public void onSuccess(String result) {
-                    SessionModel responseModel = JSON.parseObject(result, SessionModel.class);
+                    TokenModel responseModel = JSON.parseObject(result, TokenModel.class);
                     Intent intent = new Intent();
                     intent.putExtra(Constants.KEY_INTENT_SESSION, responseModel);
                     ModifyActivity.this.setResult(LoginActivity.RESPONSE_CODE_SUCCESS, intent);

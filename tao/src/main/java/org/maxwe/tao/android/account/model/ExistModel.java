@@ -4,14 +4,12 @@ import android.text.TextUtils;
 
 import com.alibaba.fastjson.annotation.JSONField;
 
-import java.io.Serializable;
-
 /**
  * Created by Pengwei Ding on 2017-01-10 17:28.
  * Email: www.dingpengwei@foxmail.com www.dingpegnwei@gmail.com
  * Description: TODO
  */
-public class ExistModel extends SessionModel {
+public class ExistModel extends TokenModel {
     private String cellphone;
 
     public ExistModel() {

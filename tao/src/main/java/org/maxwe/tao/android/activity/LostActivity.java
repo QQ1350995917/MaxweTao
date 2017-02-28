@@ -16,10 +16,8 @@ import org.maxwe.tao.android.Constants;
 import org.maxwe.tao.android.INetWorkManager;
 import org.maxwe.tao.android.NetworkManager;
 import org.maxwe.tao.android.account.model.RegisterModel;
-import org.maxwe.tao.android.account.model.SessionModel;
+import org.maxwe.tao.android.account.model.TokenModel;
 import org.maxwe.tao.android.meta.SMSModel;
-import org.maxwe.tao.android.response.IResponse;
-import org.maxwe.tao.android.response.Response;
 import org.maxwe.tao.android.utils.CellPhoneUtils;
 import org.maxwe.tao.android.R;
 import org.xutils.view.annotation.ContentView;
@@ -160,7 +158,7 @@ public class LostActivity extends BaseActivity {
         NetworkManager.requestByPost(url, registerModel, new INetWorkManager.OnNetworkCallback() {
             @Override
             public void onSuccess(String result) {
-                SessionModel responseModel = JSON.parseObject(result, SessionModel.class);
+                TokenModel responseModel = JSON.parseObject(result, TokenModel.class);
                 Intent intent = new Intent();
                 intent.putExtra(Constants.KEY_INTENT_SESSION, responseModel);
                 LostActivity.this.setResult(LoginActivity.RESPONSE_CODE_SUCCESS, intent);

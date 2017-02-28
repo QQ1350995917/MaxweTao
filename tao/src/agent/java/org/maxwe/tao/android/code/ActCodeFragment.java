@@ -22,7 +22,7 @@ import org.maxwe.tao.android.NetworkManager;
 import org.maxwe.tao.android.R;
 import org.maxwe.tao.android.account.agent.AgentEntity;
 import org.maxwe.tao.android.account.agent.AgentModel;
-import org.maxwe.tao.android.account.model.SessionModel;
+import org.maxwe.tao.android.account.model.TokenModel;
 import org.maxwe.tao.android.agent.TrunkActivity;
 import org.maxwe.tao.android.trade.TradeModel;
 import org.maxwe.tao.android.utils.SharedPreferencesUtils;
@@ -160,7 +160,7 @@ public class ActCodeFragment extends BaseFragment {
     private void onRequestMineInfo() {
         try {
             String url = this.getString(R.string.string_url_domain) + this.getString(R.string.string_url_account_mine);
-            SessionModel session = SharedPreferencesUtils.getSession(this.getContext());
+            TokenModel session = SharedPreferencesUtils.getSession(this.getContext());
             session.setSign(session.getEncryptSing());
             NetworkManager.requestByPost(url, session, new INetWorkManager.OnNetworkCallback() {
                 @Override

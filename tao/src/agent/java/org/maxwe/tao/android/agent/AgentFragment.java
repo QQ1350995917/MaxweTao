@@ -21,7 +21,7 @@ import org.maxwe.tao.android.INetWorkManager;
 import org.maxwe.tao.android.NetworkManager;
 import org.maxwe.tao.android.R;
 import org.maxwe.tao.android.account.agent.AgentModel;
-import org.maxwe.tao.android.account.model.SessionModel;
+import org.maxwe.tao.android.account.model.TokenModel;
 import org.maxwe.tao.android.mate.BranchModel;
 import org.maxwe.tao.android.utils.SharedPreferencesUtils;
 import org.xutils.view.annotation.ContentView;
@@ -172,7 +172,7 @@ public class AgentFragment extends BaseFragment implements SwipeRefreshLayout.On
     private void onRequestAgentMates() {
         this.srl_frg_agent_list_container.setRefreshing(true);
         try {
-            SessionModel session = SharedPreferencesUtils.getSession(this.getContext());
+            TokenModel session = SharedPreferencesUtils.getSession(this.getContext());
             BranchModel branchModel = new BranchModel(session, pageIndex, pageSize);
             branchModel.setSign(session.getEncryptSing());
             String url = this.getString(R.string.string_url_domain) + this.getString(R.string.string_url_mate_mates);

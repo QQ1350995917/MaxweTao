@@ -1,14 +1,5 @@
 package org.maxwe.tao.android;
 
-import org.maxwe.tao.android.account.agent.BankModel;
-import org.maxwe.tao.android.account.agent.FindModel;
-import org.maxwe.tao.android.account.agent.MineModel;
-import org.maxwe.tao.android.account.model.ExistModel;
-import org.maxwe.tao.android.account.model.LoginModel;
-import org.maxwe.tao.android.account.model.RegisterModel;
-import org.maxwe.tao.android.account.model.SessionModel;
-import org.maxwe.tao.android.account.user.ActiveModel;
-import org.maxwe.tao.android.response.Response;
 import org.xutils.common.Callback;
 
 /**

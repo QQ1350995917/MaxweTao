@@ -19,7 +19,7 @@ import org.maxwe.tao.android.R;
 import org.maxwe.tao.android.account.agent.AgentEntity;
 import org.maxwe.tao.android.account.agent.AgentModel;
 import org.maxwe.tao.android.account.agent.BankModel;
-import org.maxwe.tao.android.account.model.SessionModel;
+import org.maxwe.tao.android.account.model.TokenModel;
 import org.maxwe.tao.android.activity.BaseActivity;
 import org.maxwe.tao.android.response.IResponse;
 import org.maxwe.tao.android.utils.SharedPreferencesUtils;
@@ -136,7 +136,7 @@ public class BankActivity extends BaseActivity {
 
         this.bt_act_bank_action.setClickable(false);
         try {
-            SessionModel session = SharedPreferencesUtils.getSession(this);
+            TokenModel session = SharedPreferencesUtils.getSession(this);
             BankModel bankModel = new BankModel(session, trueName, zhifubao);
             bankModel.setVerification(password);
             bankModel.setSign(session.getEncryptSing());

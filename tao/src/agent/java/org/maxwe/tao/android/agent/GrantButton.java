@@ -12,7 +12,7 @@ import org.maxwe.tao.android.INetWorkManager;
 import org.maxwe.tao.android.NetworkManager;
 import org.maxwe.tao.android.R;
 import org.maxwe.tao.android.account.agent.AgentModel;
-import org.maxwe.tao.android.account.model.SessionModel;
+import org.maxwe.tao.android.account.model.TokenModel;
 import org.maxwe.tao.android.mate.TrunkModel;
 import org.maxwe.tao.android.utils.SharedPreferencesUtils;
 
@@ -77,7 +77,7 @@ public class GrantButton extends Button implements View.OnClickListener {
 
     private void onRequestGrantAgent(final AgentModel agentEntity) {
         try {
-            SessionModel session = SharedPreferencesUtils.getSession(this.getContext());
+            TokenModel session = SharedPreferencesUtils.getSession(this.getContext());
             TrunkModel trunkModel = new TrunkModel(session, agentEntity.getAgentEntity().getId());
             trunkModel.setSign(session.getEncryptSing());
             String url = GrantButton.this.getContext().getString(R.string.string_url_domain) + GrantButton.this.getContext().getString(R.string.string_url_mate_grant);

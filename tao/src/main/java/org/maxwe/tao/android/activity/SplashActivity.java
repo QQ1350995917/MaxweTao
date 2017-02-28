@@ -8,7 +8,7 @@ import android.support.annotation.Nullable;
 import android.widget.TextView;
 
 import org.maxwe.tao.android.R;
-import org.maxwe.tao.android.account.model.SessionModel;
+import org.maxwe.tao.android.account.model.TokenModel;
 import org.maxwe.tao.android.main.MainActivity;
 import org.maxwe.tao.android.utils.SharedPreferencesUtils;
 import org.xutils.view.annotation.ContentView;
@@ -55,8 +55,8 @@ public class SplashActivity extends BaseActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        SessionModel session = SharedPreferencesUtils.getSession(this);
-        if (session == null) {
+        TokenModel session = SharedPreferencesUtils.getSession(this);
+        if (session == null || session.getId() == 0) {
             this.handler.sendEmptyMessageDelayed(WHAT_0, DELAY);
         } else {
             this.handler.sendEmptyMessageDelayed(WHAT_1, DELAY);

@@ -2,14 +2,14 @@ package org.maxwe.tao.android.account.agent;
 
 import android.text.TextUtils;
 
-import org.maxwe.tao.android.account.model.SessionModel;
+import org.maxwe.tao.android.account.model.TokenModel;
 
 /**
  * Created by Pengwei Ding on 2017-01-10 17:40.
  * Email: www.dingpengwei@foxmail.com www.dingpegnwei@gmail.com
  * Description: TODO
  */
-public class BankModel extends SessionModel {
+public class BankModel extends TokenModel {
     private String trueName;
     private String zhifubao;
     private long timestamp;// 响应字段
@@ -18,7 +18,7 @@ public class BankModel extends SessionModel {
         super();
     }
 
-    public BankModel(SessionModel sessionModel,String trueName,String zhifubao) {
+    public BankModel(TokenModel sessionModel, String trueName, String zhifubao) {
         super(sessionModel.getT(),sessionModel.getId(),sessionModel.getCellphone(),sessionModel.getApt());
         this.trueName = trueName;
         this.zhifubao = zhifubao;
@@ -58,7 +58,6 @@ public class BankModel extends SessionModel {
                 '}';
     }
 
-    @Override
     public boolean isParamsOk() {
         if (TextUtils.isEmpty(this.getTrueName())
                 || TextUtils.isEmpty(this.getZhifubao())
@@ -67,6 +66,6 @@ public class BankModel extends SessionModel {
                 || this.getVerification().length() > 12) {
             return false;
         }
-        return super.isParamsOk();
+        return super.isTokenParamsOk();
     }
 }

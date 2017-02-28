@@ -32,7 +32,7 @@ import com.umeng.socialize.bean.SHARE_MEDIA;
 import org.maxwe.tao.android.INetWorkManager;
 import org.maxwe.tao.android.NetworkManager;
 import org.maxwe.tao.android.R;
-import org.maxwe.tao.android.account.model.SessionModel;
+import org.maxwe.tao.android.account.model.TokenModel;
 import org.maxwe.tao.android.activity.BaseActivity;
 import org.maxwe.tao.android.api.Position;
 import org.maxwe.tao.android.common.AuthorActivity;
@@ -325,7 +325,7 @@ public class GoodsDetailActivity extends BaseActivity {
         aliConvertRequestModel.setAuctionid(goodsEntity.getAuctionId());
 
         String url = this.getString(R.string.string_url_domain) + this.getString(R.string.string_url_ali_goods_convert);
-        SessionModel sessionModel = SharedPreferencesUtils.getSession(this);
+        TokenModel sessionModel = SharedPreferencesUtils.getSession(this);
         aliConvertRequestModel.setT(sessionModel.getT());
         aliConvertRequestModel.setId(sessionModel.getId());
         aliConvertRequestModel.setCellphone(sessionModel.getCellphone());

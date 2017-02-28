@@ -2,21 +2,21 @@ package org.maxwe.tao.android.account.user;
 
 import android.text.TextUtils;
 
-import org.maxwe.tao.android.account.model.SessionModel;
+import org.maxwe.tao.android.account.model.TokenModel;
 
 /**
  * Created by Pengwei Ding on 2017-01-10 17:40.
  * Email: www.dingpengwei@foxmail.com www.dingpegnwei@gmail.com
  * Description: TODO
  */
-public class ActiveModel extends SessionModel {
+public class ActiveModel extends TokenModel {
     private String actCode;
 
     public ActiveModel() {
         super();
     }
 
-    public ActiveModel(SessionModel sessionModel,String actCode) {
+    public ActiveModel(TokenModel sessionModel, String actCode) {
         super(sessionModel.getT(),sessionModel.getId(),sessionModel.getCellphone(),sessionModel.getApt());
         this.actCode = actCode;
     }
@@ -29,10 +29,9 @@ public class ActiveModel extends SessionModel {
         this.actCode = actCode;
     }
 
-    @Override
     public boolean isParamsOk() {
         if (!TextUtils.isEmpty(this.getActCode())) {
-            return true && super.isParamsOk();
+            return true && super.isTokenParamsOk();
         }
         return false;
     }

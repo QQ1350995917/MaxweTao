@@ -1,13 +1,13 @@
 package org.maxwe.tao.android.goods;
 
-import org.maxwe.tao.android.account.model.SessionModel;
+import org.maxwe.tao.android.account.model.TokenModel;
 
 /**
  * Created by Pengwei Ding on 2017-02-18 11:40.
  * Email: www.dingpengwei@foxmail.com www.dingpegnwei@gmail.com
  * Description: 请求获取淘口令的模型
  */
-public class TaoPwdRequestModel extends SessionModel {
+public class TaoPwdRequestModel extends TokenModel {
     private String ext;//可选 {"xx":"xx"}扩展字段JSON格式
     private String logo;//可选 http://m.taobao.com/xxx.jpg口令弹框logoURL
     private String text;//必须 超值活动，惊喜活动多多口令弹框内容

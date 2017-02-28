@@ -1,13 +1,13 @@
 package org.maxwe.tao.android.goods;
 
-import org.maxwe.tao.android.account.model.SessionModel;
+import org.maxwe.tao.android.account.model.TokenModel;
 
 /**
  * Created by Pengwei Ding on 2017-01-08 11:35.
  * Email: www.dingpengwei@foxmail.com www.dingpegnwei@gmail.com
  * Description: TODO
  */
-public class GoodsRequestModel extends SessionModel {
+public class GoodsRequestModel extends TokenModel {
 
     private static final String DES = "_des";//排序（降序）
     private static final String ASC = "_asc";// 排序（升序）

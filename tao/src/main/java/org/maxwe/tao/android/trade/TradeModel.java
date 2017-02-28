@@ -1,13 +1,13 @@
 package org.maxwe.tao.android.trade;
 
-import org.maxwe.tao.android.account.model.SessionModel;
+import org.maxwe.tao.android.account.model.TokenModel;
 
 /**
  * Created by Pengwei Ding on 2017-01-11 21:14.
  * Email: www.dingpengwei@foxmail.com www.dingpegnwei@gmail.com
  * Description: TODO
  */
-public class TradeModel extends SessionModel {
+public class TradeModel extends TokenModel {
     private int targetId;
     private int type;
     private String actCode;
@@ -17,7 +17,7 @@ public class TradeModel extends SessionModel {
         super();
     }
 
-    public TradeModel(SessionModel sessionModel,int type,int codeNum) {
+    public TradeModel(TokenModel sessionModel, int type, int codeNum) {
         super(sessionModel.getT(),sessionModel.getId(),sessionModel.getCellphone(),sessionModel.getApt());
         this.type = type;
         this.codeNum = codeNum;

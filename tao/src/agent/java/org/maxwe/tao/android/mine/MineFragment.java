@@ -16,7 +16,7 @@ import org.maxwe.tao.android.Constants;
 import org.maxwe.tao.android.INetWorkManager;
 import org.maxwe.tao.android.NetworkManager;
 import org.maxwe.tao.android.R;
-import org.maxwe.tao.android.account.model.SessionModel;
+import org.maxwe.tao.android.account.model.TokenModel;
 import org.maxwe.tao.android.activity.LoginActivity;
 import org.maxwe.tao.android.activity.ModifyActivity;
 import org.maxwe.tao.android.agent.TradeActivity;
@@ -48,7 +48,7 @@ public class MineFragment extends BaseFragment {
         switch (requestCode) {
             case REQUEST_CODE_MODIFY_PASSWORD:
                 if (resultCode == LoginActivity.RESPONSE_CODE_SUCCESS) {
-                    onModifyPasswordSuccessCallback((SessionModel) data.getSerializableExtra(Constants.KEY_INTENT_SESSION));
+                    onModifyPasswordSuccessCallback((TokenModel) data.getSerializableExtra(Constants.KEY_INTENT_SESSION));
                 }
                 break;
             default:
@@ -105,7 +105,7 @@ public class MineFragment extends BaseFragment {
     @Event(value = R.id.bt_frg_mine_exit, type = View.OnClickListener.class)
     private void onExitAction(final View view) {
         view.setClickable(false);
-        SessionModel sessionModel = SharedPreferencesUtils.getSession(MineFragment.this.getContext());
+        TokenModel sessionModel = SharedPreferencesUtils.getSession(MineFragment.this.getContext());
         try {
             sessionModel.setSign(sessionModel.getEncryptSing());
             String url = this.getString(R.string.string_url_domain) + this.getString(R.string.string_url_account_logout);
@@ -161,7 +161,7 @@ public class MineFragment extends BaseFragment {
         }
     }
 
-    private void onModifyPasswordSuccessCallback(SessionModel sessionModel) {
+    private void onModifyPasswordSuccessCallback(TokenModel sessionModel) {
         SharedPreferencesUtils.saveSession(this.getContext(), sessionModel);
     }
 }

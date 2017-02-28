@@ -20,7 +20,7 @@ import org.maxwe.tao.android.BaseFragment;
 import org.maxwe.tao.android.INetWorkManager;
 import org.maxwe.tao.android.NetworkManager;
 import org.maxwe.tao.android.R;
-import org.maxwe.tao.android.account.model.SessionModel;
+import org.maxwe.tao.android.account.model.TokenModel;
 import org.maxwe.tao.android.common.AuthorActivity;
 import org.maxwe.tao.android.common.BrandActivity;
 import org.maxwe.tao.android.index.AliGoodsEntity;
@@ -176,7 +176,7 @@ public class LinkFragment extends BaseFragment {
 
     private void requestTaoConvert() {
         String url = this.getString(R.string.string_url_domain) + this.getString(R.string.string_url_ali_goods_search);
-        SessionModel sessionModel = SharedPreferencesUtils.getSession(this.getContext());
+        TokenModel sessionModel = SharedPreferencesUtils.getSession(this.getContext());
         AliGoodsRequestModel aliGoodsRequestModel = new AliGoodsRequestModel();
         aliGoodsRequestModel.setQ(this.url);
         aliGoodsRequestModel.setT(sessionModel.getT());

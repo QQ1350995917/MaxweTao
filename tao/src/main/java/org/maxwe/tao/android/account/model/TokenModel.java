@@ -15,7 +15,7 @@ import java.io.Serializable;
  * Email: www.dingpengwei@foxmail.com www.dingpegnwei@gmail.com
  * Description: TODO
  */
-public class SessionModel implements Serializable {
+public class TokenModel implements Serializable {
     private String t;
     private int id;
     private String cellphone;
@@ -23,11 +23,11 @@ public class SessionModel implements Serializable {
     private String verification;//敏感操作的验证密码
     private String sign;
 
-    public SessionModel() {
+    public TokenModel() {
         super();
     }
 
-    public SessionModel(String t, int id, String cellphone, int apt) {
+    public TokenModel(String t, int id, String cellphone, int apt) {
         this.t = t;
         this.id = id;
         this.cellphone = cellphone;
@@ -114,7 +114,7 @@ public class SessionModel implements Serializable {
     }
 
     @JSONField(serialize = false)
-    private boolean isSessionParamsOk() {
+    public boolean isTokenParamsOk() {
         if (!TextUtils.isEmpty(this.getT())
                 && !TextUtils.isEmpty(this.getId() + "")
                 && CellPhoneUtils.isCellphone(this.getCellphone())) {
@@ -122,10 +122,5 @@ public class SessionModel implements Serializable {
         } else {
             return false;
         }
-    }
-
-    @JSONField(serialize = false)
-    public boolean isParamsOk() {
-        return isSessionParamsOk();
     }
 }

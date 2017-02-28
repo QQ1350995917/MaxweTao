@@ -7,7 +7,7 @@ import android.content.SharedPreferences;
 import com.alibaba.fastjson.JSON;
 
 import org.maxwe.tao.android.R;
-import org.maxwe.tao.android.account.model.SessionModel;
+import org.maxwe.tao.android.account.model.TokenModel;
 import org.maxwe.tao.android.api.AuthorizeEntity;
 import org.maxwe.tao.android.api.Position;
 
@@ -41,13 +41,13 @@ public class SharedPreferencesUtils {
         edit.commit();
     }
 
-    public static SessionModel getSession(Context context){
+    public static TokenModel getSession(Context context){
         SharedPreferences sharedPreferences = context.getSharedPreferences(KEY_SHARED_PREFERENCES_NAME, Activity.MODE_PRIVATE);
         String t = sharedPreferences.getString(KEY_LOGIN_T, null);
         int id = sharedPreferences.getInt(KEY_LOGIN_ID, 0);
         String cellphone = sharedPreferences.getString(KEY_LOGIN_CELLPHONE, null);
-        SessionModel sessionModel = new SessionModel(t,id,cellphone,context.getResources().getInteger(R.integer.integer_app_type));
-        boolean paramsOk = sessionModel.isParamsOk();
+        TokenModel sessionModel = new TokenModel(t,id,cellphone,context.getResources().getInteger(R.integer.integer_app_type));
+        boolean paramsOk = sessionModel.isTokenParamsOk();
         if (paramsOk){
             return sessionModel;
         }else{
@@ -57,7 +57,7 @@ public class SharedPreferencesUtils {
         }
     }
 
-    public static void saveSession(Context context,SessionModel sessionModel){
+    public static void saveSession(Context context,TokenModel sessionModel){
         SharedPreferences sharedPreferences = context.getSharedPreferences(KEY_SHARED_PREFERENCES_NAME, Activity.MODE_PRIVATE);
         SharedPreferences.Editor edit = sharedPreferences.edit();
         edit.putString(KEY_LOGIN_T, sessionModel.getT());

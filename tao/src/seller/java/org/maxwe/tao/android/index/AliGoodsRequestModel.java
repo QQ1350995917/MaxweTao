@@ -1,13 +1,13 @@
 package org.maxwe.tao.android.index;
 
-import org.maxwe.tao.android.account.model.SessionModel;
+import org.maxwe.tao.android.account.model.TokenModel;
 
 /**
  * Created by Pengwei Ding on 2017-02-24 22:04.
  * Email: www.dingpengwei@foxmail.com www.dingpegnwei@gmail.com
  * Description: TODO
  */
-public class AliGoodsRequestModel extends SessionModel {
+public class AliGoodsRequestModel extends TokenModel {
     private long toPage = 1;
     private long perPageSize = 20;
     private String q;
@@ -19,7 +19,7 @@ public class AliGoodsRequestModel extends SessionModel {
         super();
     }
 
-    public AliGoodsRequestModel(SessionModel sessionModel, long toPage, long perPageSize, String q, String cookie,int urlType) {
+    public AliGoodsRequestModel(TokenModel sessionModel, long toPage, long perPageSize, String q, String cookie, int urlType) {
         super(sessionModel.getT(), sessionModel.getId(), sessionModel.getCellphone(), sessionModel.getApt());
         this.toPage = toPage;
         this.perPageSize = perPageSize;

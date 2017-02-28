@@ -2,13 +2,12 @@ package org.maxwe.tao.android.mine;
 
 import android.content.Intent;
 import android.view.View;
-import android.widget.Toast;
 
 import org.maxwe.tao.android.BaseFragment;
 import org.maxwe.tao.android.INetWorkManager;
 import org.maxwe.tao.android.NetworkManager;
 import org.maxwe.tao.android.R;
-import org.maxwe.tao.android.account.model.SessionModel;
+import org.maxwe.tao.android.account.model.TokenModel;
 import org.maxwe.tao.android.activity.LoginActivity;
 import org.maxwe.tao.android.activity.ModifyActivity;
 import org.maxwe.tao.android.activity.WebViewActivity;
@@ -76,7 +75,7 @@ public class MineFragment extends BaseFragment {
     @Event(value = R.id.bt_frg_mine_exit, type = View.OnClickListener.class)
     private void onExitAction(View view) {
         try {
-            SessionModel sessionModel = SharedPreferencesUtils.getSession(this.getContext());
+            TokenModel sessionModel = SharedPreferencesUtils.getSession(this.getContext());
             sessionModel.setSign(sessionModel.getEncryptSing());
             String url = this.getString(R.string.string_url_domain) + this.getString(R.string.string_url_account_logout);
             NetworkManager.requestByPost(url, sessionModel, new INetWorkManager.OnNetworkCallback() {

@@ -15,7 +15,7 @@ import org.maxwe.tao.android.INetWorkManager;
 import org.maxwe.tao.android.NetworkManager;
 import org.maxwe.tao.android.R;
 import org.maxwe.tao.android.account.model.LoginModel;
-import org.maxwe.tao.android.account.model.SessionModel;
+import org.maxwe.tao.android.account.model.TokenModel;
 import org.maxwe.tao.android.main.MainActivity;
 import org.maxwe.tao.android.utils.CellPhoneUtils;
 import org.maxwe.tao.android.utils.SharedPreferencesUtils;
@@ -78,7 +78,7 @@ public class LoginActivity extends BaseActivity {
         NetworkManager.requestByPost(url, loginModel, new INetWorkManager.OnNetworkCallback() {
             @Override
             public void onSuccess(String result) {
-                SessionModel responseModel = JSON.parseObject(result, SessionModel.class);
+                TokenModel responseModel = JSON.parseObject(result, TokenModel.class);
                 onLoginSuccessCallback(responseModel);
                 view.setClickable(true);
             }
@@ -109,12 +109,12 @@ public class LoginActivity extends BaseActivity {
         switch (requestCode) {
             case REQUEST_CODE_REGISTER:
                 if (resultCode == RESPONSE_CODE_SUCCESS) {
-                    onLoginSuccessCallback((SessionModel) data.getSerializableExtra(Constants.KEY_INTENT_SESSION));
+                    onLoginSuccessCallback((TokenModel) data.getSerializableExtra(Constants.KEY_INTENT_SESSION));
                 }
                 break;
             case REQUEST_CODE_LOST_PASSWORD:
                 if (resultCode == RESPONSE_CODE_SUCCESS) {
-                    onLoginSuccessCallback((SessionModel) data.getSerializableExtra(Constants.KEY_INTENT_SESSION));
+                    onLoginSuccessCallback((TokenModel) data.getSerializableExtra(Constants.KEY_INTENT_SESSION));
                 }
                 break;
             default:
@@ -122,7 +122,7 @@ public class LoginActivity extends BaseActivity {
         }
     }
 
-    private void onLoginSuccessCallback(SessionModel sessionModel) {
+    private void onLoginSuccessCallback(TokenModel sessionModel) {
         SharedPreferencesUtils.saveSession(this, sessionModel);
         this.toMainActivity();
     }

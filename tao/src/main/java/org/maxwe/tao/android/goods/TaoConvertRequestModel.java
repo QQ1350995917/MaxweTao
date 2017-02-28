@@ -1,13 +1,13 @@
 package org.maxwe.tao.android.goods;
 
-import org.maxwe.tao.android.account.model.SessionModel;
+import org.maxwe.tao.android.account.model.TokenModel;
 
 /**
  * Created by Pengwei Ding on 2017-02-22 21:56.
  * Email: www.dingpengwei@foxmail.com www.dingpegnwei@gmail.com
  * Description: TODO
  */
-public class TaoConvertRequestModel extends SessionModel {
+public class TaoConvertRequestModel extends TokenModel {
     private String cookie;
     private String siteid;
     private String adzoneid;
