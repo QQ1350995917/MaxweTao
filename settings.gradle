@@ -1,1 +1,1 @@
-include ':tao', ':tao-umeng'
+include ':tao', ':tao-umeng', ':tao_vcode'

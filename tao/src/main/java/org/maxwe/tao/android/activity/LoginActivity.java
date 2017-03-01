@@ -79,6 +79,7 @@ public class LoginActivity extends BaseActivity {
             @Override
             public void onSuccess(String result) {
                 TokenModel responseModel = JSON.parseObject(result, TokenModel.class);
+                SharedPreferencesUtils.saveSession(LoginActivity.this,responseModel);
                 onLoginSuccessCallback(responseModel);
                 view.setClickable(true);
             }

@@ -12,6 +12,7 @@ import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
 
+import org.maxwe.android.support.ValidationCode;
 import org.maxwe.tao.android.Constants;
 import org.maxwe.tao.android.INetWorkManager;
 import org.maxwe.tao.android.NetworkManager;
@@ -20,6 +21,7 @@ import org.maxwe.tao.android.account.model.RegisterModel;
 import org.maxwe.tao.android.account.model.TokenModel;
 import org.maxwe.tao.android.meta.SMSModel;
 import org.maxwe.tao.android.utils.CellPhoneUtils;
+import org.maxwe.tao.android.utils.SharedPreferencesUtils;
 import org.xutils.view.annotation.ContentView;
 import org.xutils.view.annotation.Event;
 import org.xutils.view.annotation.ViewInject;
@@ -33,6 +35,10 @@ import org.xutils.view.annotation.ViewInject;
 public class RegisterActivity extends BaseActivity {
     @ViewInject(R.id.et_act_register_cellphone)
     private EditText et_act_register_cellphone;
+    @ViewInject(R.id.et_act_register_cellphone_code_vcode)
+    private EditText et_act_register_cellphone_code_vcode;
+    @ViewInject(R.id.bt_act_cellphone_code_get_vcode)
+    private ValidationCode bt_act_cellphone_code_get_vcode;
     @ViewInject(R.id.et_act_register_cellphone_code)
     private EditText et_act_register_cellphone_code;
     @ViewInject(R.id.et_act_register_password)
@@ -71,11 +77,22 @@ public class RegisterActivity extends BaseActivity {
         this.finish();
     }
 
+
+    @Event(value = R.id.bt_act_cellphone_code_get_vcode, type = View.OnClickListener.class)
+    private void onGetVCodeAction(View view) {
+        bt_act_cellphone_code_get_vcode.refresh();
+    }
+
     @Event(value = R.id.bt_act_cellphone_code, type = View.OnClickListener.class)
     private void onCellphoneCodeAction(final View view) {
         String cellphone = et_act_register_cellphone.getText().toString();
         if (TextUtils.isEmpty(cellphone) || !CellPhoneUtils.isCellphone(cellphone)) {
             Toast.makeText(this, this.getString(R.string.string_toast_cellphone), Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        if (!bt_act_cellphone_code_get_vcode.isEqualsIgnoreCase(et_act_register_cellphone_code_vcode.getText().toString())){
+            Toast.makeText(this, "图形验证码错误", Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -147,6 +164,7 @@ public class RegisterActivity extends BaseActivity {
             @Override
             public void onSuccess(String result) {
                 TokenModel responseModel = JSON.parseObject(result, TokenModel.class);
+                SharedPreferencesUtils.saveSession(RegisterActivity.this,responseModel);
                 Intent intent = new Intent();
                 intent.putExtra(Constants.KEY_INTENT_SESSION, responseModel);
                 RegisterActivity.this.setResult(LoginActivity.RESPONSE_CODE_SUCCESS, intent);

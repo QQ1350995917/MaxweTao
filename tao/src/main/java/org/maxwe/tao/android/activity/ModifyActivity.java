@@ -82,6 +82,7 @@ public class ModifyActivity extends BaseActivity {
                 @Override
                 public void onSuccess(String result) {
                     TokenModel responseModel = JSON.parseObject(result, TokenModel.class);
+                    SharedPreferencesUtils.saveSession(ModifyActivity.this,responseModel);
                     Intent intent = new Intent();
                     intent.putExtra(Constants.KEY_INTENT_SESSION, responseModel);
                     ModifyActivity.this.setResult(LoginActivity.RESPONSE_CODE_SUCCESS, intent);

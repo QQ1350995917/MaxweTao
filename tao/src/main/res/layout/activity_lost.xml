@@ -37,9 +37,28 @@
             android:maxLength="11" />
 
         <EditText
-            android:id="@+id/et_act_lost_cellphone_code"
+            android:id="@+id/et_act_lost_cellphone_code_vcode"
             style="@style/editor"
             android:layout_below="@+id/et_act_lost_cellphone"
+            android:hint="请输入图形验证码"
+            android:inputType="text"
+            android:maxLength="6" />
+
+        <org.maxwe.android.support.ValidationCode
+            android:id="@+id/bt_act_cellphone_code_get_vcode"
+            android:layout_width="150dp"
+            android:layout_height="50dp"
+            android:layout_below="@+id/et_act_lost_cellphone"
+            android:layout_alignRight="@+id/et_act_lost_cellphone_code_vcode"
+            android:layout_marginRight="2dp"
+            android:layout_marginBottom="10dp"
+            android:clickable="true"
+            android:text="@string/string_get_cellphone_code"/>
+
+        <EditText
+            android:id="@+id/et_act_lost_cellphone_code"
+            style="@style/editor"
+            android:layout_below="@+id/et_act_lost_cellphone_code_vcode"
             android:hint="@string/string_input_cellphone_code"
             android:inputType="number"
             android:maxLength="6" />

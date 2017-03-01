@@ -25,7 +25,8 @@
     <string name="string_goods_detail">商品详情</string>
 
     <!--<string name="string_url_domain">http://192.168.10.81:8080/tao</string>-->
-    <string name="string_url_domain">http://101.200.56.221:8080/tao</string>
+    <!--<string name="string_url_domain">http://58.218.207.186:8080/tao</string>-->
+    <string name="string_url_domain">http://taomami.net</string>
     <!--<string name="string_url_domain">http://192.168.0.112:8080/tao</string>-->
     <string name="string_url_account_exist">/user/exist</string>
     <string name="string_url_account_lost">/user/lost</string>
