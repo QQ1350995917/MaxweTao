@@ -42,7 +42,6 @@ public class LostActivity extends BaseActivity {
     @ViewInject(R.id.bt_act_cellphone_code)
     private Button bt_act_cellphone_code;
 
-    private String cellphoneOfGetCode = null;
     private int DELAY = 60;
     private Handler handler = new Handler() {
         public void handleMessage(android.os.Message msg) {
@@ -79,9 +78,9 @@ public class LostActivity extends BaseActivity {
             Toast.makeText(this, this.getString(R.string.string_toast_cellphone), Toast.LENGTH_SHORT).show();
             return;
         }
-        this.cellphoneOfGetCode = cellphone;
+
         String url = this.getString(R.string.string_url_domain) + this.getString(R.string.string_url_meta_smsCode);
-        SMSModel smsModel = new SMSModel(this.cellphoneOfGetCode);
+        SMSModel smsModel = new SMSModel(cellphone);
         NetworkManager.requestByPost(url, smsModel, new NetworkManager.OnNetworkCallback() {
             @Override
             public void onSuccess(String result) {
@@ -131,11 +130,6 @@ public class LostActivity extends BaseActivity {
             return;
         }
 
-        if (!TextUtils.equals(cellphone, cellphoneOfGetCode)) {
-            Toast.makeText(this, this.getString(R.string.string_toast_cellphone_different), Toast.LENGTH_SHORT).show();
-            return;
-        }
-
         if (TextUtils.isEmpty(password)  || password.length() < 6) {
             Toast.makeText(this, this.getString(R.string.string_toast_password), Toast.LENGTH_SHORT).show();
             return;
@@ -150,10 +144,9 @@ public class LostActivity extends BaseActivity {
             Toast.makeText(this, this.getString(R.string.string_toast_password_different), Toast.LENGTH_SHORT).show();
             return;
         }
-
         view.setClickable(false);
         String url = this.getString(R.string.string_url_domain) + this.getString(R.string.string_url_account_lost);
-        RegisterModel registerModel = new RegisterModel(this.cellphoneOfGetCode,cellphoneCode,password);
+        RegisterModel registerModel = new RegisterModel(cellphoneCode,cellphoneCode,password);
         registerModel.setApt(this.getResources().getInteger(R.integer.integer_app_type));
         NetworkManager.requestByPost(url, registerModel, new INetWorkManager.OnNetworkCallback() {
             @Override
