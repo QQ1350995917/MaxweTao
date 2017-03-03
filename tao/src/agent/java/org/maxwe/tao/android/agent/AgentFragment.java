@@ -22,23 +22,26 @@ import org.maxwe.tao.android.NetworkManager;
 import org.maxwe.tao.android.R;
 import org.maxwe.tao.android.account.agent.AgentModel;
 import org.maxwe.tao.android.account.model.TokenModel;
-import org.maxwe.tao.android.mate.BranchModel;
+import org.maxwe.tao.android.mate.BranchesRequestModel;
+import org.maxwe.tao.android.mate.BranchesResponseModel;
+import org.maxwe.tao.android.mate.MateModel;
 import org.maxwe.tao.android.utils.SharedPreferencesUtils;
 import org.xutils.view.annotation.ContentView;
 import org.xutils.view.annotation.Event;
 import org.xutils.view.annotation.ViewInject;
 
 import java.util.LinkedList;
+import java.util.List;
 
 /**
  * Created by Pengwei Ding on 2017-01-11 16:26.
  * Email: www.dingpengwei@foxmail.com www.dingpegnwei@gmail.com
- * Description: TODO
+ * Description: 显示下级代理
  */
 @ContentView(R.layout.fragment_agent)
 public class AgentFragment extends BaseFragment implements SwipeRefreshLayout.OnRefreshListener, AbsListView.OnScrollListener, View.OnClickListener {
 
-    private LinkedList<AgentModel> agentEntities = new LinkedList<>();
+    private LinkedList<MateModel> agentEntities = new LinkedList<>();
 
     private class AgentItemAdapter extends BaseAdapter {
         private LayoutInflater layoutInflater;
@@ -68,12 +71,9 @@ public class AgentFragment extends BaseFragment implements SwipeRefreshLayout.On
             TextView tv_frg_agent_item_id = (TextView) inflate.findViewById(R.id.tv_frg_agent_item_id);
             TextView tv_frg_agent_item_level = (TextView) inflate.findViewById(R.id.tv_frg_agent_item_level);
             GrantButton bt_frg_agent_item_status = (GrantButton) inflate.findViewById(R.id.bt_frg_agent_item_status);
-            AgentModel agentModel = agentEntities.get(position);
-            tv_frg_agent_item_id.setText("ID:" + agentModel.getAgentEntity().getId());
-            if (agentModel.getLevelEntity() != null) {
-                tv_frg_agent_item_level.setText(agentModel.getLevelEntity().getName());
-            }
-            bt_frg_agent_item_status.setAgentEntity(agentModel);
+            MateModel mateModel = agentEntities.get(position);
+            tv_frg_agent_item_id.setText("ID:" + mateModel.getAgent().getId());
+            bt_frg_agent_item_status.setMateModel(mateModel);
             return inflate;
         }
     }
@@ -154,7 +154,7 @@ public class AgentFragment extends BaseFragment implements SwipeRefreshLayout.On
     }
 
     // 成功返回
-    private void onResponseSuccess(LinkedList<AgentModel> agentEntities) {
+    private void onResponseSuccess(List<MateModel> agentEntities) {
         this.srl_frg_agent_list_container.setRefreshing(false);
         this.agentEntities.addAll(agentEntities);
         this.agentItemAdapter.notifyDataSetChanged();
@@ -173,14 +173,14 @@ public class AgentFragment extends BaseFragment implements SwipeRefreshLayout.On
         this.srl_frg_agent_list_container.setRefreshing(true);
         try {
             TokenModel session = SharedPreferencesUtils.getSession(this.getContext());
-            BranchModel branchModel = new BranchModel(session, pageIndex, pageSize);
+            BranchesRequestModel branchModel = new BranchesRequestModel(session, pageIndex, pageSize);
             branchModel.setSign(session.getEncryptSing());
             String url = this.getString(R.string.string_url_domain) + this.getString(R.string.string_url_mate_mates);
             NetworkManager.requestByPost(url, branchModel, new INetWorkManager.OnNetworkCallback() {
                 @Override
                 public void onSuccess(String result) {
-                    BranchModel responseModel = JSON.parseObject(result, BranchModel.class);
-                    onResponseSuccess(responseModel.getAgentEntities());
+                    BranchesResponseModel responseModel = JSON.parseObject(result, BranchesResponseModel.class);
+                    onResponseSuccess(responseModel.getBranches());
                 }
 
                 @Override

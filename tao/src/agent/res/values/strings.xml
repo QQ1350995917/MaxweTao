@@ -21,9 +21,6 @@
     <string name="string_trade_to">向该账号转让</string>
     <string name="string_trade_number">个码量</string>
     <string name="string_trade_detail">转码细则</string>
-    <string name="string_trade_level1">总代（500码起）</string>
-    <string name="string_trade_level2">一级（50码起）</string>
-    <string name="string_trade_level3">分销（5码起）</string>
     <string name="string_doing_trade_alert">⚠您正在向转让授权码，该操作将会消耗掉您的授权码量。该操不可撤销。</string>
     <string name="string_access">授权</string>
     <string name="string_input_trade_number">请输入转码数量</string>
@@ -44,6 +41,8 @@
     <string name="string_cancel">取消</string>
 
     <string name="string_alert_leader">⚠️您正在向上级代理申请授权，该授权一旦申请，将不可变更。</string>
+    <string name="string_alert_leader_wechat">⚠请您输入微信号，一旦申请，将不可变更。</string>
+    <string name="string_leader_myself_wechat">请输入自己的微信号</string>
     <string name="string_leader_myself">不能输入自己的ID</string>
     <string name="string_your_leader">您的上级代理信息如下：</string>
     <string name="string_ID">ID：</string>
@@ -72,14 +71,11 @@
     <!--<string name="string_agents_no_code">您已经没有授权码了</string>-->
 
 
-
-
     <!--<string name="string_input_grant_data_error">数据错误，请重新搜索</string>-->
     <!--<string name="string_input_trade_fail">转让失败</string>-->
 
-    <!--<string name="string_url_domain">http://192.168.13.138:8080/tao</string>-->
-    <!--<string name="string_url_domain">http://58.218.207.186:8080/tao</string>-->
-    <string name="string_url_domain">http://taomami.net</string>
+    <string name="string_url_domain">http://192.168.0.112:8080</string>
+    <!--<string name="string_url_domain">http://taomami.net</string>-->
     <string name="string_url_account_exist">/agent/exist</string>
     <string name="string_url_account_lost">/agent/lost</string>
     <string name="string_url_account_register">/agent/register</string>
@@ -97,6 +93,7 @@
     <string name="string_url_mate_reject">/mate/reject</string>
     <string name="string_url_mate_leader">/mate/leader</string>
     <string name="string_url_mate_mates">/mate/mates</string>
+    <string name="string_url_mate_mate">/mate/mate</string>
     <string name="string_url_version_version">/version/version</string>
 
     <item name="tag_key_1" type="id"></item>

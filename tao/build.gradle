@@ -45,11 +45,11 @@ android {
             versionCode 11
             versionName "snapshot-1.0.10"
         }
-        seller {
-            applicationId "org.maxwe.tao.seller.android"
-            versionCode 18
-            versionName "snapshot-1.0.17"
-        }
+//        seller {
+//            applicationId "org.maxwe.tao.seller.android"
+//            versionCode 18
+//            versionName "snapshot-1.0.17"
+//        }
     }
 
     useLibrary 'org.apache.http.legacy'

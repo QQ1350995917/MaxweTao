@@ -81,4 +81,15 @@ public class LevelEntity implements Serializable{
     public void setUpdateTime(long updateTime) {
         this.updateTime = updateTime;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o != null && o instanceof LevelEntity){
+            if (this.getMinNum() == ((LevelEntity)o).getMinNum()){
+                return true;
+            }
+            return false;
+        }
+        return false;
+    }
 }

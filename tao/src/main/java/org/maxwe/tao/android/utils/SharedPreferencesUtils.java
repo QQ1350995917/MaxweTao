@@ -28,36 +28,36 @@ public class SharedPreferencesUtils {
     private static final String KEY_TAO_PP = "KEY_TAO_PP";
     private static final String KEY_TAO_KEEPER_ID = "KEY_TAO_KEEPER_ID";
 
-    public static String getLastLoginCellphone(Context context){
+    public static String getLastLoginCellphone(Context context) {
         SharedPreferences sharedPreferences = context.getSharedPreferences(KEY_SHARED_PREFERENCES_NAME, Activity.MODE_PRIVATE);
         String lastAccount = sharedPreferences.getString(KEY_LAST_LOGIN_CELLPHONE, null);
         return lastAccount;
     }
 
-    public static void saveLastLoginCellphone(Context context,String cellphone){
+    public static void saveLastLoginCellphone(Context context, String cellphone) {
         SharedPreferences sharedPreferences = context.getSharedPreferences(KEY_SHARED_PREFERENCES_NAME, Activity.MODE_PRIVATE);
         SharedPreferences.Editor edit = sharedPreferences.edit();
         edit.putString(KEY_LAST_LOGIN_CELLPHONE, cellphone);
         edit.commit();
     }
 
-    public static TokenModel getSession(Context context){
+    public static TokenModel getSession(Context context) {
         SharedPreferences sharedPreferences = context.getSharedPreferences(KEY_SHARED_PREFERENCES_NAME, Activity.MODE_PRIVATE);
         String t = sharedPreferences.getString(KEY_LOGIN_T, null);
         int id = sharedPreferences.getInt(KEY_LOGIN_ID, 0);
         String cellphone = sharedPreferences.getString(KEY_LOGIN_CELLPHONE, null);
-        TokenModel sessionModel = new TokenModel(t,id,cellphone,context.getResources().getInteger(R.integer.integer_app_type));
+        TokenModel sessionModel = new TokenModel(t, id, cellphone, context.getResources().getInteger(R.integer.integer_app_type));
         boolean paramsOk = sessionModel.isTokenParamsOk();
-        if (paramsOk){
+        if (paramsOk) {
             return sessionModel;
-        }else{
+        } else {
             clearSession(context);
             clearAuthor(context);
             return null;
         }
     }
 
-    public static void saveSession(Context context,TokenModel sessionModel){
+    public static void saveSession(Context context, TokenModel sessionModel) {
         SharedPreferences sharedPreferences = context.getSharedPreferences(KEY_SHARED_PREFERENCES_NAME, Activity.MODE_PRIVATE);
         SharedPreferences.Editor edit = sharedPreferences.edit();
         edit.putString(KEY_LOGIN_T, sessionModel.getT());
@@ -66,7 +66,7 @@ public class SharedPreferencesUtils {
         edit.commit();
     }
 
-    public static void clearSession(Context context){
+    public static void clearSession(Context context) {
         SharedPreferences sharedPreferences = context.getSharedPreferences(KEY_SHARED_PREFERENCES_NAME, Activity.MODE_PRIVATE);
         SharedPreferences.Editor edit = sharedPreferences.edit();
         edit.remove(KEY_LOGIN_T);
@@ -75,12 +75,12 @@ public class SharedPreferencesUtils {
         edit.commit();
     }
 
-    public static AuthorizeEntity getAuthor(Context context){
+    public static AuthorizeEntity getAuthor(Context context) {
         SharedPreferences sharedPreferences = context.getSharedPreferences(KEY_SHARED_PREFERENCES_NAME, Activity.MODE_PRIVATE);
         SharedPreferences.Editor edit = sharedPreferences.edit();
         String content = sharedPreferences.getString(KEY_TAO_AUTHOR, null);
         long createTime = sharedPreferences.getLong(KEY_TAO_AUTHOR_CREATE_TIME, 0L);
-        if (content == null){
+        if (content == null) {
             return null;
         }
         AuthorizeEntity authorizeEntity = new AuthorizeEntity(content);
@@ -88,7 +88,7 @@ public class SharedPreferencesUtils {
         return authorizeEntity;
     }
 
-    public static void saveAuthor(Context context, AuthorizeEntity authorizeEntity){
+    public static void saveAuthor(Context context, AuthorizeEntity authorizeEntity) {
         SharedPreferences sharedPreferences = context.getSharedPreferences(KEY_SHARED_PREFERENCES_NAME, Activity.MODE_PRIVATE);
         SharedPreferences.Editor edit = sharedPreferences.edit();
         edit.putString(KEY_TAO_AUTHOR, authorizeEntity.getContent());
@@ -96,7 +96,7 @@ public class SharedPreferencesUtils {
         edit.commit();
     }
 
-    public static void clearAuthor(Context context){
+    public static void clearAuthor(Context context) {
         SharedPreferences sharedPreferences = context.getSharedPreferences(KEY_SHARED_PREFERENCES_NAME, Activity.MODE_PRIVATE);
         SharedPreferences.Editor edit = sharedPreferences.edit();
         edit.remove(KEY_TAO_AUTHOR);
@@ -105,50 +105,50 @@ public class SharedPreferencesUtils {
     }
 
 
-    public static void saveCurrentPP(Context context,Position position){
+    public static void saveCurrentPP(Context context, Position position) {
         SharedPreferences sharedPreferences = context.getSharedPreferences(KEY_SHARED_PREFERENCES_NAME, Activity.MODE_PRIVATE);
         SharedPreferences.Editor edit = sharedPreferences.edit();
         edit.putString(KEY_TAO_PP, position.toJsonString());
         edit.commit();
     }
 
-    public static Position getCurrentPP(Context context){
+    public static Position getCurrentPP(Context context) {
         SharedPreferences sharedPreferences = context.getSharedPreferences(KEY_SHARED_PREFERENCES_NAME, Activity.MODE_PRIVATE);
         String pp = sharedPreferences.getString(KEY_TAO_PP, null);
-        if (pp != null){
-            return  JSON.parseObject(pp,Position.class);
+        if (pp != null) {
+            return JSON.parseObject(pp, Position.class);
         }
         return null;
     }
 
-    public static void clearCurrentPP(Context context){
+    public static void clearCurrentPP(Context context) {
         SharedPreferences sharedPreferences = context.getSharedPreferences(KEY_SHARED_PREFERENCES_NAME, Activity.MODE_PRIVATE);
         SharedPreferences.Editor edit = sharedPreferences.edit();
         edit.remove(KEY_TAO_PP);
         edit.commit();
     }
 
-    public static void saveCurrentKeeperId(Context context,String keeperId){
+    public static void saveCurrentKeeperId(Context context, String keeperId) {
         SharedPreferences sharedPreferences = context.getSharedPreferences(KEY_SHARED_PREFERENCES_NAME, Activity.MODE_PRIVATE);
         SharedPreferences.Editor edit = sharedPreferences.edit();
         edit.putString(KEY_TAO_KEEPER_ID, keeperId);
         edit.commit();
     }
 
-    public static String getCurrentKeeperId(Context context){
+    public static String getCurrentKeeperId(Context context) {
         SharedPreferences sharedPreferences = context.getSharedPreferences(KEY_SHARED_PREFERENCES_NAME, Activity.MODE_PRIVATE);
         String pid = sharedPreferences.getString(KEY_TAO_KEEPER_ID, null);
         return pid;
     }
 
-    public static void clearCurrentKeeperId(Context context){
+    public static void clearCurrentKeeperId(Context context) {
         SharedPreferences sharedPreferences = context.getSharedPreferences(KEY_SHARED_PREFERENCES_NAME, Activity.MODE_PRIVATE);
         SharedPreferences.Editor edit = sharedPreferences.edit();
         edit.remove(KEY_TAO_KEEPER_ID);
         edit.commit();
     }
 
-    public static void onExistClear(Context context){
+    public static void onExistClear(Context context) {
         clearCurrentPP(context);
         clearCurrentKeeperId(context);
     }

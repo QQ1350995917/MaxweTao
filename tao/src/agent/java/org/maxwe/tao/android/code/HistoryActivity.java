@@ -77,7 +77,7 @@ public class HistoryActivity extends BaseActivity implements SwipeRefreshLayout.
                 tv_act_history_item_number.setText(historyEntity.getActCode());
                 if (historyEntity.getToId() == 0) {
                     tv_act_history_item_number.setClickable(true);
-                    tv_act_history_item_number.setOnClickListener(new View.OnClickListener() {
+                    inflate.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
                             ClipboardManager clipboardManager = (ClipboardManager) HistoryItemAdapter.this.context.getSystemService(Context.CLIPBOARD_SERVICE);
@@ -90,7 +90,7 @@ public class HistoryActivity extends BaseActivity implements SwipeRefreshLayout.
             } else {
                 tv_act_history_item_number.setText(historyEntity.getCodeNum() + "");
             }
-            tv_act_history_item_to_id.setText(historyEntity.getToId() + "");
+            tv_act_history_item_to_id.setText(historyEntity.getToId() == 0 ? "未使用" : historyEntity.getToId() + "");
             return inflate;
         }
     }

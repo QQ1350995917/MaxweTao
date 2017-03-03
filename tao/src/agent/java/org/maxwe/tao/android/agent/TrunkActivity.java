@@ -18,9 +18,14 @@ import org.maxwe.tao.android.R;
 import org.maxwe.tao.android.account.agent.AgentEntity;
 import org.maxwe.tao.android.account.model.TokenModel;
 import org.maxwe.tao.android.activity.BaseActivity;
-import org.maxwe.tao.android.mate.TrunkModel;
+import org.maxwe.tao.android.mate.BranchBegRequestModel;
+import org.maxwe.tao.android.mate.BranchBegResponseModel;
+import org.maxwe.tao.android.mate.MateModel;
+import org.maxwe.tao.android.mate.TrunkInfoRequestModel;
+import org.maxwe.tao.android.mate.TrunkInfoResponseModel;
 import org.maxwe.tao.android.response.IResponse;
 import org.maxwe.tao.android.utils.SharedPreferencesUtils;
+import org.w3c.dom.Text;
 import org.xutils.view.annotation.ContentView;
 import org.xutils.view.annotation.Event;
 import org.xutils.view.annotation.ViewInject;
@@ -41,12 +46,16 @@ public class TrunkActivity extends BaseActivity {
 
     @ViewInject(R.id.et_act_trunk_leader_mark)
     private EditText et_act_trunk_leader_mark;
+    @ViewInject(R.id.et_act_trunk_my_wechat)
+    private EditText et_act_trunk_my_wechat;
     @ViewInject(R.id.et_act_trunk_password)
     private EditText et_act_trunk_password;
 
     @ViewInject(R.id.ll_act_trunk_after_status)
     private LinearLayout ll_act_trunk_after_status;
 
+    @ViewInject(R.id.tv_act_trunk_leader_grant_status)
+    private TextView tv_act_trunk_leader_grant_status;
     @ViewInject(R.id.tv_act_trunk_leader_id)
     private TextView tv_act_trunk_leader_id;
     @ViewInject(R.id.tv_act_trunk_leader_level)
@@ -58,29 +67,52 @@ public class TrunkActivity extends BaseActivity {
         // 数据异常
         if (AgentApplication.currentAgentModel == null) {
             showException();
+        } else {
+            onRequestTrunkAgentInfo();
         }
+    }
 
-        // 没有申请
-        if (AgentApplication.currentAgentModel != null
-                && AgentApplication.currentAgentModel.getAgentEntity() != null
-                && AgentApplication.currentAgentModel.getAgentEntity().getReach() != 1
-                && AgentApplication.currentAgentModel.getAgentEntity().getpId() == 0) {
-            showRequestLeader();
-        }
 
-        // 已经申请，但没有审核通过
-        if (AgentApplication.currentAgentModel != null
-                && AgentApplication.currentAgentModel.getAgentEntity() != null
-                && AgentApplication.currentAgentModel.getAgentEntity().getReach() != 1
-                && AgentApplication.currentAgentModel.getAgentEntity().getpId() != 0) {
-            onLeaderAction();
-        }
+    private void onRequestTrunkAgentInfo() {
+        try {
+            TokenModel tokenModel = SharedPreferencesUtils.getSession(this);
+            String url = this.getString(R.string.string_url_domain) + this.getString(R.string.string_url_mate_leader);
+            tokenModel.setSign(tokenModel.getEncryptSing());
+            TrunkInfoRequestModel trunkModel = new TrunkInfoRequestModel(tokenModel);
+            trunkModel.setSign(tokenModel.getEncryptSing());
+            NetworkManager.requestByPost(url, trunkModel, new INetWorkManager.OnNetworkCallback() {
+                @Override
+                public void onSuccess(String result) {
+                    TrunkInfoResponseModel responseModel = JSON.parseObject(result, TrunkInfoResponseModel.class);
+                    showTrunkInfoView(responseModel.getTrunk(),responseModel.getBranch());
+                }
 
-        // 已经加入成功
-        if (AgentApplication.currentAgentModel != null
-                && AgentApplication.currentAgentModel.getAgentEntity() != null
-                && AgentApplication.currentAgentModel.getAgentEntity().getReach() == 1) {
-            onLeaderAction();
+                @Override
+                public void onEmptyResult(String result) {
+                    showUnTrunkView();
+                }
+
+                @Override
+                public void onLoginTimeout(String result) {
+                    Toast.makeText(TrunkActivity.this, R.string.string_toast_timeout, Toast.LENGTH_SHORT).show();
+                    SharedPreferencesUtils.clearSession(TrunkActivity.this);
+                }
+
+                @Override
+                public void onError(Throwable ex, boolean isOnCallback) {
+                    Toast.makeText(TrunkActivity.this, R.string.string_toast_network_error, Toast.LENGTH_SHORT).show();
+                }
+
+                @Override
+                public void onOther(int code, String result) {
+                    if (code == IResponse.ResultCode.RC_ACCESS_BAD_2.getCode()) {
+                        Toast.makeText(TrunkActivity.this, R.string.string_the_mark_no_reach, Toast.LENGTH_SHORT).show();
+                    }
+                }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+            Toast.makeText(this, "请求失败", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -100,26 +132,17 @@ public class TrunkActivity extends BaseActivity {
         this.ll_act_trunk_after_status.setVisibility(View.GONE);
     }
 
-    private void showLeaderInfo(TrunkModel responseModel) {
+    private void showTrunkInfoView(MateModel trunkMateModel, AgentEntity branchAgent) {
         this.tv_act_trunk_no_data.setVisibility(View.GONE);
         this.ll_act_trunk_before_status.setVisibility(View.GONE);
         this.ll_act_trunk_after_status.setVisibility(View.VISIBLE);
-        this.tv_act_trunk_leader_id.setText(this.getString(R.string.string_ID) + responseModel.getAgentEntity().getId());
-        this.tv_act_trunk_leader_level.setText(this.getString(R.string.string_level) + responseModel.getLevelEntity().getName());
+
+        this.tv_act_trunk_leader_grant_status.setText("状态：" + (branchAgent.getReach() == 1 ? "已经批准":"未批准"));
+        this.tv_act_trunk_leader_id.setText(this.getString(R.string.string_ID) + trunkMateModel.getAgent().getId());
+        this.tv_act_trunk_leader_level.setText(this.getString(R.string.string_level) + trunkMateModel.getLevel().getName());
     }
 
-    private void showReaching(AgentEntity agentEntity) {
-        AgentApplication.currentAgentModel.getAgentEntity().setReach(0);
-        AgentApplication.currentAgentModel.getAgentEntity().setId(agentEntity.getId());
-        AgentApplication.currentAgentModel.getAgentEntity().setReachTime(agentEntity.getReachTime());
-        this.tv_act_trunk_no_data.setVisibility(View.GONE);
-        this.ll_act_trunk_before_status.setVisibility(View.GONE);
-        this.ll_act_trunk_after_status.setVisibility(View.VISIBLE);
-        this.tv_act_trunk_leader_id.setText(this.getString(R.string.string_ID) + agentEntity.getId());
-        this.tv_act_trunk_leader_level.setText(R.string.string_reaching);
-    }
-
-    private void showRequestLeader() {
+    private void showUnTrunkView() {
         this.tv_act_trunk_no_data.setVisibility(View.GONE);
         this.ll_act_trunk_before_status.setVisibility(View.VISIBLE);
         this.ll_act_trunk_after_status.setVisibility(View.GONE);
@@ -140,6 +163,17 @@ public class TrunkActivity extends BaseActivity {
             return;
         }
 
+        String weChat = et_act_trunk_my_wechat.getText().toString();
+        if (TextUtils.isEmpty(weChat)) {
+            Toast.makeText(this, R.string.string_leader_myself_wechat, Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        if (weChat.length() < 1 || weChat.length() > 36){
+            Toast.makeText(this, "微信号码不合格", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
         if (TextUtils.isEmpty(password)) {
             Toast.makeText(this, R.string.string_input_account_password, Toast.LENGTH_SHORT).show();
             return;
@@ -149,13 +183,22 @@ public class TrunkActivity extends BaseActivity {
         try {
             String url = this.getString(R.string.string_url_domain) + this.getString(R.string.string_url_mate_beg);
             session.setSign(session.getEncryptSing());
-            TrunkModel trunkModel = new TrunkModel(session, Integer.parseInt(leaderId));
-            trunkModel.setSign(session.getEncryptSing());
-            NetworkManager.requestByPost(url, trunkModel, new INetWorkManager.OnNetworkCallback() {
+            BranchBegRequestModel branchBegRequestModel = new BranchBegRequestModel(session, Integer.parseInt(leaderId), weChat);
+            branchBegRequestModel.setAuthenticatePassword(password);
+            branchBegRequestModel.setSign(session.getEncryptSing());
+            branchBegRequestModel.setApt(this.getResources().getInteger(R.integer.integer_app_type));
+            NetworkManager.requestByPost(url, branchBegRequestModel, new INetWorkManager.OnNetworkCallback() {
                 @Override
                 public void onSuccess(String result) {
-                    TrunkModel responseModel = JSON.parseObject(result, TrunkModel.class);
-                    showReaching(responseModel.getAgentEntity());
+                    BranchBegResponseModel responseModel = JSON.parseObject(result, BranchBegResponseModel.class);
+                    showTrunkInfoView(responseModel.getTrunk(),responseModel.getBranch());
+                    view.setClickable(true);
+                }
+
+                @Override
+                public void onAccessBad(String result) {
+                    super.onAccessBad(result);
+                    Toast.makeText(TrunkActivity.this, "密码错误", Toast.LENGTH_SHORT).show();
                     view.setClickable(true);
                 }
 
@@ -188,50 +231,6 @@ public class TrunkActivity extends BaseActivity {
             });
         } catch (Exception e) {
             view.setClickable(true);
-            e.printStackTrace();
-            Toast.makeText(this, "请求失败", Toast.LENGTH_SHORT).show();
-        }
-    }
-
-    private void onLeaderAction() {
-        try {
-            TokenModel session = SharedPreferencesUtils.getSession(this);
-            String url = this.getString(R.string.string_url_domain) + this.getString(R.string.string_url_mate_leader);
-            session.setSign(session.getEncryptSing());
-            TrunkModel trunkModel = new TrunkModel(session, AgentApplication.currentAgentModel.getAgentEntity().getId());
-            trunkModel.setSign(session.getEncryptSing());
-            NetworkManager.requestByPost(url, trunkModel, new INetWorkManager.OnNetworkCallback() {
-                @Override
-                public void onSuccess(String result) {
-                    TrunkModel responseModel = JSON.parseObject(result, TrunkModel.class);
-                    showReaching(responseModel.getAgentEntity());
-                    showLeaderInfo(responseModel);
-                }
-
-                @Override
-                public void onEmptyResult(String result) {
-                    Toast.makeText(TrunkActivity.this, R.string.string_no_mark, Toast.LENGTH_SHORT).show();
-                }
-
-                @Override
-                public void onLoginTimeout(String result) {
-                    Toast.makeText(TrunkActivity.this, R.string.string_toast_timeout, Toast.LENGTH_SHORT).show();
-                    SharedPreferencesUtils.clearSession(TrunkActivity.this);
-                }
-
-                @Override
-                public void onError(Throwable ex, boolean isOnCallback) {
-                    Toast.makeText(TrunkActivity.this, R.string.string_toast_network_error, Toast.LENGTH_SHORT).show();
-                }
-
-                @Override
-                public void onOther(int code, String result) {
-                    if (code == IResponse.ResultCode.RC_ACCESS_BAD_2.getCode()) {
-                        Toast.makeText(TrunkActivity.this, R.string.string_the_mark_no_reach, Toast.LENGTH_SHORT).show();
-                    }
-                }
-            });
-        } catch (Exception e) {
             e.printStackTrace();
             Toast.makeText(this, "请求失败", Toast.LENGTH_SHORT).show();
         }

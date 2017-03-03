@@ -50,13 +50,11 @@
 
                 <TextView
                     android:id="@+id/tv_act_trade_id"
-                    style="@style/table_cell_of_agent"
-                    android:text="ID: 西门吹雪" />
+                    style="@style/table_cell_of_agent" />
 
                 <TextView
                     android:id="@+id/tv_act_trade_level"
-                    style="@style/table_cell_of_agent"
-                    android:text="分销" />
+                    style="@style/table_cell_of_agent" />
 
                 <TextView style="@style/table_cell_of_agent" />
             </TableRow>
@@ -81,17 +79,17 @@
                 <TextView
                     android:id="@+id/tv_act_trade_haveCodes"
                     style="@style/table_cell_of_agent"
-                    android:text="30" />
+                    android:text="0" />
 
                 <TextView
                     android:id="@+id/tv_act_trade_leftCodes"
                     style="@style/table_cell_of_agent"
-                    android:text="20" />
+                    android:text="0" />
 
                 <TextView
                     android:id="@+id/tv_act_trade_spendCodes"
                     style="@style/table_cell_of_agent"
-                    android:text="10" />
+                    android:text="0" />
             </TableRow>
         </TableLayout>
 
@@ -115,28 +113,17 @@
             android:paddingLeft="20dp"
             android:paddingRight="20dp">
 
-            <LinearLayout
+            <TextView
+                style="@style/trade_detail"
+                android:text="@string/string_trade_detail" />
+
+            <RadioGroup
+                android:id="@+id/rg_act_levels"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:orientation="vertical">
-
-                <TextView
-                    style="@style/trade_detail"
-                    android:text="@string/string_trade_detail" />
-
-                <TextView
-                    style="@style/trade_detail"
-                    android:text="@string/string_trade_level1" />
-
-                <TextView
-                    style="@style/trade_detail"
-                    android:text="@string/string_trade_level2" />
-
-                <TextView
-                    style="@style/trade_detail"
-                    android:text="@string/string_trade_level3" />
-            </LinearLayout>
+            </RadioGroup>
 
             <LinearLayout
                 android:layout_width="match_parent"

@@ -56,12 +56,29 @@
             android:maxLength="6"
             android:hint="@string/string_leader_mark" />
 
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:text="@string/string_alert_leader_wechat"
+            android:textSize="16dp" />
+
+        <EditText
+            android:id="@+id/et_act_trunk_my_wechat"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:inputType="text"
+            android:maxLength="36"
+            android:hint="@string/string_leader_myself_wechat" />
+
         <EditText
             android:id="@+id/et_act_trunk_password"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
             android:hint="@string/string_input_account_password"
+            android:maxLength="12"
             android:inputType="textPassword" />
 
         <Button
@@ -85,6 +102,14 @@
             android:layout_margin="10dp"
             android:text="@string/string_your_leader"
             android:textSize="16dp" />
+
+        <TextView
+            android:id="@+id/tv_act_trunk_leader_grant_status"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:textSize="16dp" />
+
 
         <TextView
             android:id="@+id/tv_act_trunk_leader_id"

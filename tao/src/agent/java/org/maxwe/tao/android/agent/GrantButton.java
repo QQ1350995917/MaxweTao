@@ -7,13 +7,18 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.alibaba.fastjson.JSON;
+
 import org.maxwe.tao.android.Constants;
 import org.maxwe.tao.android.INetWorkManager;
 import org.maxwe.tao.android.NetworkManager;
 import org.maxwe.tao.android.R;
+import org.maxwe.tao.android.account.agent.AgentEntity;
 import org.maxwe.tao.android.account.agent.AgentModel;
 import org.maxwe.tao.android.account.model.TokenModel;
-import org.maxwe.tao.android.mate.TrunkModel;
+import org.maxwe.tao.android.mate.GrantBranchRequestModel;
+import org.maxwe.tao.android.mate.GrantBranchResponseModel;
+import org.maxwe.tao.android.mate.MateModel;
 import org.maxwe.tao.android.utils.SharedPreferencesUtils;
 
 /**
@@ -22,7 +27,7 @@ import org.maxwe.tao.android.utils.SharedPreferencesUtils;
  * Description: TODO
  */
 public class GrantButton extends Button implements View.OnClickListener {
-    private AgentModel agentModel;
+    private MateModel mateModel;
 
     public GrantButton(Context context) {
         super(context);
@@ -43,31 +48,33 @@ public class GrantButton extends Button implements View.OnClickListener {
         this.setOnClickListener(this);
     }
 
-    public void setAgentEntity(AgentModel agentEntity) {
-        this.agentModel = agentEntity;
-        if (agentEntity.getAgentEntity().getReach() != 1) {
+    public void setMateModel(MateModel mateModel) {
+        this.mateModel = mateModel;
+        if (mateModel.getAgent().getReach() != 1) {
             this.setText(R.string.string_grant_new_agent);
         } else {
-            this.setText(agentEntity.getAgentEntity().getCodeStatusString());
+            this.setText(mateModel.getAgent().getCodeStatusString());
         }
     }
 
     @Override
     public void onClick(View v) {
-        if (this.agentModel == null) {
+        if (this.mateModel == null || this.mateModel.getAgent() == null) {
             return;
         }
-        if (this.agentModel.getAgentEntity().getReach() != 1) {
+        if (this.mateModel.getAgent().getReach() != 1) {
             this.setClickable(false);
-            onRequestGrantAgent(this.agentModel);
+            onRequestGrantAgent(this.mateModel.getAgent());
         } else {
-            onTradeCode(this.agentModel);
+            Intent intent = new Intent(this.getContext(), TradeActivity.class);
+            intent.putExtra(Constants.KEY_INTENT_AGENT, mateModel);
+            this.getContext().startActivity(intent);
         }
     }
 
     private void onRequestGrantSuccess() {
-        this.agentModel.getAgentEntity().setReach(1);
-        this.setText(this.agentModel.getAgentEntity().getCodeStatusString());
+        this.mateModel.getAgent().setReach(1);
+        this.setText(this.mateModel.getAgent().getCodeStatusString());
         this.setClickable(true);
     }
 
@@ -75,16 +82,16 @@ public class GrantButton extends Button implements View.OnClickListener {
         this.setClickable(true);
     }
 
-    private void onRequestGrantAgent(final AgentModel agentEntity) {
+    private void onRequestGrantAgent(final AgentEntity agentEntity) {
         try {
             TokenModel session = SharedPreferencesUtils.getSession(this.getContext());
-            TrunkModel trunkModel = new TrunkModel(session, agentEntity.getAgentEntity().getId());
+            GrantBranchRequestModel trunkModel = new GrantBranchRequestModel(session, agentEntity.getId());
             trunkModel.setSign(session.getEncryptSing());
             String url = GrantButton.this.getContext().getString(R.string.string_url_domain) + GrantButton.this.getContext().getString(R.string.string_url_mate_grant);
             NetworkManager.requestByPost(url, trunkModel, new INetWorkManager.OnNetworkCallback() {
                 @Override
                 public void onSuccess(String result) {
-//                    BranchModel responseModel = JSON.parseObject(result, BranchModel.class);
+//                    GrantBranchResponseModel responseModel = JSON.parseObject(result, GrantBranchResponseModel.class);
                     onRequestGrantSuccess();
                 }
 
@@ -107,11 +114,5 @@ public class GrantButton extends Button implements View.OnClickListener {
             e.printStackTrace();
             Toast.makeText(GrantButton.this.getContext(), "请求失败", Toast.LENGTH_SHORT).show();
         }
-    }
-
-    private void onTradeCode(AgentModel agentEntity) {
-        Intent intent = new Intent(this.getContext(), TradeActivity.class);
-        intent.putExtra(Constants.KEY_INTENT_AGENT, agentEntity);
-        this.getContext().startActivity(intent);
     }
 }
