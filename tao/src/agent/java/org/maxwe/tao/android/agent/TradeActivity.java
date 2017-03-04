@@ -5,8 +5,8 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
@@ -30,7 +30,8 @@ import org.maxwe.tao.android.mate.BranchInfoRequestModel;
 import org.maxwe.tao.android.mate.BranchInfoResponseModel;
 import org.maxwe.tao.android.mate.MateModel;
 import org.maxwe.tao.android.response.IResponse;
-import org.maxwe.tao.android.trade.TradeModel;
+import org.maxwe.tao.android.trade.TradeRequestModel;
+import org.maxwe.tao.android.trade.TradeResponseModel;
 import org.maxwe.tao.android.utils.SharedPreferencesUtils;
 import org.xutils.view.annotation.ContentView;
 import org.xutils.view.annotation.Event;
@@ -46,7 +47,7 @@ import java.util.regex.Pattern;
  * Description: 授权码交易
  */
 @ContentView(R.layout.activity_trade)
-public class TradeActivity extends BaseActivity implements View.OnFocusChangeListener {
+public class TradeActivity extends BaseActivity implements View.OnFocusChangeListener, RadioGroup.OnCheckedChangeListener {
 
     private MateModel branchAgentModel;
 
@@ -69,10 +70,7 @@ public class TradeActivity extends BaseActivity implements View.OnFocusChangeLis
     private RelativeLayout rl_act_trade_container;
 
     @ViewInject(R.id.rg_act_levels)
-    private RadioGroup rg_act_levels;
-
-    @ViewInject(R.id.tv_act_trade_alert)
-    private TextView tv_act_trade_alert;
+    private RadioGroup rg_act_levels; // 承载一个重要属性，当前用户的级别属性
 
     @ViewInject(R.id.et_act_trade_number)
     private EditText et_act_trade_number;
@@ -90,6 +88,8 @@ public class TradeActivity extends BaseActivity implements View.OnFocusChangeLis
         if (serializableExtra != null && serializableExtra instanceof MateModel) {
             this.branchAgentModel = (MateModel) serializableExtra;
             onRequestBranchAgentInfo();
+            this.rg_act_levels.setTag(this.branchAgentModel.getLevel());
+            this.rg_act_levels.setOnCheckedChangeListener(this);
             this.et_act_trade_number.setOnFocusChangeListener(this);
         }
     }
@@ -115,6 +115,7 @@ public class TradeActivity extends BaseActivity implements View.OnFocusChangeLis
 
                 @Override
                 public void onError(Throwable ex, boolean isOnCallback) {
+                    ex.printStackTrace();
                     Toast.makeText(TradeActivity.this, R.string.string_toast_network_error, Toast.LENGTH_SHORT).show();
                 }
 
@@ -131,7 +132,12 @@ public class TradeActivity extends BaseActivity implements View.OnFocusChangeLis
         AgentEntity agentEntity = responseModel.getBranch().getAgent();
         LevelEntity levelEntity = responseModel.getBranch().getLevel();
         this.tv_act_trade_id.setText("ID:" + agentEntity.getId());
-        this.tv_act_trade_level.setText(levelEntity.getName());
+        if (levelEntity == null) {
+            this.tv_act_trade_level.setText("代理级别未定");
+        } else {
+            this.tv_act_trade_level.setText(levelEntity.getName());
+        }
+
         this.tv_act_trade_haveCodes.setText(agentEntity.getHaveCodes() + "");
         this.tv_act_trade_leftCodes.setText(agentEntity.getLeftCodes() + "");
         this.tv_act_trade_spendCodes.setText(agentEntity.getSpendCodes() + "");
@@ -142,6 +148,7 @@ public class TradeActivity extends BaseActivity implements View.OnFocusChangeLis
         if (levels != null) {
             for (LevelEntity level : levels) {
                 RadioButton radioButton = new RadioButton(this);
+                radioButton.setTag(level);
                 radioButton.setLayoutParams(new RadioGroup.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
                 radioButton.setText(level.getName() + "(" + level.getMinNum() + "码起,每码价格" + level.getPrice() + "元)");
                 if (level.equals(currentLevel)) {
@@ -150,7 +157,32 @@ public class TradeActivity extends BaseActivity implements View.OnFocusChangeLis
                 rg_act_levels.addView(radioButton);
             }
         }
-        this.et_act_trade_number.setText(currentLevel.getMinNum());
+        if (currentLevel != null) {
+//            this.et_act_trade_number.setText("" + currentLevel.getMinNum());
+        }
+    }
+
+    @Override
+    public void onCheckedChanged(RadioGroup group, int checkedId) {
+        if (group.getTag() == null) {
+            int childCount = group.getChildCount();
+            for (int i = 0; i < childCount; i++) {
+                if (group.getChildAt(i).getId() == checkedId) {
+                    group.setTag(group.getChildAt(i).getTag());
+                    break;
+                }
+            }
+        } else {
+            int childCount = group.getChildCount();
+            for (int i = 0; i < childCount; i++) {
+                if (group.getTag().equals(group.getChildAt(i).getTag())) {
+                    ((RadioButton) group.getChildAt(i)).setChecked(true);
+                } else {
+                    ((RadioButton) group.getChildAt(i)).setChecked(false);
+                }
+            }
+            Toast.makeText(this, "级别自动升级，不可更改", Toast.LENGTH_SHORT).show();
+        }
     }
 
     @Event(value = R.id.bt_act_trade_back, type = View.OnClickListener.class)
@@ -167,11 +199,10 @@ public class TradeActivity extends BaseActivity implements View.OnFocusChangeLis
     @Override
     public void onFocusChange(View v, boolean hasFocus) {
         if (!hasFocus) {
-            tv_act_trade_alert.setVisibility(View.VISIBLE);
         }
     }
 
-    private void onResponseSuccess(TradeModel responseModel) {
+    private void onResponseSuccess(TradeResponseModel responseModel) {
         this.bt_act_trade_action.setClickable(true);
         this.et_act_trade_number.setText(null);
         this.et_act_trade_password.setText(null);
@@ -197,6 +228,11 @@ public class TradeActivity extends BaseActivity implements View.OnFocusChangeLis
 
     @Event(value = R.id.bt_act_trade_action, type = View.OnClickListener.class)
     private void onTradeAction(View view) {
+        if (this.rg_act_levels.getTag() == null || !(this.rg_act_levels.getTag() instanceof LevelEntity)) {
+            Toast.makeText(this, "请为您的代理选择级别", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
         String number = this.et_act_trade_number.getText().toString();
         String password = this.et_act_trade_password.getText().toString();
         if (TextUtils.isEmpty(number)) {
@@ -209,28 +245,49 @@ public class TradeActivity extends BaseActivity implements View.OnFocusChangeLis
             return;
         }
 
-        if (Integer.parseInt(number) < this.branchAgentModel.getLevel().getMinNum()) {
-            Toast.makeText(this, R.string.string_trade_num_by_level, Toast.LENGTH_SHORT).show();
-            return;
+        LevelEntity currentLevel = (LevelEntity) this.rg_act_levels.getTag();
+        if (branchAgentModel.getLevel() == null) {
+            if (Integer.parseInt(number) < currentLevel.getMinNum()) {
+                Toast.makeText(this, R.string.string_trade_num_by_level, Toast.LENGTH_SHORT).show();
+                return;
+            }
+        } else {
+            if (Integer.parseInt(number) < 1) {
+                Toast.makeText(this, R.string.string_trade_num_by_level, Toast.LENGTH_SHORT).show();
+                return;
+            }
         }
 
         if (TextUtils.isEmpty(password)) {
             Toast.makeText(this, R.string.string_input_account_password, Toast.LENGTH_SHORT).show();
             return;
         }
+
+        if (password.length() < 6 || password.length() > 12) {
+            Toast.makeText(this, "密码格式错误", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
         view.setClickable(false);
         try {
             TokenModel session = SharedPreferencesUtils.getSession(this);
-            TradeModel tradeModel = new TradeModel(session, 2, Integer.parseInt(number));
+            branchAgentModel.setLevel(currentLevel);
+            TradeRequestModel tradeModel = new TradeRequestModel(session, branchAgentModel, Integer.parseInt(number));
             tradeModel.setSign(session.getEncryptSing());
-            tradeModel.setTargetId(this.branchAgentModel.getAgent().getId());
+            tradeModel.setAuthenticatePassword(password);
             String url = this.getString(R.string.string_url_domain) + this.getString(R.string.string_url_trade_trade);
             NetworkManager.requestByPost(url, tradeModel, new INetWorkManager.OnNetworkCallback() {
                 @Override
                 public void onSuccess(String result) {
-                    TradeModel responseModel = JSON.parseObject(result, TradeModel.class);
+                    TradeResponseModel responseModel = JSON.parseObject(result, TradeResponseModel.class);
                     onResponseSuccess(responseModel);
                     Toast.makeText(TradeActivity.this, R.string.string_input_trade_success, Toast.LENGTH_SHORT).show();
+                }
+
+                @Override
+                public void onAccessBad(String result) {
+                    onResponseError();
+                    Toast.makeText(TradeActivity.this, "密码错误", Toast.LENGTH_SHORT).show();
                 }
 
                 @Override

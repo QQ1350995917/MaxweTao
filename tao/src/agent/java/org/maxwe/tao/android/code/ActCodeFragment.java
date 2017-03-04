@@ -24,6 +24,7 @@ import org.maxwe.tao.android.account.agent.AgentEntity;
 import org.maxwe.tao.android.account.agent.AgentModel;
 import org.maxwe.tao.android.account.model.TokenModel;
 import org.maxwe.tao.android.agent.TrunkActivity;
+import org.maxwe.tao.android.trade.GrantResponseModel;
 import org.maxwe.tao.android.trade.TradeModel;
 import org.maxwe.tao.android.utils.SharedPreferencesUtils;
 import org.xutils.view.annotation.ContentView;
@@ -69,7 +70,7 @@ public class ActCodeFragment extends BaseFragment {
         switch (requestCode) {
             case REQUEST_CODE_GEN_ACT_CODE:
                 if (resultCode == GenCodeActivity.RESULT_CODE_GEN_ACT_CODE_OK) {
-                    TradeModel tradeModel = (TradeModel) data.getSerializableExtra(Constants.KEY_INTENT_SESSION);
+                    GrantResponseModel tradeModel = (GrantResponseModel) data.getSerializableExtra(Constants.KEY_INTENT_SESSION);
                     onGenCodeSuccess(tradeModel);
                 } else if (resultCode == GenCodeActivity.RESULT_CODE_GEN_ACT_CODE_ERROR) {
 
@@ -81,7 +82,7 @@ public class ActCodeFragment extends BaseFragment {
     }
 
     // 成功生成一个激活码回显到界面中
-    private void onGenCodeSuccess(TradeModel tradeModel) {
+    private void onGenCodeSuccess(GrantResponseModel tradeModel) {
         if (AgentApplication.currentAgentModel != null) {
             AgentEntity agentEntity = AgentApplication.currentAgentModel.getAgentEntity();
             agentEntity.setSpendCodes(agentEntity.getSpendCodes() + 1);

@@ -12,7 +12,9 @@ public class LevelEntity implements Serializable{
     private String name;
     private String description;
     private int minNum;
-    private int price;
+    private float price;
+    private int level;
+    private int weight;
     private long createTime;
     private long updateTime;
 
@@ -58,12 +60,28 @@ public class LevelEntity implements Serializable{
         this.minNum = minNum;
     }
 
-    public int getPrice() {
+    public float getPrice() {
         return price;
     }
 
-    public void setPrice(int price) {
+    public void setPrice(float price) {
         this.price = price;
+    }
+
+    public int getLevel() {
+        return level;
+    }
+
+    public void setLevel(int level) {
+        this.level = level;
+    }
+
+    public int getWeight() {
+        return weight;
+    }
+
+    public void setWeight(int weight) {
+        this.weight = weight;
     }
 
     public long getCreateTime() {
@@ -85,7 +103,7 @@ public class LevelEntity implements Serializable{
     @Override
     public boolean equals(Object o) {
         if (o != null && o instanceof LevelEntity){
-            if (this.getMinNum() == ((LevelEntity)o).getMinNum()){
+            if (this.getLevel() == ((LevelEntity)o).getLevel()){
                 return true;
             }
             return false;

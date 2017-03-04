@@ -19,6 +19,8 @@ import org.maxwe.tao.android.account.model.TokenModel;
 import org.maxwe.tao.android.activity.BaseActivity;
 import org.maxwe.tao.android.activity.LoginActivity;
 import org.maxwe.tao.android.response.IResponse;
+import org.maxwe.tao.android.trade.GrantRequestModel;
+import org.maxwe.tao.android.trade.GrantResponseModel;
 import org.maxwe.tao.android.trade.TradeModel;
 import org.maxwe.tao.android.utils.SharedPreferencesUtils;
 import org.xutils.view.annotation.ContentView;
@@ -75,15 +77,15 @@ public class GenCodeActivity extends BaseActivity {
         view.setClickable(false);
         try {
             TokenModel sessionModel = SharedPreferencesUtils.getSession(this);
-            TradeModel tradeModel = new TradeModel(sessionModel,1,1);
-            tradeModel.setVerification(password);
+            GrantRequestModel tradeModel = new GrantRequestModel(sessionModel);
+            tradeModel.setAuthenticatePassword(password);
             tradeModel.setSign(sessionModel.getEncryptSing());
             String url = this.getString(R.string.string_url_domain) + this.getString(R.string.string_url_trade_grant);
             NetworkManager.requestByPost(url, tradeModel, new INetWorkManager.OnNetworkCallback() {
                 @Override
                 public void onSuccess(String result) {
                     Intent intent = new Intent();
-                    TradeModel tradeModel = JSON.parseObject(result, TradeModel.class);
+                    GrantResponseModel tradeModel = JSON.parseObject(result, GrantResponseModel.class);
                     intent.putExtra(Constants.KEY_INTENT_SESSION, tradeModel);
                     GenCodeActivity.this.setResult(RESULT_CODE_GEN_ACT_CODE_OK, intent);
                     GenCodeActivity.this.finish();

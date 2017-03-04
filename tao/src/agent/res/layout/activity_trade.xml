@@ -100,7 +100,6 @@
             android:layout_below="@+id/tl_act_trade_to_agent_info"
             android:layout_centerInParent="true"
             android:gravity="center"
-            android:text="您于2017-01-08:21:39向该账号转让10个码量"
             android:visibility="gone" />
 
         <LinearLayout
@@ -109,7 +108,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/tv_act_trade_result_tip"
             android:layout_marginTop="20dp"
-            android:orientation="horizontal"
+            android:orientation="vertical"
             android:paddingLeft="20dp"
             android:paddingRight="20dp">
 
@@ -124,22 +123,6 @@
                 android:layout_weight="1"
                 android:orientation="vertical">
             </RadioGroup>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:orientation="vertical">
-
-                <TextView
-                    android:id="@+id/tv_act_trade_alert"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerInParent="true"
-                    android:text="@string/string_doing_trade_alert"
-                    android:visibility="gone" />
-            </LinearLayout>
-
         </LinearLayout>
 
         <EditText
