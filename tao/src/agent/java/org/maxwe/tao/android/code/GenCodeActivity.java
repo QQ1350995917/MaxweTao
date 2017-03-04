@@ -21,7 +21,6 @@ import org.maxwe.tao.android.activity.LoginActivity;
 import org.maxwe.tao.android.response.IResponse;
 import org.maxwe.tao.android.trade.GrantRequestModel;
 import org.maxwe.tao.android.trade.GrantResponseModel;
-import org.maxwe.tao.android.trade.TradeModel;
 import org.maxwe.tao.android.utils.SharedPreferencesUtils;
 import org.xutils.view.annotation.ContentView;
 import org.xutils.view.annotation.Event;
