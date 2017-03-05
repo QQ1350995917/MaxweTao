@@ -87,7 +87,9 @@
     <string name="string_url_meta_smsCode">/meta/smsCode</string>
     <string name="string_url_trade_grant">/trade/grant</string>
     <string name="string_url_trade_trade">/trade/trade</string>
+    <string name="string_url_trade_upgrade">/trade/upgrade</string>
     <string name="string_url_history_history">/history/history</string>
+    <string name="string_url_history_rebate">/history/rebate</string>
     <string name="string_url_mate_beg">/mate/beg</string>
     <string name="string_url_mate_grant">/mate/grant</string>
     <string name="string_url_mate_reject">/mate/reject</string>

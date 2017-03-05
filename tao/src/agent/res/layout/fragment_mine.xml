@@ -134,10 +134,11 @@
             android:paddingRight="10dp">
 
             <Button
+                android:id="@+id/bt_frg_agent_rebate"
                 style="@style/button_list_green"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="当月获得50系统返点（查看返点细则）" />
+                android:text="查看返点" />
 
             <Button
                 android:id="@+id/bt_frg_mine_bank"

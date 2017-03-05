@@ -32,6 +32,8 @@ import org.maxwe.tao.android.mate.MateModel;
 import org.maxwe.tao.android.response.IResponse;
 import org.maxwe.tao.android.trade.TradeRequestModel;
 import org.maxwe.tao.android.trade.TradeResponseModel;
+import org.maxwe.tao.android.trade.UpgradeRequestModel;
+import org.maxwe.tao.android.trade.UpgradeResponseModel;
 import org.maxwe.tao.android.utils.SharedPreferencesUtils;
 import org.xutils.view.annotation.ContentView;
 import org.xutils.view.annotation.Event;
@@ -47,14 +49,17 @@ import java.util.regex.Pattern;
  * Description: 授权码交易
  */
 @ContentView(R.layout.activity_trade)
-public class TradeActivity extends BaseActivity implements View.OnFocusChangeListener, RadioGroup.OnCheckedChangeListener {
+public class TradeActivity extends BaseActivity implements View.OnFocusChangeListener, CompoundButton.OnCheckedChangeListener {
 
     private MateModel branchAgentModel;
+    private LevelEntity upgradeLevel;
 
     @ViewInject(R.id.tv_act_trade_id)
     private TextView tv_act_trade_id;
     @ViewInject(R.id.tv_act_trade_level)
     private TextView tv_act_trade_level;
+    @ViewInject(R.id.tv_act_trade_upgrade)
+    private Button tv_act_trade_upgrade;
 
     @ViewInject(R.id.tv_act_trade_haveCodes)
     private TextView tv_act_trade_haveCodes;
@@ -69,6 +74,8 @@ public class TradeActivity extends BaseActivity implements View.OnFocusChangeLis
     @ViewInject(R.id.rl_act_trade_container)
     private RelativeLayout rl_act_trade_container;
 
+    @ViewInject(R.id.ll_act_trade_detail_level)
+    private LinearLayout ll_act_trade_detail_level;
     @ViewInject(R.id.rg_act_levels)
     private RadioGroup rg_act_levels; // 承载一个重要属性，当前用户的级别属性
 
@@ -89,7 +96,6 @@ public class TradeActivity extends BaseActivity implements View.OnFocusChangeLis
             this.branchAgentModel = (MateModel) serializableExtra;
             onRequestBranchAgentInfo();
             this.rg_act_levels.setTag(this.branchAgentModel.getLevel());
-            this.rg_act_levels.setOnCheckedChangeListener(this);
             this.et_act_trade_number.setOnFocusChangeListener(this);
         }
     }
@@ -134,8 +140,11 @@ public class TradeActivity extends BaseActivity implements View.OnFocusChangeLis
         this.tv_act_trade_id.setText("ID:" + agentEntity.getId());
         if (levelEntity == null) {
             this.tv_act_trade_level.setText("代理级别未定");
+            this.ll_act_trade_detail_level.setVisibility(View.VISIBLE);
         } else {
             this.tv_act_trade_level.setText(levelEntity.getName());
+            this.tv_act_trade_upgrade.setVisibility(View.VISIBLE);
+            this.ll_act_trade_detail_level.setVisibility(View.GONE);
         }
 
         this.tv_act_trade_haveCodes.setText(agentEntity.getHaveCodes() + "");
@@ -146,42 +155,43 @@ public class TradeActivity extends BaseActivity implements View.OnFocusChangeLis
         LevelEntity currentLevel = responseModel.getBranch().getLevel();
 
         if (levels != null) {
-            for (LevelEntity level : levels) {
-                RadioButton radioButton = new RadioButton(this);
+            for (int i = 0; i < levels.size(); i++) {
+                LevelEntity level = levels.get(i);
+                RadioButton radioButton = (RadioButton) rg_act_levels.getChildAt(i);
+                radioButton.setOnCheckedChangeListener(this);
                 radioButton.setTag(level);
-                radioButton.setLayoutParams(new RadioGroup.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
-                radioButton.setText(level.getName() + "(" + level.getMinNum() + "码起,每码价格" + level.getPrice() + "元)");
+                radioButton.setText(level.getName() + "(" + level.getMinNum() + "码起)");
                 if (level.equals(currentLevel)) {
                     radioButton.setChecked(true);
                 }
-                rg_act_levels.addView(radioButton);
             }
+
+            upgradeLevel = null;
         }
-        if (currentLevel != null) {
-//            this.et_act_trade_number.setText("" + currentLevel.getMinNum());
+    }
+
+    @Event(value = R.id.tv_act_trade_upgrade, type = View.OnClickListener.class)
+    private void onUpgradeAction(View view) {
+        if (tv_act_trade_upgrade.getTag() == null) {
+            tv_act_trade_upgrade.setTag(new Object());
+            this.ll_act_trade_detail_level.setVisibility(View.VISIBLE);
+            tv_act_trade_upgrade.setText("取消升级");
+        } else {
+            tv_act_trade_upgrade.setTag(null);
+            this.ll_act_trade_detail_level.setVisibility(View.GONE);
+            tv_act_trade_upgrade.setText("升级");
+            this.upgradeLevel = null;
         }
     }
 
     @Override
-    public void onCheckedChanged(RadioGroup group, int checkedId) {
-        if (group.getTag() == null) {
-            int childCount = group.getChildCount();
-            for (int i = 0; i < childCount; i++) {
-                if (group.getChildAt(i).getId() == checkedId) {
-                    group.setTag(group.getChildAt(i).getTag());
-                    break;
-                }
-            }
+    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+        if (branchAgentModel.getLevel() == null) {
+            this.rg_act_levels.setTag(buttonView.getTag());
         } else {
-            int childCount = group.getChildCount();
-            for (int i = 0; i < childCount; i++) {
-                if (group.getTag().equals(group.getChildAt(i).getTag())) {
-                    ((RadioButton) group.getChildAt(i)).setChecked(true);
-                } else {
-                    ((RadioButton) group.getChildAt(i)).setChecked(false);
-                }
+            if (isChecked){
+                upgradeLevel = (LevelEntity) buttonView.getTag();
             }
-            Toast.makeText(this, "级别自动升级，不可更改", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -213,9 +223,11 @@ public class TradeActivity extends BaseActivity implements View.OnFocusChangeLis
         }
 
         if (this.branchAgentModel != null) {
+            this.branchAgentModel.setLevel(responseModel.getBranchAgent().getLevel());
             AgentEntity agentEntity = this.branchAgentModel.getAgent();
             agentEntity.setHaveCodes(agentEntity.getHaveCodes() + responseModel.getCodeNum());
             agentEntity.setLeftCodes(agentEntity.getLeftCodes() + responseModel.getCodeNum());
+            this.tv_act_trade_level.setText(responseModel.getBranchAgent().getLevel().getName());
             this.tv_act_trade_haveCodes.setText(agentEntity.getHaveCodes() + "");
             this.tv_act_trade_leftCodes.setText(agentEntity.getLeftCodes() + "");
             this.tv_act_trade_spendCodes.setText(agentEntity.getSpendCodes() + "");
@@ -228,7 +240,15 @@ public class TradeActivity extends BaseActivity implements View.OnFocusChangeLis
 
     @Event(value = R.id.bt_act_trade_action, type = View.OnClickListener.class)
     private void onTradeAction(View view) {
-        if (this.rg_act_levels.getTag() == null || !(this.rg_act_levels.getTag() instanceof LevelEntity)) {
+        if (tv_act_trade_upgrade.getTag() != null) {
+            onUpgradeRequest(view);
+        } else {
+            onTradeRequest(view);
+        }
+    }
+
+    private void onTradeRequest(View view) {
+        if (this.rg_act_levels.getTag() == null) {
             Toast.makeText(this, "请为您的代理选择级别", Toast.LENGTH_SHORT).show();
             return;
         }
@@ -281,6 +301,94 @@ public class TradeActivity extends BaseActivity implements View.OnFocusChangeLis
                 public void onSuccess(String result) {
                     TradeResponseModel responseModel = JSON.parseObject(result, TradeResponseModel.class);
                     onResponseSuccess(responseModel);
+                    Toast.makeText(TradeActivity.this, R.string.string_input_trade_success, Toast.LENGTH_SHORT).show();
+                }
+
+                @Override
+                public void onAccessBad(String result) {
+                    onResponseError();
+                    Toast.makeText(TradeActivity.this, "密码错误", Toast.LENGTH_SHORT).show();
+                }
+
+                @Override
+                public void onLoginTimeout(String result) {
+                    onResponseError();
+                    SharedPreferencesUtils.clearSession(TradeActivity.this);
+                    Toast.makeText(TradeActivity.this, R.string.string_toast_timeout, Toast.LENGTH_SHORT).show();
+                }
+
+                @Override
+                public void onError(Throwable ex, boolean isOnCallback) {
+                    onResponseError();
+                    Toast.makeText(TradeActivity.this, R.string.string_toast_network_error, Toast.LENGTH_SHORT).show();
+                }
+
+                @Override
+                public void onOther(int code, String result) {
+                    if (code == IResponse.ResultCode.RC_ACCESS_BAD_2.getCode()) {
+                        Toast.makeText(TradeActivity.this, R.string.string_trade_num_by_level, Toast.LENGTH_SHORT).show();
+                    }
+                    onResponseError();
+                }
+            });
+        } catch (Exception e) {
+            view.setClickable(true);
+            e.printStackTrace();
+            Toast.makeText(this, "请求失败", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void onUpgradeRequest(View view) {
+        if (upgradeLevel == null) {
+            Toast.makeText(this, "亲,要选择升级的级别哟", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        if (upgradeLevel.getLevel() > branchAgentModel.getLevel().getLevel()) {
+            Toast.makeText(this, "亲，不要伤害您的小伙伴哟", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        String number = this.et_act_trade_number.getText().toString();
+        String password = this.et_act_trade_password.getText().toString();
+        if (TextUtils.isEmpty(number)) {
+            Toast.makeText(this, R.string.string_input_grant_code_number, Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        if (!Pattern.compile("^[-\\+]?[\\d]*$").matcher(number).matches()) {
+            Toast.makeText(this, R.string.string_input_grant_code_number_integer, Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        if ((Integer.parseInt(number) + branchAgentModel.getAgent().getHaveCodes()) < upgradeLevel.getMinNum()) {
+            Toast.makeText(this, "亲,转码量不足以让您的小伙伴升级哟", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        if (TextUtils.isEmpty(password)) {
+            Toast.makeText(this, R.string.string_input_account_password, Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        if (password.length() < 6 || password.length() > 12) {
+            Toast.makeText(this, "密码格式错误", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        view.setClickable(false);
+        try {
+            TokenModel session = SharedPreferencesUtils.getSession(this);
+            UpgradeRequestModel upgradeRequestModel = new UpgradeRequestModel(session, branchAgentModel, upgradeLevel, Integer.parseInt(number));
+            upgradeRequestModel.setSign(session.getEncryptSing());
+            upgradeRequestModel.setAuthenticatePassword(password);
+            String url = this.getString(R.string.string_url_domain) + this.getString(R.string.string_url_trade_upgrade);
+            NetworkManager.requestByPost(url, upgradeRequestModel, new INetWorkManager.OnNetworkCallback() {
+                @Override
+                public void onSuccess(String result) {
+                    UpgradeResponseModel responseModel = JSON.parseObject(result, UpgradeResponseModel.class);
+                    onResponseSuccess(new TradeResponseModel(responseModel.getBranch(), responseModel.getCodeNum()));
+                    onUpgradeAction(null);
                     Toast.makeText(TradeActivity.this, R.string.string_input_trade_success, Toast.LENGTH_SHORT).show();
                 }
 

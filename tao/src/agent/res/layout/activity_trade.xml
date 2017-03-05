@@ -56,7 +56,11 @@
                     android:id="@+id/tv_act_trade_level"
                     style="@style/table_cell_of_agent" />
 
-                <TextView style="@style/table_cell_of_agent" />
+                <Button
+                    android:id="@+id/tv_act_trade_upgrade"
+                    style="@style/table_cell_of_agent"
+                    android:visibility="gone"
+                    android:text="升级"/>
             </TableRow>
 
             <TableRow>
@@ -103,13 +107,14 @@
             android:visibility="gone" />
 
         <LinearLayout
-            android:id="@+id/ll_act_trade_detail_alert"
+            android:id="@+id/ll_act_trade_detail_level"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/tv_act_trade_result_tip"
             android:layout_marginTop="20dp"
             android:orientation="vertical"
             android:paddingLeft="20dp"
+            android:visibility="gone"
             android:paddingRight="20dp">
 
             <TextView
@@ -122,13 +127,29 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:orientation="vertical">
+                <RadioButton
+                    android:id="@+id/rb_act_trade_level1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+                <RadioButton
+                    android:id="@+id/rb_act_trade_level2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+                <RadioButton
+                    android:id="@+id/rb_act_trade_level3"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+                <RadioButton
+                    android:id="@+id/rb_act_trade_level4"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
             </RadioGroup>
         </LinearLayout>
 
         <EditText
             android:id="@+id/et_act_trade_number"
             style="@style/editor"
-            android:layout_below="@+id/ll_act_trade_detail_alert"
+            android:layout_below="@+id/ll_act_trade_detail_level"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
             android:hint="@string/string_input_trade_number"

@@ -34,6 +34,7 @@
         <activity android:name=".agent.TrunkActivity"></activity>
         <activity android:name=".agent.TradeActivity"></activity>
         <activity android:name=".mine.BankActivity"></activity>
+        <activity android:name=".mine.RebateActivity"></activity>
     </application>
 
 </manifest>

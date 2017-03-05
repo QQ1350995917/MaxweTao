@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:id="@+id/rl_act_rebate_nav"
+        style="@style/nav_header_of_act">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:text="返点详情"
+            android:textSize="24dp" />
+
+        <Button
+            android:id="@+id/bt_act_rebate_back"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_centerVertical="true"
+            android:background="#00000000"
+            android:text="@string/string_back" />
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/tv_act_rebate_no_data"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:text="@string/string_no_data" />
+
+    <LinearLayout
+        android:id="@+id/ll_act_rebate_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <include layout="@layout/activity_rebate_item"></include>
+
+        <ListView
+            android:id="@+id/lv_act_rebate_list"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </LinearLayout>
+
+
+</LinearLayout>

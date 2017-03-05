@@ -68,4 +68,17 @@ public class DateTimeUtils {
         String format = simpleDateFormat.format(date);
         return format;
     }
+
+    /**
+     * 获取当前的年份月份和天数
+     *
+     * @return
+     */
+    public static int[] getCurrentYearMonthDate() {
+        Calendar calendar = Calendar.getInstance();
+        int year = calendar.get(Calendar.YEAR);
+        int month = calendar.get(Calendar.MONTH) + 1;
+        int date = calendar.get(Calendar.DATE);
+        return new int[]{year, month, date};
+    }
 }

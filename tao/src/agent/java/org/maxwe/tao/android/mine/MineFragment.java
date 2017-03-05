@@ -89,6 +89,15 @@ public class MineFragment extends BaseFragment {
         Toast.makeText(this.getContext(), R.string.string_copy_success, Toast.LENGTH_SHORT).show();
     }
 
+
+    @Event(value = R.id.bt_frg_agent_rebate, type = View.OnClickListener.class)
+    private void onRebateAction(View view) {
+        Intent intent = new Intent(this.getContext(), RebateActivity.class);
+        intent.putExtra(Constants.KEY_INTENT_AGENT, AgentApplication.currentAgentModel);
+        this.getContext().startActivity(intent);
+    }
+
+
     @Event(value = R.id.bt_frg_mine_bank, type = View.OnClickListener.class)
     private void onBankBindAction(View view) {
         Intent intent = new Intent(this.getContext(), BankActivity.class);

@@ -18,6 +18,11 @@ public class TradeResponseModel extends TradeRequestModel {
         super();
     }
 
+    public TradeResponseModel(MateModel branchAgent,int codeNum) {
+        this.branchAgent = branchAgent;
+        this.codeNum = codeNum;
+    }
+
     @Override
     public MateModel getBranchAgent() {
         return branchAgent;
