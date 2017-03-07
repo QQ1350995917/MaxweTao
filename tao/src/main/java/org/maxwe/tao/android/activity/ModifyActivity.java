@@ -10,10 +10,12 @@ import com.alibaba.fastjson.JSON;
 
 import org.maxwe.tao.android.Constants;
 import org.maxwe.tao.android.INetWorkManager;
-import org.maxwe.tao.android.R;
 import org.maxwe.tao.android.NetworkManager;
-import org.maxwe.tao.android.account.model.ModifyModel;
+import org.maxwe.tao.android.R;
+import org.maxwe.tao.android.account.model.AccountModifyRequestModel;
+import org.maxwe.tao.android.account.model.AccountModifyResponseModel;
 import org.maxwe.tao.android.account.model.TokenModel;
+import org.maxwe.tao.android.response.ResponseModel;
 import org.maxwe.tao.android.utils.SharedPreferencesUtils;
 import org.xutils.view.annotation.ContentView;
 import org.xutils.view.annotation.Event;
@@ -74,43 +76,26 @@ public class ModifyActivity extends BaseActivity {
         view.setClickable(false);
         String url = this.getString(R.string.string_url_domain) + this.getString(R.string.string_url_account_password);
         TokenModel sessionModel = SharedPreferencesUtils.getSession(this);
-        ModifyModel modifyModel = new ModifyModel(sessionModel, oldPassword, newPassword);
-        modifyModel.setApt(this.getResources().getInteger(R.integer.integer_app_type));
+        AccountModifyRequestModel modifyModel = new AccountModifyRequestModel(sessionModel, oldPassword, newPassword);
         try {
             modifyModel.setSign(sessionModel.getEncryptSing());
-            NetworkManager.requestByPost(url, modifyModel, new INetWorkManager.OnNetworkCallback() {
+            NetworkManager.requestByPostNew(url, modifyModel, new INetWorkManager.OnNetworkCallback() {
                 @Override
                 public void onSuccess(String result) {
-                    TokenModel responseModel = JSON.parseObject(result, TokenModel.class);
-                    SharedPreferencesUtils.saveSession(ModifyActivity.this,responseModel);
-                    Intent intent = new Intent();
-                    intent.putExtra(Constants.KEY_INTENT_SESSION, responseModel);
-                    ModifyActivity.this.setResult(LoginActivity.RESPONSE_CODE_SUCCESS, intent);
-                    ModifyActivity.this.finish();
-                }
-
-                @Override
-                public void onAccessBad(String result) {
-                    Toast.makeText(ModifyActivity.this, R.string.string_toast_old_password_error, Toast.LENGTH_SHORT).show();
+                    AccountModifyResponseModel responseModel = JSON.parseObject(result, AccountModifyResponseModel.class);
+                    if (responseModel.getCode() == ResponseModel.RC_SUCCESS) {
+                        SharedPreferencesUtils.saveSession(ModifyActivity.this, responseModel.getToken());
+                        Intent intent = new Intent();
+                        intent.putExtra(Constants.KEY_INTENT_SESSION, responseModel);
+                        ModifyActivity.this.setResult(LoginActivity.RESPONSE_CODE_SUCCESS, intent);
+                        ModifyActivity.this.finish();
+                    }
+                    Toast.makeText(ModifyActivity.this, responseModel.getMessage(), Toast.LENGTH_SHORT).show();
                     view.setClickable(true);
                 }
-
-                @Override
-                public void onLoginTimeout(String result) {
-                    SharedPreferencesUtils.clearSession(ModifyActivity.this);
-                    SharedPreferencesUtils.clearAuthor(ModifyActivity.this);
-                    Toast.makeText(ModifyActivity.this, R.string.string_toast_timeout, Toast.LENGTH_SHORT).show();
-                }
-
                 @Override
                 public void onError(Throwable ex, boolean isOnCallback) {
                     Toast.makeText(ModifyActivity.this, R.string.string_toast_network_error, Toast.LENGTH_SHORT).show();
-                    view.setClickable(true);
-                }
-
-                @Override
-                public void onOther(int code, String result) {
-                    Toast.makeText(ModifyActivity.this, R.string.string_toast_reset_password_error, Toast.LENGTH_SHORT).show();
                     view.setClickable(true);
                 }
             });

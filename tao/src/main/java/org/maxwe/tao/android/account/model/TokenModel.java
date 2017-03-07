@@ -1,30 +1,36 @@
 package org.maxwe.tao.android.account.model;
 
-import android.text.TextUtils;
-import android.util.Base64;
-
 import com.alibaba.fastjson.annotation.JSONField;
 
+import org.apache.commons.codec.binary.Base64;
 import org.maxwe.tao.android.utils.CellPhoneUtils;
 import org.maxwe.tao.android.utils.CryptionUtils;
+import org.maxwe.tao.android.utils.StringUtils;
 
 import java.io.Serializable;
 
 /**
- * Created by Pengwei Ding on 2017-01-10 17:28.
+ * Created by Pengwei Ding on 2017-01-09 18:26.
  * Email: www.dingpengwei@foxmail.com www.dingpegnwei@gmail.com
- * Description: TODO
+ * Description: token模型
  */
 public class TokenModel implements Serializable {
-    private String t;
-    private int id;
-    private String cellphone;
-    private int apt; //app 类型
-    private String verification;//敏感操作的验证密码
+    private String t;//token字符串
+    private int id;//用户ID
+    private String cellphone;//电话号码
+    private String verification;
+    private int apt; // 登录类型,在内存中标记token的类型
     private String sign;
 
     public TokenModel() {
         super();
+    }
+
+    public TokenModel(TokenModel tokenModel) {
+        this.t = tokenModel.getT();
+        this.id = tokenModel.getId();
+        this.cellphone = tokenModel.getCellphone();
+        this.apt = tokenModel.getApt();
     }
 
     public TokenModel(String t, int id, String cellphone, int apt) {
@@ -58,20 +64,20 @@ public class TokenModel implements Serializable {
         this.cellphone = cellphone;
     }
 
-    public int getApt() {
-        return apt;
-    }
-
-    public void setApt(int apt) {
-        this.apt = apt;
-    }
-
     public String getVerification() {
         return verification;
     }
 
     public void setVerification(String verification) {
         this.verification = verification;
+    }
+
+    public int getApt() {
+        return apt;
+    }
+
+    public void setApt(int apt) {
+        this.apt = apt;
     }
 
     public String getSign() {
@@ -82,6 +88,15 @@ public class TokenModel implements Serializable {
         this.sign = sign;
     }
 
+    @Override
+    public String toString() {
+        return "SessionModel{" +
+                ", id='" + id + '\'' +
+                ", cellphone='" + cellphone + '\'' +
+                ", apt=" + apt +
+                '}';
+    }
+
     @JSONField(serialize = false)
     public String getEncryptSing() throws Exception {
         if (this.getId() == 0 || !CellPhoneUtils.isCellphone(this.getCellphone())) {
@@ -89,24 +104,31 @@ public class TokenModel implements Serializable {
         }
         String password = (this.getCellphone() + new StringBuffer(this.getCellphone()).reverse()).substring(1, 17);//生成的ID是11位，补全16位密码
         String content = this.getId() + "-" + System.currentTimeMillis() + "-" + this.getCellphone();
-        String encodeContent = new String(Base64.encodeToString(content.getBytes(), Base64.NO_WRAP));
+        String encodeContent = new String(Base64.encodeBase64(content.getBytes()));
         byte[] encryptResult = CryptionUtils.encryptCustomer(encodeContent, password);
         String encryptResultStr = CryptionUtils.parseByte2HexStr(encryptResult);
         return encryptResultStr;
+    }
+
+    public boolean isCellphoneParamsOk() {
+        if (!CellPhoneUtils.isCellphone(this.getCellphone())) {
+            return false;
+        }
+        return true;
     }
 
     @JSONField(serialize = false)
     public boolean isDecryptSignOK() throws Exception {
         String password = (this.getCellphone() + new StringBuffer(this.getCellphone()).reverse()).substring(1, 17);//生成的ID是11位，补全16位密码
         byte[] decryptResult = CryptionUtils.decryptCustomer(CryptionUtils.parseHexStr2Byte(this.getSign()), password);
-        byte[] decode = Base64.decode(decryptResult, Base64.NO_WRAP);
+        byte[] decode = Base64.decodeBase64(decryptResult);
         String[] split = new String(decode).split("-");
         if (split == null || split.length != 3) {
             return false;
         }
-        if (TextUtils.equals(split[0], this.getId() + "")
+        if (StringUtils.equals(split[0], this.getId() + "")
                 && System.currentTimeMillis() - Long.parseLong(split[1]) < 60 * 1000
-                && TextUtils.equals(split[2], this.getCellphone())
+                && StringUtils.equals(split[2], this.getCellphone())
                 ) {
             return true;
         }
@@ -115,9 +137,11 @@ public class TokenModel implements Serializable {
 
     @JSONField(serialize = false)
     public boolean isTokenParamsOk() {
-        if (!TextUtils.isEmpty(this.getT())
-                && !TextUtils.isEmpty(this.getId() + "")
-                && CellPhoneUtils.isCellphone(this.getCellphone())) {
+        if (!StringUtils.isEmpty(this.getT())
+                && this.getId() > 0
+                && CellPhoneUtils.isCellphone(this.getCellphone())
+                && !StringUtils.isEmpty(this.getSign())
+                && (this.getApt() == 1 || this.getApt() == 2)) {
             return true;
         } else {
             return false;

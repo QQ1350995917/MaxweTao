@@ -57,6 +57,8 @@ public class SplashActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         TokenModel session = SharedPreferencesUtils.getSession(this);
         if (session == null || session.getId() == 0) {
+            SharedPreferencesUtils.clearAuthor(this);
+            SharedPreferencesUtils.clearSession(this);
             this.handler.sendEmptyMessageDelayed(WHAT_0, DELAY);
         } else {
             this.handler.sendEmptyMessageDelayed(WHAT_1, DELAY);

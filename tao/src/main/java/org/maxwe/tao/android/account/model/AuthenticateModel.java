@@ -1,5 +1,8 @@
 package org.maxwe.tao.android.account.model;
 
+
+import org.maxwe.tao.android.utils.PasswordUtils;
+
 /**
  * Created by Pengwei Ding on 2017-03-03 15:29.
  * Email: www.dingpengwei@foxmail.com www.dingpegnwei@gmail.com
@@ -13,8 +16,18 @@ public class AuthenticateModel extends TokenModel {
         super();
     }
 
+    public AuthenticateModel(String authenticatePassword) {
+        super();
+        this.authenticatePassword = authenticatePassword;
+    }
+
     public AuthenticateModel(TokenModel tokenModel) {
-        super(tokenModel.getT(),tokenModel.getId(),tokenModel.getCellphone(),tokenModel.getApt());
+        super(tokenModel);
+    }
+
+    public AuthenticateModel(TokenModel tokenModel,String authenticatePassword) {
+        super(tokenModel);
+        this.authenticatePassword = authenticatePassword;
     }
 
     public String getAuthenticatePassword() {
@@ -25,4 +38,7 @@ public class AuthenticateModel extends TokenModel {
         this.authenticatePassword = authenticatePassword;
     }
 
+    public boolean isAuthenticateParamsOk(){
+        return super.isTokenParamsOk() && PasswordUtils.isPlainPasswordOk(this.getAuthenticatePassword());
+    }
 }

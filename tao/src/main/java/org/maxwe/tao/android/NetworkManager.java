@@ -6,6 +6,7 @@ import com.alibaba.fastjson.JSON;
 
 import org.maxwe.tao.android.response.IResponse;
 import org.maxwe.tao.android.response.Response;
+import org.maxwe.tao.android.response.ResponseModel;
 import org.maxwe.tao.android.utils.CryptionUtils;
 import org.xutils.common.Callback;
 import org.xutils.http.RequestParams;
@@ -17,6 +18,36 @@ import org.xutils.x;
  * Description: 网络请求
  */
 public class NetworkManager implements INetWorkManager {
+
+    public static Callback.Cancelable requestByPostNew(String url, final Object object, final OnNetworkCallback onNetworkCallback) {
+        final RequestParams requestParams = new RequestParams(url);
+        String jsonParams = JSON.toJSONString(object);
+        String encodeToString = Base64.encodeToString(jsonParams.getBytes(), Base64.NO_WRAP);
+        String encryptionParams = CryptionUtils.parseByte2HexStr(CryptionUtils.encrypt(encodeToString));
+        requestParams.addParameter(Constants.PARAMS, encryptionParams);
+        Callback.Cancelable cancelable = x.http().post(requestParams, new Callback.CommonCallback<String>() {
+            @Override
+            public void onSuccess(String result) {
+                onNetworkCallback.onSuccess(result);
+            }
+
+            @Override
+            public void onError(Throwable ex, boolean isOnCallback) {
+                onNetworkCallback.onError(ex,isOnCallback);
+            }
+
+            @Override
+            public void onCancelled(CancelledException cex) {
+                onNetworkCallback.onCancelled(cex);
+            }
+
+            @Override
+            public void onFinished() {
+                onNetworkCallback.onFinished();
+            }
+        });
+        return cancelable;
+    }
 
     public static Callback.Cancelable requestByPost(String url, final Object object, final OnNetworkCallback onNetworkCallback) {
         final RequestParams requestParams = new RequestParams(url);

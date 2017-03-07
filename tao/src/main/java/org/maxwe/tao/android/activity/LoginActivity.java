@@ -14,9 +14,12 @@ import org.maxwe.tao.android.Constants;
 import org.maxwe.tao.android.INetWorkManager;
 import org.maxwe.tao.android.NetworkManager;
 import org.maxwe.tao.android.R;
+import org.maxwe.tao.android.account.model.AccountSignInRequestModel;
+import org.maxwe.tao.android.account.model.AccountSignInResponseModel;
 import org.maxwe.tao.android.account.model.LoginModel;
 import org.maxwe.tao.android.account.model.TokenModel;
 import org.maxwe.tao.android.main.MainActivity;
+import org.maxwe.tao.android.response.ResponseModel;
 import org.maxwe.tao.android.utils.CellPhoneUtils;
 import org.maxwe.tao.android.utils.SharedPreferencesUtils;
 import org.xutils.view.annotation.ContentView;
@@ -73,32 +76,22 @@ public class LoginActivity extends BaseActivity {
         view.setClickable(false);
         SharedPreferencesUtils.saveLastLoginCellphone(this, cellphone);
         String url = this.getString(R.string.string_url_domain) + this.getString(R.string.string_url_account_login);
-        LoginModel loginModel = new LoginModel(cellphone, password);
-        loginModel.setApt(this.getResources().getInteger(R.integer.integer_app_type));
-        NetworkManager.requestByPost(url, loginModel, new INetWorkManager.OnNetworkCallback() {
+        AccountSignInRequestModel loginModel = new AccountSignInRequestModel(cellphone, password,this.getResources().getInteger(R.integer.integer_app_type));
+        NetworkManager.requestByPostNew(url, loginModel, new INetWorkManager.OnNetworkCallback() {
             @Override
             public void onSuccess(String result) {
-                TokenModel responseModel = JSON.parseObject(result, TokenModel.class);
-                SharedPreferencesUtils.saveSession(LoginActivity.this,responseModel);
-                onLoginSuccessCallback(responseModel);
-                view.setClickable(true);
-            }
-
-            @Override
-            public void onAccessBad(String result) {
-                super.onAccessBad(result);
-                Toast.makeText(LoginActivity.this, R.string.string_toast_account_login_error, Toast.LENGTH_SHORT).show();
+                AccountSignInResponseModel responseModel = JSON.parseObject(result, AccountSignInResponseModel.class);
+                if (responseModel.getCode() == ResponseModel.RC_SUCCESS){
+                    SharedPreferencesUtils.saveSession(LoginActivity.this,responseModel.getToken());
+                    onLoginSuccessCallback(responseModel.getToken());
+                }
+                Toast.makeText(LoginActivity.this, responseModel.getMessage(), Toast.LENGTH_SHORT).show();
                 view.setClickable(true);
             }
 
             @Override
             public void onError(Throwable ex, boolean isOnCallback) {
                 Toast.makeText(LoginActivity.this, R.string.string_toast_network_error, Toast.LENGTH_SHORT).show();
-                view.setClickable(true);
-            }
-
-            @Override
-            public void onOther(int code, String result) {
                 view.setClickable(true);
             }
         });
@@ -124,11 +117,6 @@ public class LoginActivity extends BaseActivity {
     }
 
     private void onLoginSuccessCallback(TokenModel sessionModel) {
-        SharedPreferencesUtils.saveSession(this, sessionModel);
-        this.toMainActivity();
-    }
-
-    private void toMainActivity() {
         Intent intent = new Intent(this, MainActivity.class);
         this.startActivity(intent);
         this.finish();

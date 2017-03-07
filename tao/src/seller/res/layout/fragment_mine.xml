@@ -6,9 +6,15 @@
     android:padding="10dp">
 
     <Button
+        android:id="@+id/bt_frg_mine_login_tao_bao"
+        style="@style/button_list_green"
+        android:text="登录淘宝" />
+
+    <Button
         android:id="@+id/bt_frg_mine_promotion"
         style="@style/button_list_green"
-        android:text="@string/string_promotion" />
+        android:text="@string/string_promotion"
+        android:layout_below="@+id/bt_frg_mine_login_tao_bao"/>
 
     <Button
         android:id="@+id/bt_frg_mine_password"

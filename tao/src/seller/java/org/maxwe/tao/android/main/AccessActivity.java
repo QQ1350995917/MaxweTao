@@ -18,11 +18,15 @@ import org.maxwe.tao.android.Constants;
 import org.maxwe.tao.android.INetWorkManager;
 import org.maxwe.tao.android.NetworkManager;
 import org.maxwe.tao.android.R;
+import org.maxwe.tao.android.account.model.AccountSignOutRequestModel;
 import org.maxwe.tao.android.account.model.TokenModel;
 import org.maxwe.tao.android.account.user.ActiveModel;
 import org.maxwe.tao.android.account.user.UserEntity;
+import org.maxwe.tao.android.account.user.UserMineRequestModel;
+import org.maxwe.tao.android.account.user.UserMineResponseModel;
 import org.maxwe.tao.android.activity.BaseActivity;
 import org.maxwe.tao.android.activity.LoginActivity;
+import org.maxwe.tao.android.response.ResponseModel;
 import org.maxwe.tao.android.utils.SharedPreferencesUtils;
 import org.xutils.view.annotation.ContentView;
 import org.xutils.view.annotation.Event;
@@ -106,36 +110,29 @@ public class AccessActivity extends BaseActivity {
             onRequestingView();
             String url = this.getString(R.string.string_url_domain) + this.getString(R.string.string_url_account_mine);
             TokenModel session = SharedPreferencesUtils.getSession(this);
-            session.setSign(session.getEncryptSing());
-            NetworkManager.requestByPost(url, session, new INetWorkManager.OnNetworkCallback() {
+            UserMineRequestModel requestModel = new UserMineRequestModel(session);
+            requestModel.setSign(session.getEncryptSing());
+            NetworkManager.requestByPostNew(url, requestModel, new INetWorkManager.OnNetworkCallback() {
                 @Override
                 public void onSuccess(String result) {
-                    UserEntity requestModel = JSON.parseObject(result, UserEntity.class);
-                    if (requestModel.getActCode() == null) {
-                        onResponseWaitingAct(requestModel);
-                    } else {
-                        onResponseUserSuccess(requestModel);
+                    UserMineResponseModel requestModel = JSON.parseObject(result, UserMineResponseModel.class);
+                    if (requestModel.getCode() == ResponseModel.RC_SUCCESS) {
+                        if (requestModel.getUser().getActCode() == null) {
+                            onResponseWaitingAct(requestModel.getUser());
+                        } else {
+                            onResponseUserSuccess(requestModel.getUser());
+                        }
+                    } else if (requestModel.getCode() == ResponseModel.RC_TIMEOUT){
+                        SharedPreferencesUtils.clearSession(AccessActivity.this);
+                        SharedPreferencesUtils.clearAuthor(AccessActivity.this);
                     }
-                }
-
-                @Override
-                public void onLoginTimeout(String result) {
-                    Toast.makeText(AccessActivity.this, R.string.string_toast_timeout, Toast.LENGTH_SHORT).show();
-                    SharedPreferencesUtils.clearSession(AccessActivity.this);
-                    SharedPreferencesUtils.clearAuthor(AccessActivity.this);
-                    onResponseLoginTimeout();
+                    Toast.makeText(AccessActivity.this, requestModel.getMessage(), Toast.LENGTH_SHORT).show();
                 }
 
                 @Override
                 public void onError(Throwable ex, boolean isOnCallback) {
                     Toast.makeText(AccessActivity.this, R.string.string_toast_network_error, Toast.LENGTH_SHORT).show();
                     onResponseReAct(AccessActivity.this.getString(R.string.string_toast_network_error));
-                }
-
-                @Override
-                public void onOther(int code, String result) {
-                    Toast.makeText(AccessActivity.this, R.string.string_act_error, Toast.LENGTH_SHORT).show();
-                    onResponseReAct(AccessActivity.this.getString(R.string.string_act_error));
                 }
             });
         } catch (Exception e) {
@@ -211,18 +208,12 @@ public class AccessActivity extends BaseActivity {
     private void onLogoutAction(View view) {
         try {
             TokenModel sessionModel = SharedPreferencesUtils.getSession(this);
-            sessionModel.setSign(sessionModel.getEncryptSing());
+            AccountSignOutRequestModel requestModel = new AccountSignOutRequestModel(sessionModel);
+            requestModel.setSign(sessionModel.getEncryptSing());
             String url = this.getString(R.string.string_url_domain) + this.getString(R.string.string_url_account_logout);
-            NetworkManager.requestByPost(url, sessionModel, new INetWorkManager.OnNetworkCallback() {
+            NetworkManager.requestByPostNew(url, requestModel, new INetWorkManager.OnNetworkCallback() {
                 @Override
                 public void onSuccess(String result) {
-                    SharedPreferencesUtils.clearSession(AccessActivity.this);
-                    SharedPreferencesUtils.clearAuthor(AccessActivity.this);
-                    onReopenLaterAction(null);
-                }
-
-                @Override
-                public void onLoginTimeout(String result) {
                     SharedPreferencesUtils.clearSession(AccessActivity.this);
                     SharedPreferencesUtils.clearAuthor(AccessActivity.this);
                     onReopenLaterAction(null);

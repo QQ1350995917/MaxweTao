@@ -17,9 +17,11 @@ import org.maxwe.tao.android.Constants;
 import org.maxwe.tao.android.INetWorkManager;
 import org.maxwe.tao.android.NetworkManager;
 import org.maxwe.tao.android.R;
-import org.maxwe.tao.android.account.model.RegisterModel;
-import org.maxwe.tao.android.account.model.TokenModel;
-import org.maxwe.tao.android.meta.SMSModel;
+import org.maxwe.tao.android.account.model.AccountSignUpRequestModel;
+import org.maxwe.tao.android.account.model.AccountSignUpResponseModel;
+import org.maxwe.tao.android.meta.SMSCodeRequestModel;
+import org.maxwe.tao.android.meta.SMSCodeResponseModel;
+import org.maxwe.tao.android.response.ResponseModel;
 import org.maxwe.tao.android.utils.CellPhoneUtils;
 import org.maxwe.tao.android.utils.SharedPreferencesUtils;
 import org.xutils.view.annotation.ContentView;
@@ -91,17 +93,18 @@ public class RegisterActivity extends BaseActivity {
             return;
         }
 
-        if (!bt_act_cellphone_code_get_vcode.isEqualsIgnoreCase(et_act_register_cellphone_code_vcode.getText().toString())){
+        if (!bt_act_cellphone_code_get_vcode.isEqualsIgnoreCase(et_act_register_cellphone_code_vcode.getText().toString())) {
             Toast.makeText(this, "图形验证码错误", Toast.LENGTH_SHORT).show();
             return;
         }
 
         String url = this.getString(R.string.string_url_domain) + this.getString(R.string.string_url_meta_smsCode);
-        SMSModel smsModel = new SMSModel(cellphone);
-        NetworkManager.requestByPost(url, smsModel, new NetworkManager.OnNetworkCallback() {
+        SMSCodeRequestModel smsModel = new SMSCodeRequestModel(cellphone,this.getResources().getInteger(R.integer.integer_app_type));
+        NetworkManager.requestByPostNew(url, smsModel, new NetworkManager.OnNetworkCallback() {
             @Override
             public void onSuccess(String result) {
-                Toast.makeText(RegisterActivity.this,R.string.string_toast_cellphone_code_send,Toast.LENGTH_SHORT).show();
+                SMSCodeResponseModel responseModel = JSON.parseObject(result, SMSCodeResponseModel.class);
+                Toast.makeText(RegisterActivity.this, responseModel.getMessage(), Toast.LENGTH_SHORT).show();
             }
 
             @Override
@@ -158,34 +161,25 @@ public class RegisterActivity extends BaseActivity {
         }
         view.setClickable(false);
         String url = this.getString(R.string.string_url_domain) + this.getString(R.string.string_url_account_register);
-        RegisterModel registerModel = new RegisterModel(cellphone,cellphoneCode,password);
-        registerModel.setApt(this.getResources().getInteger(R.integer.integer_app_type));
-        NetworkManager.requestByPost(url, registerModel, new INetWorkManager.OnNetworkCallback() {
+        AccountSignUpRequestModel registerModel = new AccountSignUpRequestModel(cellphone, cellphoneCode, password,this.getResources().getInteger(R.integer.integer_app_type));
+        NetworkManager.requestByPostNew(url, registerModel, new INetWorkManager.OnNetworkCallback() {
             @Override
             public void onSuccess(String result) {
-                TokenModel responseModel = JSON.parseObject(result, TokenModel.class);
-                SharedPreferencesUtils.saveSession(RegisterActivity.this,responseModel);
-                Intent intent = new Intent();
-                intent.putExtra(Constants.KEY_INTENT_SESSION, responseModel);
-                RegisterActivity.this.setResult(LoginActivity.RESPONSE_CODE_SUCCESS, intent);
-                RegisterActivity.this.finish();
-                return;
-            }
-
-            @Override
-            public void onRepeat(String result) {
-                Toast.makeText(RegisterActivity.this, R.string.string_toast_cellphone_repeat, Toast.LENGTH_SHORT).show();
+                AccountSignUpResponseModel responseModel = JSON.parseObject(result, AccountSignUpResponseModel.class);
+                if (responseModel.getCode() == ResponseModel.RC_SUCCESS) {
+                    SharedPreferencesUtils.saveSession(RegisterActivity.this, responseModel.getToken());
+                    Intent intent = new Intent();
+                    intent.putExtra(Constants.KEY_INTENT_SESSION, responseModel);
+                    RegisterActivity.this.setResult(LoginActivity.RESPONSE_CODE_SUCCESS, intent);
+                    RegisterActivity.this.finish();
+                }
+                Toast.makeText(RegisterActivity.this, responseModel.getMessage(), Toast.LENGTH_SHORT).show();
+                view.setClickable(true);
             }
 
             @Override
             public void onError(Throwable ex, boolean isOnCallback) {
                 Toast.makeText(RegisterActivity.this, R.string.string_toast_network_error, Toast.LENGTH_SHORT).show();
-                view.setClickable(true);
-            }
-
-            @Override
-            public void onOther(int code, String result) {
-                Toast.makeText(RegisterActivity.this, R.string.string_toast_register_error, Toast.LENGTH_SHORT).show();
                 view.setClickable(true);
             }
         });

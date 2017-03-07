@@ -26,14 +26,14 @@
 
     <!--<string name="string_url_domain">http://192.168.10.81:8080/tao</string>-->
     <!--<string name="string_url_domain">http://58.218.207.186:8080/tao</string>-->
-    <string name="string_url_domain">http://taomami.net</string>
-    <!--<string name="string_url_domain">http://192.168.0.112:8080/tao</string>-->
+    <!--<string name="string_url_domain">http://taomami.net</string>-->
+    <string name="string_url_domain">http://192.168.0.112:8080</string>
     <string name="string_url_account_exist">/user/exist</string>
+    <string name="string_url_account_register">/user/signup</string>
+    <string name="string_url_account_login">/user/signin</string>
     <string name="string_url_account_lost">/user/lost</string>
-    <string name="string_url_account_register">/user/register</string>
-    <string name="string_url_account_login">/user/login</string>
     <string name="string_url_account_password">/user/password</string>
-    <string name="string_url_account_logout">/user/logout</string>
+    <string name="string_url_account_logout">/user/signout</string>
     <string name="string_url_account_mine">/user/mine</string>
     <string name="string_url_account_active">/user/active</string>
     <string name="string_url_meta_smsCode">/meta/smsCode</string>

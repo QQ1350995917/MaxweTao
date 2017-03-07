@@ -2,6 +2,7 @@ package org.maxwe.tao.android.mine;
 
 import android.content.Intent;
 import android.view.View;
+import android.widget.Toast;
 
 import org.maxwe.tao.android.BaseFragment;
 import org.maxwe.tao.android.INetWorkManager;
@@ -27,6 +28,32 @@ import org.xutils.view.annotation.Event;
 public class MineFragment extends BaseFragment {
     private static final int CODE_REQUEST_AUTHOR = 0;
 
+    @Event(value = R.id.bt_frg_mine_login_tao_bao, type = View.OnClickListener.class)
+    private void onTaoBaoLoginAction(View view) {
+        AuthorActivity.requestTaoLoginStatus(this.getContext(), new AuthorActivity.TaoLoginStatusCallback() {
+            @Override
+            public void onNeedLoginCallback() {
+                Intent intent = new Intent(MineFragment.this.getContext(), AuthorActivity.class);
+                intent.putExtra(AuthorActivity.KEY_INTENT_OF_STATE_CODE, 1234);
+                MineFragment.this.startActivityForResult(intent, MineFragment.this.CODE_REQUEST_AUTHOR);
+            }
+
+            @Override
+            public void onNeedBrandCallback() {
+                Toast.makeText(MineFragment.this.getContext(),"您已经登录，赶快生成推广位吧",Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onNeedOkCallback() {
+                Toast.makeText(MineFragment.this.getContext(),"您已经登录，无需再次登录",Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onNeedErrorCallback() {
+
+            }
+        });
+    }
     @Event(value = R.id.bt_frg_mine_promotion, type = View.OnClickListener.class)
     private void onPromotionAction(View view) {
         AuthorActivity.requestTaoLoginStatus(this.getContext(), new AuthorActivity.TaoLoginStatusCallback() {

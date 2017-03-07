@@ -61,7 +61,32 @@ public class MainActivity extends BaseFragmentActivity implements View.OnClickLi
         if (SellerApplication.currentUserEntity == null || SellerApplication.currentUserEntity.getActCode() == null) {
             Intent intent = new Intent(this, AccessActivity.class);
             this.startActivityForResult(intent, REQUEST_CODE_ACCESS_CHECK);
+        } else {
+            AuthorActivity.requestTaoLoginStatus(this, new AuthorActivity.TaoLoginStatusCallback() {
+                @Override
+                public void onNeedLoginCallback() {
+                    Intent intent = new Intent(MainActivity.this, AuthorActivity.class);
+                    intent.putExtra(AuthorActivity.KEY_INTENT_OF_STATE_CODE, 1234);
+                    MainActivity.this.startActivityForResult(intent, MainActivity.this.CODE_REQUEST_AUTHOR);
+                }
+
+                @Override
+                public void onNeedBrandCallback() {
+
+                }
+
+                @Override
+                public void onNeedOkCallback() {
+
+                }
+
+                @Override
+                public void onNeedErrorCallback() {
+
+                }
+            });
         }
+
         this.onCheckNewVersion();
 
 //        getRunningActivityName();
@@ -94,29 +119,6 @@ public class MainActivity extends BaseFragmentActivity implements View.OnClickLi
 //        startActivity(intent);
 
 
-        AuthorActivity.requestTaoLoginStatus(this, new AuthorActivity.TaoLoginStatusCallback() {
-            @Override
-            public void onNeedLoginCallback() {
-                Intent intent = new Intent(MainActivity.this, AuthorActivity.class);
-                intent.putExtra(AuthorActivity.KEY_INTENT_OF_STATE_CODE, 1234);
-                MainActivity.this.startActivityForResult(intent, MainActivity.this.CODE_REQUEST_AUTHOR);
-            }
-
-            @Override
-            public void onNeedBrandCallback() {
-
-            }
-
-            @Override
-            public void onNeedOkCallback() {
-
-            }
-
-            @Override
-            public void onNeedErrorCallback() {
-
-            }
-        });
     }
 
     @Override
@@ -190,11 +192,7 @@ public class MainActivity extends BaseFragmentActivity implements View.OnClickLi
                     onConvertLinkSuccessCallback();
                 }
                 break;
-            case REQUEST_CODE_MODIFY_PASSWORD:
-                if (resultCode == LoginActivity.RESPONSE_CODE_SUCCESS) {
-                    onModifyPasswordSuccessCallback((TokenModel) data.getSerializableExtra(Constants.KEY_INTENT_SESSION));
-                }
-                break;
+
             case REQUEST_CODE_ACCESS_CHECK:
                 if (resultCode == LoginActivity.RESPONSE_CODE_SUCCESS) {
                     onRequestMyInfoCallback((UserEntity) data.getSerializableExtra(Constants.KEY_INTENT_SESSION));
@@ -233,9 +231,7 @@ public class MainActivity extends BaseFragmentActivity implements View.OnClickLi
 
     }
 
-    private void onModifyPasswordSuccessCallback(TokenModel sessionModel) {
-        SharedPreferencesUtils.saveSession(this, sessionModel);
-    }
+
 
     private void onRequestMyInfoCallback(UserEntity userEntity) {
         SellerApplication.currentUserEntity = userEntity;

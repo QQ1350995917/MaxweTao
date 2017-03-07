@@ -47,14 +47,7 @@ public class SharedPreferencesUtils {
         int id = sharedPreferences.getInt(KEY_LOGIN_ID, 0);
         String cellphone = sharedPreferences.getString(KEY_LOGIN_CELLPHONE, null);
         TokenModel sessionModel = new TokenModel(t, id, cellphone, context.getResources().getInteger(R.integer.integer_app_type));
-        boolean paramsOk = sessionModel.isTokenParamsOk();
-        if (paramsOk) {
-            return sessionModel;
-        } else {
-            clearSession(context);
-            clearAuthor(context);
-            return null;
-        }
+        return sessionModel;
     }
 
     public static void saveSession(Context context, TokenModel sessionModel) {
