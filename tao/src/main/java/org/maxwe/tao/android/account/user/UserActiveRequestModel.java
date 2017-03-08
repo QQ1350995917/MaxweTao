@@ -2,6 +2,7 @@ package org.maxwe.tao.android.account.user;
 
 
 import org.maxwe.tao.android.account.model.AuthenticateModel;
+import org.maxwe.tao.android.account.model.TokenModel;
 import org.maxwe.tao.android.utils.StringUtils;
 
 /**
@@ -14,6 +15,15 @@ public class UserActiveRequestModel extends AuthenticateModel {
 
     public UserActiveRequestModel() {
         super();
+    }
+
+    public UserActiveRequestModel(TokenModel tokenModel) {
+        super(tokenModel);
+    }
+
+    public UserActiveRequestModel(TokenModel tokenModel, String authenticatePassword,String actCode) {
+        super(tokenModel, authenticatePassword);
+        this.actCode = actCode;
     }
 
     public String getActCode() {

@@ -119,7 +119,7 @@ public class MineFragment extends BaseFragment {
             AccountSignOutRequestModel requestModel = new AccountSignOutRequestModel(sessionModel);
             requestModel.setSign(sessionModel.getEncryptSing());
             String url = this.getString(R.string.string_url_domain) + this.getString(R.string.string_url_account_logout);
-            NetworkManager.requestByPost(url, requestModel, new INetWorkManager.OnNetworkCallback() {
+            NetworkManager.requestByPostNew(url, requestModel, new INetWorkManager.OnNetworkCallback() {
                 @Override
                 public void onSuccess(String result) {
                     SharedPreferencesUtils.clearSession(MineFragment.this.getContext());

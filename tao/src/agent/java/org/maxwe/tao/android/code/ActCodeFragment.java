@@ -117,6 +117,7 @@ public class ActCodeFragment extends BaseFragment {
     private void showReachView(AgentModel responseModel) {
         AgentApplication.currentAgentModel = responseModel;
         this.bt_frg_code_active_action.setVisibility(View.INVISIBLE);
+        this.tv_frg_code_level_name.setText(responseModel.getLevelEntity() == null ? "" : responseModel.getLevelEntity().getName());
         resetCodesStatus();
     }
 
@@ -170,14 +171,14 @@ public class ActCodeFragment extends BaseFragment {
                 @Override
                 public void onSuccess(String result) {
                     AgentMineResponseModel responseModel = JSON.parseObject(result, AgentMineResponseModel.class);
-                    if (responseModel.getCode() == ResponseModel.RC_SUCCESS){
+                    if (responseModel.getCode() == ResponseModel.RC_SUCCESS) {
                         if (responseModel.getAgent().getAgentEntity().getReach() != 1) {
                             showUnReachView(responseModel.getAgent());
                         } else {
                             showReachView(responseModel.getAgent());
                         }
                     }
-                    Toast.makeText(ActCodeFragment.this.getContext(),responseModel.getMessage(),Toast.LENGTH_SHORT).show();
+                    Toast.makeText(ActCodeFragment.this.getContext(), responseModel.getMessage(), Toast.LENGTH_SHORT).show();
                 }
 
                 @Override

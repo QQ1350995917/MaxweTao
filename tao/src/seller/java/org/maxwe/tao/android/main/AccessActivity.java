@@ -21,6 +21,8 @@ import org.maxwe.tao.android.R;
 import org.maxwe.tao.android.account.model.AccountSignOutRequestModel;
 import org.maxwe.tao.android.account.model.TokenModel;
 import org.maxwe.tao.android.account.user.ActiveModel;
+import org.maxwe.tao.android.account.user.UserActiveRequestModel;
+import org.maxwe.tao.android.account.user.UserActiveResponseModel;
 import org.maxwe.tao.android.account.user.UserEntity;
 import org.maxwe.tao.android.account.user.UserMineRequestModel;
 import org.maxwe.tao.android.account.user.UserMineResponseModel;
@@ -100,8 +102,8 @@ public class AccessActivity extends BaseActivity {
         AccessActivity.this.finish();
     }
 
-    private void onResponseActSuccess(String actCode) {
-        this.userEntity.setActCode(actCode);
+    private void onResponseActSuccess(long actTime) {
+        this.userEntity.setActTime(actTime);
         onResponseUserSuccess(this.userEntity);
     }
 
@@ -160,29 +162,16 @@ public class AccessActivity extends BaseActivity {
         try {
             String url = this.getString(R.string.string_url_domain) + this.getString(R.string.string_url_account_active);
             TokenModel session = SharedPreferencesUtils.getSession(this);
-            ActiveModel activeModel = new ActiveModel(session, actCode);
-            activeModel.setVerification(password);
-            activeModel.setSign(session.getEncryptSing());
-            NetworkManager.requestByPost(url, activeModel, new INetWorkManager.OnNetworkCallback() {
+            UserActiveRequestModel requestModel = new UserActiveRequestModel(session,password, actCode);
+            requestModel.setSign(session.getEncryptSing());
+            NetworkManager.requestByPostNew(url, requestModel, new INetWorkManager.OnNetworkCallback() {
                 @Override
                 public void onSuccess(String result) {
-                    ActiveModel responseModel = JSON.parseObject(result, ActiveModel.class);
-                    onResponseActSuccess(responseModel.getActCode());
-                    Toast.makeText(AccessActivity.this, R.string.string_act_success, Toast.LENGTH_SHORT).show();
-                }
-
-                @Override
-                public void onParamsError(String result) {
-                    Toast.makeText(AccessActivity.this, R.string.string_act_error, Toast.LENGTH_SHORT).show();
-                    onResponseReAct(AccessActivity.this.getString(R.string.string_act_error));
-                }
-
-                @Override
-                public void onLoginTimeout(String result) {
-                    Toast.makeText(AccessActivity.this, R.string.string_toast_timeout, Toast.LENGTH_SHORT).show();
-                    SharedPreferencesUtils.clearSession(AccessActivity.this);
-                    SharedPreferencesUtils.clearAuthor(AccessActivity.this);
-                    onResponseLoginTimeout();
+                    UserActiveResponseModel responseModel = JSON.parseObject(result, UserActiveResponseModel.class);
+                    if (responseModel.getCode() == ResponseModel.RC_SUCCESS){
+                        onResponseActSuccess(responseModel.getActTime());
+                    }
+                    Toast.makeText(AccessActivity.this, responseModel.getMessage(), Toast.LENGTH_SHORT).show();
                 }
 
                 @Override
@@ -190,18 +179,11 @@ public class AccessActivity extends BaseActivity {
                     Toast.makeText(AccessActivity.this, R.string.string_toast_network_error, Toast.LENGTH_SHORT).show();
                     onResponseReAct(AccessActivity.this.getString(R.string.string_toast_network_error));
                 }
-
-                @Override
-                public void onOther(int code, String result) {
-                    Toast.makeText(AccessActivity.this, R.string.string_act_error, Toast.LENGTH_SHORT).show();
-                    onResponseReAct(AccessActivity.this.getString(R.string.string_act_error));
-                }
             });
         } catch (Exception e) {
             e.printStackTrace();
             Toast.makeText(this, "请求失败", Toast.LENGTH_SHORT).show();
         }
-
     }
 
     @Event(value = R.id.bt_act_access_logout, type = View.OnClickListener.class)

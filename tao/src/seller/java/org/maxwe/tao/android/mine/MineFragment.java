@@ -8,6 +8,8 @@ import org.maxwe.tao.android.BaseFragment;
 import org.maxwe.tao.android.INetWorkManager;
 import org.maxwe.tao.android.NetworkManager;
 import org.maxwe.tao.android.R;
+import org.maxwe.tao.android.SellerApplication;
+import org.maxwe.tao.android.account.model.AccountSignOutRequestModel;
 import org.maxwe.tao.android.account.model.TokenModel;
 import org.maxwe.tao.android.activity.LoginActivity;
 import org.maxwe.tao.android.activity.ModifyActivity;
@@ -103,11 +105,13 @@ public class MineFragment extends BaseFragment {
     private void onExitAction(View view) {
         try {
             TokenModel sessionModel = SharedPreferencesUtils.getSession(this.getContext());
-            sessionModel.setSign(sessionModel.getEncryptSing());
+            AccountSignOutRequestModel requestModel = new AccountSignOutRequestModel(sessionModel);
+            requestModel.setSign(sessionModel.getEncryptSing());
             String url = this.getString(R.string.string_url_domain) + this.getString(R.string.string_url_account_logout);
-            NetworkManager.requestByPost(url, sessionModel, new INetWorkManager.OnNetworkCallback() {
+            NetworkManager.requestByPostNew(url, requestModel, new INetWorkManager.OnNetworkCallback() {
                 @Override
                 public void onSuccess(String result) {
+                    SellerApplication.currentUserEntity = null;
                     SharedPreferencesUtils.clearSession(MineFragment.this.getContext());
                     SharedPreferencesUtils.clearAuthor(MineFragment.this.getContext());
                     Intent intent = new Intent(MineFragment.this.getContext(), LoginActivity.class);

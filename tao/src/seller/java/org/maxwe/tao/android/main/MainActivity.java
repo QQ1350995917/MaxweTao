@@ -18,7 +18,6 @@ import android.widget.Toast;
 import org.maxwe.tao.android.Constants;
 import org.maxwe.tao.android.R;
 import org.maxwe.tao.android.SellerApplication;
-import org.maxwe.tao.android.account.model.TokenModel;
 import org.maxwe.tao.android.account.user.UserEntity;
 import org.maxwe.tao.android.activity.BaseFragmentActivity;
 import org.maxwe.tao.android.activity.LoginActivity;
@@ -26,7 +25,6 @@ import org.maxwe.tao.android.common.AuthorActivity;
 import org.maxwe.tao.android.common.BrandActivity;
 import org.maxwe.tao.android.index.IndexFragment;
 import org.maxwe.tao.android.mine.MineFragment;
-import org.maxwe.tao.android.utils.SharedPreferencesUtils;
 import org.xutils.view.annotation.ContentView;
 import org.xutils.view.annotation.ViewInject;
 
@@ -195,7 +193,7 @@ public class MainActivity extends BaseFragmentActivity implements View.OnClickLi
 
             case REQUEST_CODE_ACCESS_CHECK:
                 if (resultCode == LoginActivity.RESPONSE_CODE_SUCCESS) {
-                    onRequestMyInfoCallback((UserEntity) data.getSerializableExtra(Constants.KEY_INTENT_SESSION));
+                    SellerApplication.currentUserEntity = (UserEntity) data.getSerializableExtra(Constants.KEY_INTENT_SESSION);
                 } else {
                     this.finish();
                 }
@@ -232,9 +230,7 @@ public class MainActivity extends BaseFragmentActivity implements View.OnClickLi
     }
 
 
-
     private void onRequestMyInfoCallback(UserEntity userEntity) {
-        SellerApplication.currentUserEntity = userEntity;
 
     }
 
