@@ -1,13 +1,13 @@
-package org.maxwe.tao.android.index;
+package org.maxwe.tao.android.goods.alimama;
 
-import org.maxwe.tao.android.response.IResponse;
+import java.io.Serializable;
 
 /**
  * Created by Pengwei Ding on 2017-02-24 23:41.
  * Email: www.dingpengwei@foxmail.com www.dingpegnwei@gmail.com
  * Description: TODO
  */
-public class AliConvertEntity implements IResponse{
+public class ConvertEntity implements Serializable {
     private String taoToken; // "￥qeerQDT9Yv￥",
     private String couponShortLinkUrl; // "https; ////s.click.taobao.com/njrzN4x",
     private String qrCodeUrl; // "http; ////gqrcode.alicdn.com/img?type=hv&text=https%3A%2F%2Fs.click.taobao.com%2F6FtzN4x&h=300&w=300",
@@ -17,7 +17,7 @@ public class AliConvertEntity implements IResponse{
     private String type; // "auction",
     private String shortLinkUrl; // "https; ////s.click.taobao.com/qlszN4x"
 
-    public AliConvertEntity() {
+    public ConvertEntity() {
         super();
     }
 

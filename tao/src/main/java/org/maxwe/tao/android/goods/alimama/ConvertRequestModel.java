@@ -1,23 +1,23 @@
-package org.maxwe.tao.android.index;
+package org.maxwe.tao.android.goods.alimama;
 
 import org.maxwe.tao.android.account.model.TokenModel;
 
 /**
  * Created by Pengwei Ding on 2017-02-24 23:37.
  * Email: www.dingpengwei@foxmail.com www.dingpegnwei@gmail.com
- * Description: TODO
+ * Description: 转链请求模型
  */
-public class AliConvertRequestModel  extends TokenModel {
+public class ConvertRequestModel extends TokenModel {
     private long siteid;  // 21454360;
     private long auctionid;  // 521477762631; 商品ID
     private long adzoneid;  // 72044740;
     private String cookie;
 
-    public AliConvertRequestModel() {
+    public ConvertRequestModel() {
         super();
     }
 
-    public AliConvertRequestModel(TokenModel sessionModel, long siteid, long auctionid, long adzoneid, String cookie) {
+    public ConvertRequestModel(TokenModel sessionModel, long siteid, long auctionid, long adzoneid, String cookie) {
         super(sessionModel.getT(), sessionModel.getId(), sessionModel.getCellphone(), sessionModel.getApt());
         this.siteid = siteid;
         this.auctionid = auctionid;

@@ -1,26 +1,34 @@
-package org.maxwe.tao.android.index;
+package org.maxwe.tao.android.goods.alimama;
 
 import org.maxwe.tao.android.account.model.TokenModel;
 
 /**
- * Created by Pengwei Ding on 2017-02-24 22:04.
+ * Created by Pengwei Ding on 2017-01-08 11:35.
  * Email: www.dingpengwei@foxmail.com www.dingpegnwei@gmail.com
- * Description: TODO
+ * Description:
+ * 以阿里妈妈模型作为标准
+ * 构建淘妈咪系统内的商品请求统一模型
  */
-public class AliGoodsRequestModel extends TokenModel {
-    private long toPage = 1;
-    private long perPageSize = 20;
-    private String q;
-    private String cookie;
-    private int sortType = 0;// 0:默认 1:佣金 2:优惠券 3:价格降低 4:价格升高 9:销量降序
-    private int urlType = 0;
+public class GoodsRequestModel extends TokenModel {
 
-    public AliGoodsRequestModel() {
+    private long toPage = 1;// 页面
+    private long perPageSize = 20;// 页面数据量
+    private String q; // 查询关键字
+    private String cookie; // 登录淘宝后产生的cookie
+    private int sortType = 0;// 0:默认 1:佣金 2:优惠券 3:价格降低 4:价格升高 9:销量降序
+    private int urlType = 0;//标记链接类型
+
+
+    public GoodsRequestModel() {
         super();
     }
 
-    public AliGoodsRequestModel(TokenModel sessionModel, long toPage, long perPageSize, String q, String cookie, int urlType) {
-        super(sessionModel.getT(), sessionModel.getId(), sessionModel.getCellphone(), sessionModel.getApt());
+    public GoodsRequestModel(TokenModel tokenModel) {
+        super(tokenModel);
+    }
+
+    public GoodsRequestModel(TokenModel tokenModel, long toPage, long perPageSize, String q, String cookie, int urlType) {
+        super(tokenModel);
         this.toPage = toPage;
         this.perPageSize = perPageSize;
         this.q = q;

@@ -23,8 +23,6 @@ import org.maxwe.tao.android.R;
 import org.maxwe.tao.android.account.model.TokenModel;
 import org.maxwe.tao.android.common.AuthorActivity;
 import org.maxwe.tao.android.common.BrandActivity;
-import org.maxwe.tao.android.index.AliGoodsEntity;
-import org.maxwe.tao.android.index.AliGoodsRequestModel;
 import org.maxwe.tao.android.index.GoodsDetailActivity;
 import org.maxwe.tao.android.utils.SharedPreferencesUtils;
 import org.xutils.view.annotation.ContentView;

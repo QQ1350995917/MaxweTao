@@ -31,6 +31,10 @@ import org.maxwe.tao.android.R;
 import org.maxwe.tao.android.account.model.TokenModel;
 import org.maxwe.tao.android.activity.BaseActivity;
 import org.maxwe.tao.android.common.AuthorActivity;
+import org.maxwe.tao.android.goods.alimama.GoodsEntity;
+import org.maxwe.tao.android.goods.alimama.GoodsRequestModel;
+import org.maxwe.tao.android.goods.alimama.GoodsResponseModel;
+import org.maxwe.tao.android.response.ResponseModel;
 import org.maxwe.tao.android.utils.SharedPreferencesUtils;
 import org.xutils.view.annotation.ContentView;
 import org.xutils.view.annotation.Event;
@@ -66,12 +70,12 @@ public class GoodsListActivity extends BaseActivity implements SwipeRefreshLayou
     private ListView lv_act_goods_container;
 
 
-    private List<AliGoodsEntity> goodsEntities = new LinkedList<>();
+    private List<GoodsEntity> goodsEntities = new LinkedList<>();
     private BaseAdapter listAdapter = null;
     private int pageIndex = 0;
     private int pageSize = 20;
 
-    private AliGoodsRequestModel goodsRequestModel = new AliGoodsRequestModel();
+    private GoodsRequestModel goodsRequestModel = new GoodsRequestModel();
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -101,7 +105,7 @@ public class GoodsListActivity extends BaseActivity implements SwipeRefreshLayou
 
             @Override
             public View getView(int position, View convertView, ViewGroup parent) {
-                AliGoodsEntity goodsEntity = goodsEntities.get(position);
+                GoodsEntity goodsEntity = goodsEntities.get(position);
                 View view = inflater.inflate(R.layout.include_index_fragment_goods, null);
                 SimpleDraweeView imageView = (SimpleDraweeView) view.findViewById(R.id.iv_inc_index_frg_item_goods_image);
                 TextView title = (TextView) view.findViewById(R.id.iv_inc_index_frg_item_goods_title);
@@ -195,7 +199,7 @@ public class GoodsListActivity extends BaseActivity implements SwipeRefreshLayou
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        AliGoodsEntity goodsEntity = this.goodsEntities.get(position);
+        GoodsEntity goodsEntity = this.goodsEntities.get(position);
         Intent intent = new Intent(this, GoodsDetailActivity.class);
         intent.putExtra(GoodsDetailActivity.KEY_GOODS, goodsEntity);
         this.startActivity(intent);
@@ -209,13 +213,13 @@ public class GoodsListActivity extends BaseActivity implements SwipeRefreshLayou
         this.srl_act_goods_swipe_container.setRefreshing(false);
     }
 
-    private void onRequestFinishBySuccess(List<AliGoodsEntity> goodsEntities) {
+    private void onRequestFinishBySuccess(List<GoodsEntity> goodsEntities) {
         this.hiddenLoading();
         this.goodsEntities.addAll(goodsEntities);
         this.listAdapter.notifyDataSetChanged();
     }
 
-    private void onRequestAliFinishBySuccess(List<AliGoodsEntity> goodsEntities) {
+    private void onRequestAliFinishBySuccess(List<GoodsEntity> goodsEntities) {
         this.hiddenLoading();
         this.goodsEntities.addAll(goodsEntities);
         this.listAdapter.notifyDataSetChanged();
@@ -230,38 +234,26 @@ public class GoodsListActivity extends BaseActivity implements SwipeRefreshLayou
         Toast.makeText(this, "呃 出错了", Toast.LENGTH_SHORT).show();
     }
 
-    private void onRequestAliGoods(AliGoodsRequestModel aliGoodsRequestModel) {
+    private void onRequestAliGoods(GoodsRequestModel aliGoodsRequestModel) {
         String url = this.getString(R.string.string_url_domain) + this.getString(R.string.string_url_ali_goods_search);
         TokenModel sessionModel = SharedPreferencesUtils.getSession(this);
         aliGoodsRequestModel.setT(sessionModel.getT());
         aliGoodsRequestModel.setId(sessionModel.getId());
         aliGoodsRequestModel.setCellphone(sessionModel.getCellphone());
-        aliGoodsRequestModel.setApt(this.getResources().getInteger(R.integer.integer_app_type));
+        aliGoodsRequestModel.setApt(sessionModel.getApt());
         CookieManager cookieManager = CookieManager.getInstance();
         String cookie = cookieManager.getCookie(AuthorActivity.URL_LOGIN_MESSAGE);
         aliGoodsRequestModel.setCookie(cookie);
         try {
             aliGoodsRequestModel.setSign(sessionModel.getEncryptSing());
-            NetworkManager.requestByPost(url, aliGoodsRequestModel, new INetWorkManager.OnNetworkCallback() {
+            NetworkManager.requestByPostNew(url, aliGoodsRequestModel, new INetWorkManager.OnNetworkCallback() {
                 @Override
                 public void onSuccess(String result) {
-                    List<AliGoodsEntity> aliGoodsEntities = JSON.parseArray(result, AliGoodsEntity.class);
-                    if (aliGoodsEntities != null) {
-                        onRequestFinishBySuccess(aliGoodsEntities);
+                    GoodsResponseModel responseModel = JSON.parseObject(result, GoodsResponseModel.class);
+                    if (responseModel.getCode() == ResponseModel.RC_SUCCESS){
+                        onRequestFinishBySuccess(responseModel.getGoodsEntities());
                     }
-                }
-
-                @Override
-                public void onEmptyResult(String result) {
-                    super.onEmptyResult(result);
-                    Toast.makeText(GoodsListActivity.this, "没有数据了", Toast.LENGTH_SHORT).show();
-                }
-
-                @Override
-                public void onLoginTimeout(String result) {
-                    SharedPreferencesUtils.clearSession(GoodsListActivity.this);
-                    SharedPreferencesUtils.clearAuthor(GoodsListActivity.this);
-                    Toast.makeText(GoodsListActivity.this, R.string.string_toast_timeout, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(GoodsListActivity.this, responseModel.getMessage(), Toast.LENGTH_SHORT).show();
                 }
 
                 @Override
@@ -275,7 +267,7 @@ public class GoodsListActivity extends BaseActivity implements SwipeRefreshLayou
         }
     }
 
-    private void resetAction(){
+    private void resetAction() {
         this.ib_act_goods_brokerage.setText("佣金");
         this.ib_act_goods_price.setText("价格");
         this.ib_act_goods_sale.setText("销量");

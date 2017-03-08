@@ -1,16 +1,17 @@
-package org.maxwe.tao.android.index;
+package org.maxwe.tao.android.goods.alimama;
 
-import org.maxwe.tao.android.response.IResponse;
-
+import java.io.Serializable;
 import java.util.Collection;
 import java.util.HashMap;
 
 /**
- * Created by Pengwei Ding on 2017-02-24 22:04.
+ * Created by Pengwei Ding on 2017-03-08 17:54.
  * Email: www.dingpengwei@foxmail.com www.dingpegnwei@gmail.com
- * Description: TODO
+ * Description:
+ * 以阿里妈妈模型作为标准
+ * 构建淘妈咪系统内的商品统一模型
  */
-public class AliGoodsEntity implements IResponse {
+public class GoodsEntity implements Serializable {
     private HashMap<Integer, String> tkSpecialCampaignIdRateMap;//{2616191: "15.01",4415440: "15.01",6011079: "15.38",35695643: "15.38",36555464: "15.38"}
     private long eventCreatorId; // 0,
     private long rootCatId; // 0,
@@ -59,7 +60,7 @@ public class AliGoodsEntity implements IResponse {
     private String couponOriLink; // null,
     private String userTypeName; // null
 
-    public AliGoodsEntity() {
+    public GoodsEntity() {
         super();
     }
 

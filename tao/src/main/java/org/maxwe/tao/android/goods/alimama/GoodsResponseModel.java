@@ -1,18 +1,20 @@
-package org.maxwe.tao.android.goods;
+package org.maxwe.tao.android.goods.alimama;
 
-import org.maxwe.tao.android.response.IResponse;
+import org.maxwe.tao.android.response.ResponseModel;
 
 import java.util.LinkedList;
 
 /**
  * Created by Pengwei Ding on 2017-02-11 13:27.
  * Email: www.dingpengwei@foxmail.com www.dingpegnwei@gmail.com
- * Description: TODO
+ * Description:
+ * 以阿里妈妈模型作为标准
+ * 构建淘妈咪系统内的商品响应统一模型
  */
-public class GoodsResponseModel implements IResponse{
-    private long pageIndex;
-    private long pageSize;
-    private long counter;
+public class GoodsResponseModel extends ResponseModel<GoodsRequestModel> {
+    private long pageIndex;//暂无
+    private long pageSize;//暂无
+    private long counter;//暂无
     private LinkedList<GoodsEntity> goodsEntities;
 
     public GoodsResponseModel() {

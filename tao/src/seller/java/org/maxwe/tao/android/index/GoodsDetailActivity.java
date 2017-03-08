@@ -37,6 +37,12 @@ import org.maxwe.tao.android.activity.BaseActivity;
 import org.maxwe.tao.android.api.Position;
 import org.maxwe.tao.android.common.AuthorActivity;
 import org.maxwe.tao.android.common.BrandActivity;
+import org.maxwe.tao.android.goods.alimama.ConvertEntity;
+import org.maxwe.tao.android.goods.alimama.ConvertRequestModel;
+import org.maxwe.tao.android.goods.alimama.ConvertResponseModel;
+import org.maxwe.tao.android.goods.alimama.GoodsEntity;
+import org.maxwe.tao.android.goods.alimama.GoodsResponseModel;
+import org.maxwe.tao.android.response.ResponseModel;
 import org.maxwe.tao.android.utils.SharedPreferencesUtils;
 import org.xutils.view.annotation.ContentView;
 import org.xutils.view.annotation.Event;
@@ -102,9 +108,7 @@ public class GoodsDetailActivity extends BaseActivity {
     @ViewInject(R.id.ll_act_goods_detail_action_holder)
     private LinearLayout ll_act_goods_detail_action_holder;
 
-    private AliGoodsEntity goodsEntity = null;
-    private TaoPwdEntity taoPwdEntity = null;
-
+    private GoodsEntity goodsEntity = null;
 
     private UMShareListener umShareListener = new UMShareListener() {
         @Override
@@ -129,7 +133,7 @@ public class GoodsDetailActivity extends BaseActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        this.goodsEntity = (AliGoodsEntity) this.getIntent().getExtras().get(KEY_GOODS);
+        this.goodsEntity = (GoodsEntity) this.getIntent().getExtras().get(KEY_GOODS);
         this.iv_act_goods_detail_image.setImageURI(Uri.parse(goodsEntity.getPictUrl()));
         this.tv_act_goods_detail_title.setText(goodsEntity.getTitle());
         this.tv_act_goods_detail_nick.setText(goodsEntity.getNick());
@@ -273,9 +277,9 @@ public class GoodsDetailActivity extends BaseActivity {
                 .setCallback(umShareListener).open();
     }
 
-    private AliConvertEntity aliConvertEntity = null;
+    private ConvertEntity aliConvertEntity = null;
 
-    private void onResponseTaoConvertSuccess(AliConvertEntity aliConvertEntity) {
+    private void onResponseTaoConvertSuccess(ConvertEntity aliConvertEntity) {
         this.bt_act_goods_detail_get_link.setClickable(false);
         this.bt_act_goods_detail_get_link.setVisibility(View.GONE);
         this.tv_act_goods_detail_get_link_result.setVisibility(View.VISIBLE);
@@ -317,7 +321,7 @@ public class GoodsDetailActivity extends BaseActivity {
         CookieManager cookieManager = CookieManager.getInstance();
         String cookie = cookieManager.getCookie(AuthorActivity.URL_LOGIN_MESSAGE);
 
-        AliConvertRequestModel aliConvertRequestModel = new AliConvertRequestModel();
+        ConvertRequestModel aliConvertRequestModel = new ConvertRequestModel();
 
         aliConvertRequestModel.setCookie(cookie);
         aliConvertRequestModel.setSiteid(Long.parseLong(currentPP.getSiteId()));
@@ -329,37 +333,22 @@ public class GoodsDetailActivity extends BaseActivity {
         aliConvertRequestModel.setT(sessionModel.getT());
         aliConvertRequestModel.setId(sessionModel.getId());
         aliConvertRequestModel.setCellphone(sessionModel.getCellphone());
-        aliConvertRequestModel.setApt(this.getResources().getInteger(R.integer.integer_app_type));
+        aliConvertRequestModel.setApt(sessionModel.getApt());
         try {
             aliConvertRequestModel.setSign(sessionModel.getEncryptSing());
-            NetworkManager.requestByPost(url, aliConvertRequestModel, new INetWorkManager.OnNetworkCallback() {
+            NetworkManager.requestByPostNew(url, aliConvertRequestModel, new INetWorkManager.OnNetworkCallback() {
                 @Override
                 public void onSuccess(String result) {
-                    AliConvertEntity aliConvertEntity = JSON.parseObject(result, AliConvertEntity.class);
-                    onResponseTaoConvertSuccess(aliConvertEntity);
-                }
-
-                @Override
-                public void onLoginTimeout(String result) {
-                    SharedPreferencesUtils.clearSession(GoodsDetailActivity.this);
-                    SharedPreferencesUtils.clearAuthor(GoodsDetailActivity.this);
-                    Toast.makeText(GoodsDetailActivity.this, R.string.string_toast_timeout, Toast.LENGTH_SHORT).show();
-                }
-
-                @Override
-                public void onEmptyResult(String result) {
-                    super.onEmptyResult(result);
+                    ConvertResponseModel responseModel = JSON.parseObject(result, ConvertResponseModel.class);
+                    if (responseModel.getCode() == ResponseModel.RC_SUCCESS){
+                        onResponseTaoConvertSuccess(responseModel.getAuction());
+                    }
+                    Toast.makeText(GoodsDetailActivity.this, responseModel.getMessage(), Toast.LENGTH_SHORT).show();
                 }
 
                 @Override
                 public void onError(Throwable ex, boolean isOnCallback) {
                     Toast.makeText(GoodsDetailActivity.this, R.string.string_toast_network_error, Toast.LENGTH_SHORT).show();
-                    onResponseTaoPwdError();
-                }
-
-                @Override
-                public void onOther(int code, String result) {
-                    Toast.makeText(GoodsDetailActivity.this, R.string.string_toast_reset_password_error, Toast.LENGTH_SHORT).show();
                     onResponseTaoPwdError();
                 }
             });
@@ -369,21 +358,4 @@ public class GoodsDetailActivity extends BaseActivity {
             e.printStackTrace();
         }
     }
-
-
-    private Bitmap drawableToBitamp(Drawable drawable) {
-        Bitmap bitmap = null;
-        int w = drawable.getIntrinsicWidth();
-        int h = drawable.getIntrinsicHeight();
-        Bitmap.Config config =
-                drawable.getOpacity() != PixelFormat.OPAQUE ? Bitmap.Config.ARGB_8888
-                        : Bitmap.Config.RGB_565;
-        bitmap = Bitmap.createBitmap(w, h, config);
-        //注意，下面三行代码要用到，否在在View或者surfaceview里的canvas.drawBitmap会看不到图
-        Canvas canvas = new Canvas(bitmap);
-        drawable.setBounds(0, 0, w, h);
-        drawable.draw(canvas);
-        return bitmap;
-    }
-
 }
