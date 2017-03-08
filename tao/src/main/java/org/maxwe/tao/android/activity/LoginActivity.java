@@ -83,7 +83,7 @@ public class LoginActivity extends BaseActivity {
                 AccountSignInResponseModel responseModel = JSON.parseObject(result, AccountSignInResponseModel.class);
                 if (responseModel.getCode() == ResponseModel.RC_SUCCESS){
                     SharedPreferencesUtils.saveSession(LoginActivity.this,responseModel.getToken());
-                    onLoginSuccessCallback(responseModel.getToken());
+                    onLoginSuccessCallback();
                 }
                 Toast.makeText(LoginActivity.this, responseModel.getMessage(), Toast.LENGTH_SHORT).show();
                 view.setClickable(true);
@@ -103,12 +103,12 @@ public class LoginActivity extends BaseActivity {
         switch (requestCode) {
             case REQUEST_CODE_REGISTER:
                 if (resultCode == RESPONSE_CODE_SUCCESS) {
-                    onLoginSuccessCallback((TokenModel) data.getSerializableExtra(Constants.KEY_INTENT_SESSION));
+                    onLoginSuccessCallback();
                 }
                 break;
             case REQUEST_CODE_LOST_PASSWORD:
                 if (resultCode == RESPONSE_CODE_SUCCESS) {
-                    onLoginSuccessCallback((TokenModel) data.getSerializableExtra(Constants.KEY_INTENT_SESSION));
+                    onLoginSuccessCallback();
                 }
                 break;
             default:
@@ -116,7 +116,7 @@ public class LoginActivity extends BaseActivity {
         }
     }
 
-    private void onLoginSuccessCallback(TokenModel sessionModel) {
+    private void onLoginSuccessCallback() {
         Intent intent = new Intent(this, MainActivity.class);
         this.startActivity(intent);
         this.finish();
