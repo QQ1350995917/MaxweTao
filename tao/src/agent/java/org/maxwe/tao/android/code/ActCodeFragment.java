@@ -21,9 +21,12 @@ import org.maxwe.tao.android.INetWorkManager;
 import org.maxwe.tao.android.NetworkManager;
 import org.maxwe.tao.android.R;
 import org.maxwe.tao.android.account.agent.AgentEntity;
+import org.maxwe.tao.android.account.agent.AgentMineRequestModel;
+import org.maxwe.tao.android.account.agent.AgentMineResponseModel;
 import org.maxwe.tao.android.account.agent.AgentModel;
 import org.maxwe.tao.android.account.model.TokenModel;
 import org.maxwe.tao.android.agent.TrunkActivity;
+import org.maxwe.tao.android.response.ResponseModel;
 import org.maxwe.tao.android.trade.GrantResponseModel;
 import org.maxwe.tao.android.utils.SharedPreferencesUtils;
 import org.xutils.view.annotation.ContentView;
@@ -160,34 +163,26 @@ public class ActCodeFragment extends BaseFragment {
     private void onRequestMineInfo() {
         try {
             String url = this.getString(R.string.string_url_domain) + this.getString(R.string.string_url_account_mine);
-            TokenModel session = SharedPreferencesUtils.getSession(this.getContext());
-            session.setSign(session.getEncryptSing());
-            NetworkManager.requestByPost(url, session, new INetWorkManager.OnNetworkCallback() {
+            TokenModel tokenModel = SharedPreferencesUtils.getSession(this.getContext());
+            AgentMineRequestModel requestModel = new AgentMineRequestModel(tokenModel);
+            requestModel.setSign(tokenModel.getEncryptSing());
+            NetworkManager.requestByPostNew(url, requestModel, new INetWorkManager.OnNetworkCallback() {
                 @Override
                 public void onSuccess(String result) {
-                    AgentModel responseModel = JSON.parseObject(result, AgentModel.class);
-                        if (responseModel.getAgentEntity().getReach() != 1) {
-                        showUnReachView(responseModel);
-                    } else {
-                        showReachView(responseModel);
+                    AgentMineResponseModel responseModel = JSON.parseObject(result, AgentMineResponseModel.class);
+                    if (responseModel.getCode() == ResponseModel.RC_SUCCESS){
+                        if (responseModel.getAgent().getAgentEntity().getReach() != 1) {
+                            showUnReachView(responseModel.getAgent());
+                        } else {
+                            showReachView(responseModel.getAgent());
+                        }
                     }
-                }
-
-                @Override
-                public void onLoginTimeout(String result) {
-                    Toast.makeText(ActCodeFragment.this.getContext(), R.string.string_toast_timeout, Toast.LENGTH_SHORT).show();
-                    SharedPreferencesUtils.clearSession(ActCodeFragment.this.getContext());
+                    Toast.makeText(ActCodeFragment.this.getContext(),responseModel.getMessage(),Toast.LENGTH_SHORT).show();
                 }
 
                 @Override
                 public void onError(Throwable ex, boolean isOnCallback) {
                     Toast.makeText(ActCodeFragment.this.getContext(), R.string.string_toast_network_error, Toast.LENGTH_SHORT).show();
-//                    onResponseReAct(MainActivity.this.getString(R.string.string_toast_network_error));
-                }
-
-                @Override
-                public void onOther(int code, String result) {
-                    super.onOther(code, result);
                 }
             });
         } catch (Exception e) {

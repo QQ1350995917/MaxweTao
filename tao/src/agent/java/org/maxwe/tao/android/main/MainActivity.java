@@ -4,29 +4,19 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
 import android.view.View;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 
-import com.alibaba.fastjson.JSON;
-
-import org.maxwe.tao.android.INetWorkManager;
-import org.maxwe.tao.android.NetworkManager;
 import org.maxwe.tao.android.R;
-import org.maxwe.tao.android.account.agent.AgentEntity;
-import org.maxwe.tao.android.activity.BaseActivity;
 import org.maxwe.tao.android.activity.BaseFragmentActivity;
 import org.maxwe.tao.android.activity.LoginActivity;
-import org.maxwe.tao.android.activity.VersionActivity;
 import org.maxwe.tao.android.agent.AgentFragment;
 import org.maxwe.tao.android.code.ActCodeFragment;
 import org.maxwe.tao.android.mine.MineFragment;
-import org.maxwe.tao.android.version.VersionEntity;
 import org.xutils.view.annotation.ContentView;
 import org.xutils.view.annotation.ViewInject;
-import org.xutils.x;
 
 /**
  * 默认显示已经被激活的状态，在访问状态下进行校验
@@ -120,10 +110,12 @@ public class MainActivity extends BaseFragmentActivity implements View.OnClickLi
         switch (requestCode) {
             case REQUEST_CODE_PROXY:
                 if (resultCode == LoginActivity.RESPONSE_CODE_SUCCESS) {
+
                 }
                 break;
             case REQUEST_CODE_TRADE:
                 if (resultCode == LoginActivity.RESPONSE_CODE_SUCCESS) {
+
                 }
                 break;
             default:
@@ -141,6 +133,4 @@ public class MainActivity extends BaseFragmentActivity implements View.OnClickLi
         }
         return 0;
     }
-
-
 }

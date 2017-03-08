@@ -16,6 +16,7 @@ import org.maxwe.tao.android.Constants;
 import org.maxwe.tao.android.INetWorkManager;
 import org.maxwe.tao.android.NetworkManager;
 import org.maxwe.tao.android.R;
+import org.maxwe.tao.android.account.model.AccountSignOutRequestModel;
 import org.maxwe.tao.android.account.model.TokenModel;
 import org.maxwe.tao.android.activity.LoginActivity;
 import org.maxwe.tao.android.activity.ModifyActivity;
@@ -48,7 +49,6 @@ public class MineFragment extends BaseFragment {
         switch (requestCode) {
             case REQUEST_CODE_MODIFY_PASSWORD:
                 if (resultCode == LoginActivity.RESPONSE_CODE_SUCCESS) {
-                    onModifyPasswordSuccessCallback((TokenModel) data.getSerializableExtra(Constants.KEY_INTENT_SESSION));
                 }
                 break;
             default:
@@ -116,29 +116,13 @@ public class MineFragment extends BaseFragment {
         view.setClickable(false);
         TokenModel sessionModel = SharedPreferencesUtils.getSession(MineFragment.this.getContext());
         try {
-            sessionModel.setSign(sessionModel.getEncryptSing());
+            AccountSignOutRequestModel requestModel = new AccountSignOutRequestModel(sessionModel);
+            requestModel.setSign(sessionModel.getEncryptSing());
             String url = this.getString(R.string.string_url_domain) + this.getString(R.string.string_url_account_logout);
-            NetworkManager.requestByPost(url, sessionModel, new INetWorkManager.OnNetworkCallback() {
+            NetworkManager.requestByPost(url, requestModel, new INetWorkManager.OnNetworkCallback() {
                 @Override
                 public void onSuccess(String result) {
                     SharedPreferencesUtils.clearSession(MineFragment.this.getContext());
-                    Intent intent = new Intent(MineFragment.this.getContext(), LoginActivity.class);
-                    MineFragment.this.getActivity().startActivity(intent);
-                    MineFragment.this.getActivity().finish();
-                }
-
-                @Override
-                public void onLoginTimeout(String result) {
-                    SharedPreferencesUtils.clearSession(MineFragment.this.getContext());
-                    Intent intent = new Intent(MineFragment.this.getContext(), LoginActivity.class);
-                    MineFragment.this.getActivity().startActivity(intent);
-                    MineFragment.this.getActivity().finish();
-                }
-
-                @Override
-                public void onParamsError(String result) {
-                    SharedPreferencesUtils.clearSession(MineFragment.this.getContext());
-                    SharedPreferencesUtils.clearAuthor(MineFragment.this.getContext());
                     Intent intent = new Intent(MineFragment.this.getContext(), LoginActivity.class);
                     MineFragment.this.getActivity().startActivity(intent);
                     MineFragment.this.getActivity().finish();
@@ -152,13 +136,6 @@ public class MineFragment extends BaseFragment {
                     MineFragment.this.getActivity().finish();
                 }
 
-                @Override
-                public void onOther(int code, String result) {
-                    SharedPreferencesUtils.clearSession(MineFragment.this.getContext());
-                    Intent intent = new Intent(MineFragment.this.getContext(), LoginActivity.class);
-                    MineFragment.this.getActivity().startActivity(intent);
-                    MineFragment.this.getActivity().finish();
-                }
             });
         } catch (Exception e) {
             view.setClickable(true);
@@ -168,9 +145,5 @@ public class MineFragment extends BaseFragment {
             MineFragment.this.getActivity().startActivity(intent);
             MineFragment.this.getActivity().finish();
         }
-    }
-
-    private void onModifyPasswordSuccessCallback(TokenModel sessionModel) {
-        SharedPreferencesUtils.saveSession(this.getContext(), sessionModel);
     }
 }

@@ -74,15 +74,15 @@
     <!--<string name="string_input_grant_data_error">数据错误，请重新搜索</string>-->
     <!--<string name="string_input_trade_fail">转让失败</string>-->
 
-    <!--<string name="string_url_domain">http://172.16.1.163:8080</string>-->
-    <string name="string_url_domain">http://192.168.0.112:8080</string>
+    <string name="string_url_domain">http://172.16.1.163:8080</string>
+    <!--<string name="string_url_domain">http://192.168.0.112:8080</string>-->
     <!--<string name="string_url_domain">http://taomami.net</string>-->
     <string name="string_url_account_exist">/agent/exist</string>
     <string name="string_url_account_lost">/agent/lost</string>
-    <string name="string_url_account_register">/agent/register</string>
-    <string name="string_url_account_login">/agent/login</string>
+    <string name="string_url_account_register">/agent/signup</string>
+    <string name="string_url_account_login">/agent/signin</string>
     <string name="string_url_account_password">/agent/password</string>
-    <string name="string_url_account_logout">/agent/logout</string>
+    <string name="string_url_account_logout">/agent/signout</string>
     <string name="string_url_account_mine">/agent/mine</string>
     <string name="string_url_account_bank">/agent/bank</string>
     <string name="string_url_meta_smsCode">/meta/smsCode</string>
