@@ -4,11 +4,7 @@ import android.content.ClipboardManager;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.Canvas;
 import android.graphics.Paint;
-import android.graphics.PixelFormat;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -37,11 +33,10 @@ import org.maxwe.tao.android.activity.BaseActivity;
 import org.maxwe.tao.android.api.Position;
 import org.maxwe.tao.android.common.AuthorActivity;
 import org.maxwe.tao.android.common.BrandActivity;
-import org.maxwe.tao.android.goods.alimama.ConvertEntity;
-import org.maxwe.tao.android.goods.alimama.ConvertRequestModel;
-import org.maxwe.tao.android.goods.alimama.ConvertResponseModel;
+import org.maxwe.tao.android.goods.alimama.AuctionEntity;
+import org.maxwe.tao.android.goods.alimama.AuctionRequestModel;
+import org.maxwe.tao.android.goods.alimama.AuctionResponseModel;
 import org.maxwe.tao.android.goods.alimama.GoodsEntity;
-import org.maxwe.tao.android.goods.alimama.GoodsResponseModel;
 import org.maxwe.tao.android.response.ResponseModel;
 import org.maxwe.tao.android.utils.SharedPreferencesUtils;
 import org.xutils.view.annotation.ContentView;
@@ -277,9 +272,9 @@ public class GoodsDetailActivity extends BaseActivity {
                 .setCallback(umShareListener).open();
     }
 
-    private ConvertEntity aliConvertEntity = null;
+    private AuctionEntity aliConvertEntity = null;
 
-    private void onResponseTaoConvertSuccess(ConvertEntity aliConvertEntity) {
+    private void onResponseTaoConvertSuccess(AuctionEntity aliConvertEntity) {
         this.bt_act_goods_detail_get_link.setClickable(false);
         this.bt_act_goods_detail_get_link.setVisibility(View.GONE);
         this.tv_act_goods_detail_get_link_result.setVisibility(View.VISIBLE);
@@ -321,7 +316,7 @@ public class GoodsDetailActivity extends BaseActivity {
         CookieManager cookieManager = CookieManager.getInstance();
         String cookie = cookieManager.getCookie(AuthorActivity.URL_LOGIN_MESSAGE);
 
-        ConvertRequestModel aliConvertRequestModel = new ConvertRequestModel();
+        AuctionRequestModel aliConvertRequestModel = new AuctionRequestModel();
 
         aliConvertRequestModel.setCookie(cookie);
         aliConvertRequestModel.setSiteid(Long.parseLong(currentPP.getSiteId()));
@@ -339,7 +334,7 @@ public class GoodsDetailActivity extends BaseActivity {
             NetworkManager.requestByPostNew(url, aliConvertRequestModel, new INetWorkManager.OnNetworkCallback() {
                 @Override
                 public void onSuccess(String result) {
-                    ConvertResponseModel responseModel = JSON.parseObject(result, ConvertResponseModel.class);
+                    AuctionResponseModel responseModel = JSON.parseObject(result, AuctionResponseModel.class);
                     if (responseModel.getCode() == ResponseModel.RC_SUCCESS){
                         onResponseTaoConvertSuccess(responseModel.getAuction());
                     }

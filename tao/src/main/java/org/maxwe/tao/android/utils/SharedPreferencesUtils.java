@@ -10,6 +10,7 @@ import org.maxwe.tao.android.R;
 import org.maxwe.tao.android.account.model.TokenModel;
 import org.maxwe.tao.android.api.AuthorizeEntity;
 import org.maxwe.tao.android.api.Position;
+import org.maxwe.tao.android.goods.alimama.AdZoneEntity;
 
 /**
  * Created by Pengwei Ding on 2017-01-11 10:07.
@@ -103,6 +104,22 @@ public class SharedPreferencesUtils {
         SharedPreferences.Editor edit = sharedPreferences.edit();
         edit.putString(KEY_TAO_PP, position.toJsonString());
         edit.commit();
+    }
+
+    public static void saveCurrentPP(Context context, AdZoneEntity adZoneEntity) {
+        SharedPreferences sharedPreferences = context.getSharedPreferences(KEY_SHARED_PREFERENCES_NAME, Activity.MODE_PRIVATE);
+        SharedPreferences.Editor edit = sharedPreferences.edit();
+        edit.putString(KEY_TAO_PP, JSON.toJSONString(adZoneEntity));
+        edit.commit();
+    }
+
+    public static AdZoneEntity getCurrentPP2(Context context) {
+        SharedPreferences sharedPreferences = context.getSharedPreferences(KEY_SHARED_PREFERENCES_NAME, Activity.MODE_PRIVATE);
+        String pp = sharedPreferences.getString(KEY_TAO_PP, null);
+        if (pp != null) {
+            return JSON.parseObject(pp, AdZoneEntity.class);
+        }
+        return null;
     }
 
     public static Position getCurrentPP(Context context) {

@@ -7,7 +7,7 @@ import java.io.Serializable;
  * Email: www.dingpengwei@foxmail.com www.dingpegnwei@gmail.com
  * Description: TODO
  */
-public class ConvertEntity implements Serializable {
+public class AuctionEntity implements Serializable {
     private String taoToken; // "￥qeerQDT9Yv￥",
     private String couponShortLinkUrl; // "https; ////s.click.taobao.com/njrzN4x",
     private String qrCodeUrl; // "http; ////gqrcode.alicdn.com/img?type=hv&text=https%3A%2F%2Fs.click.taobao.com%2F6FtzN4x&h=300&w=300",
@@ -17,7 +17,7 @@ public class ConvertEntity implements Serializable {
     private String type; // "auction",
     private String shortLinkUrl; // "https; ////s.click.taobao.com/qlszN4x"
 
-    public ConvertEntity() {
+    public AuctionEntity() {
         super();
     }
 

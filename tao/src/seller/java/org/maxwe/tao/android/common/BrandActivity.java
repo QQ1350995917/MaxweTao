@@ -2,7 +2,6 @@ package org.maxwe.tao.android.common;
 
 import android.graphics.Color;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -21,22 +20,25 @@ import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
 
+import org.maxwe.tao.android.INetWorkManager;
+import org.maxwe.tao.android.NetworkManager;
 import org.maxwe.tao.android.R;
+import org.maxwe.tao.android.account.model.TokenModel;
 import org.maxwe.tao.android.activity.BaseActivity;
-import org.maxwe.tao.android.api.Position;
-import org.maxwe.tao.android.api.Promotion;
+import org.maxwe.tao.android.goods.alimama.AdZoneEntity;
+import org.maxwe.tao.android.goods.alimama.BrandCreateRequestModel;
+import org.maxwe.tao.android.goods.alimama.BrandCreateResponseModel;
+import org.maxwe.tao.android.goods.alimama.BrandListRequestModel;
+import org.maxwe.tao.android.goods.alimama.BrandListResponseModel;
+import org.maxwe.tao.android.goods.alimama.GuideEntity;
+import org.maxwe.tao.android.response.ResponseModel;
 import org.maxwe.tao.android.utils.SharedPreferencesUtils;
-import org.xutils.common.Callback;
-import org.xutils.http.RequestParams;
 import org.xutils.view.annotation.ContentView;
 import org.xutils.view.annotation.Event;
 import org.xutils.view.annotation.ViewInject;
-import org.xutils.x;
 
-import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by Pengwei Ding on 2017-02-08 17:00.
@@ -48,8 +50,7 @@ public class BrandActivity extends BaseActivity {
     public static final int CODE_RESULT_SUCCESS = 0;
     public static final int CODE_RESULT_FAIL = 1;
 
-    private Map<Promotion, LinkedList<Position>> promotionListMap = new LinkedHashMap<>();
-    private LinkedList<Promotion> promotionList = new LinkedList<>();
+    private List<GuideEntity> guideEntities = new LinkedList<>();
 
     @ViewInject(R.id.lv_act_brand_promotion)
     private ListView lv_act_brand_promotion;
@@ -65,7 +66,7 @@ public class BrandActivity extends BaseActivity {
     private ProgressBar pb_act_brand_progress;
 
     private BaseAdapter promotionAdapter = null;
-    private Promotion currentPromotion = null;
+    private GuideEntity currentGuideEntity = null;
     private BaseAdapter positionAdapter = null;
 
     @Override
@@ -76,12 +77,12 @@ public class BrandActivity extends BaseActivity {
 
             @Override
             public int getCount() {
-                return promotionList.size();
+                return guideEntities.size();
             }
 
             @Override
             public Object getItem(int position) {
-                return promotionList.get(position);
+                return guideEntities.get(position);
             }
 
             @Override
@@ -93,8 +94,8 @@ public class BrandActivity extends BaseActivity {
             public View getView(int position, View convertView, ViewGroup parent) {
                 View inflate = inflater.inflate(R.layout.activity_brand_item1, null);
                 TextView name = (TextView) inflate.findViewById(R.id.tv_act_brand_item_name);
-                Promotion promotion = promotionList.get(position);
-                name.setText(promotion.getName());
+                GuideEntity guideEntity = guideEntities.get(position);
+                name.setText(guideEntity.getName());
                 return inflate;
             }
         };
@@ -104,16 +105,16 @@ public class BrandActivity extends BaseActivity {
 
             @Override
             public int getCount() {
-                if (currentPromotion != null) {
-                    return promotionListMap.get(currentPromotion).size();
+                if (currentGuideEntity != null) {
+                    return currentGuideEntity.getAdZones() == null ? 0 : currentGuideEntity.getAdZones().size();
                 }
                 return 0;
             }
 
             @Override
             public Object getItem(int position) {
-                if (currentPromotion != null) {
-                    return promotionListMap.get(currentPromotion).get(position);
+                if (currentGuideEntity != null) {
+                    return currentGuideEntity.getAdZones() == null ? null : currentGuideEntity.getAdZones().get(position);
                 }
                 return null;
             }
@@ -128,15 +129,15 @@ public class BrandActivity extends BaseActivity {
                 View inflate = inflater.inflate(R.layout.activity_brand_item2, null);
                 inflate.setBackgroundColor(Color.WHITE);
                 TextView name = (TextView) inflate.findViewById(R.id.tv_act_brand_item_name);
-                Position position1 = promotionListMap.get(currentPromotion).get(position);
+                AdZoneEntity adZoneEntity = currentGuideEntity.getAdZones().get(position);
                 RadioButton status = (RadioButton) inflate.findViewById(R.id.rb_act_brand_item_status);
-                Position currentPP = SharedPreferencesUtils.getCurrentPP(BrandActivity.this);
-                if (currentPP != null && position1.getId().equals(currentPP.getId())) {
+                AdZoneEntity adZoneEntityCurrent = SharedPreferencesUtils.getCurrentPP2(BrandActivity.this);
+                if (adZoneEntityCurrent != null && adZoneEntity.getId().equals(adZoneEntityCurrent.getId())) {
                     status.setChecked(true);
                 } else {
                     status.setChecked(false);
                 }
-                name.setText(position1.getName());
+                name.setText(adZoneEntity.getName());
                 return inflate;
             }
         };
@@ -153,7 +154,7 @@ public class BrandActivity extends BaseActivity {
                     childAt.setBackground(BrandActivity.this.getResources().getDrawable(R.color.transparent));
                 }
                 view.setBackground(BrandActivity.this.getResources().getDrawable(R.drawable.shape_rect_bg_shadow));
-                currentPromotion = promotionList.get(position);
+                currentGuideEntity = guideEntities.get(position);
                 positionAdapter.notifyDataSetChanged();
             }
         });
@@ -168,9 +169,8 @@ public class BrandActivity extends BaseActivity {
                 }
                 RadioButton status = (RadioButton) view.findViewById(R.id.rb_act_brand_item_status);
                 status.setChecked(true);
-                Position position1 = promotionListMap.get(currentPromotion).get(position);
-                position1.setPromotion(currentPromotion);
-                SharedPreferencesUtils.saveCurrentPP(BrandActivity.this, position1);
+                AdZoneEntity adZoneEntity = currentGuideEntity.getAdZones().get(position);
+                SharedPreferencesUtils.saveCurrentPP(BrandActivity.this, adZoneEntity);
             }
         });
 
@@ -185,8 +185,8 @@ public class BrandActivity extends BaseActivity {
 
     @Override
     public void onBackPressed() {
-        Position currentPP = SharedPreferencesUtils.getCurrentPP(this);
-        if (currentPP == null) {
+        AdZoneEntity currentAdZoneEntity = SharedPreferencesUtils.getCurrentPP2(this);
+        if (currentAdZoneEntity == null) {
             this.setResult(CODE_RESULT_FAIL);
         } else {
             this.setResult(CODE_RESULT_SUCCESS);
@@ -199,38 +199,13 @@ public class BrandActivity extends BaseActivity {
         this.rl_act_brand_create.setVisibility(View.VISIBLE);
     }
 
-    private void guideListSuccess(List<Map<String, Object>> adZoneList) {
-        this.promotionListMap.clear();
+    private void guideListSuccess(List<GuideEntity> guideEntities) {
+        this.guideEntities.clear();
         this.pb_act_brand_progress.setVisibility(View.GONE);
-        for (Map<String, Object> map : adZoneList) {
-            String id = map.get("id").toString();
-            String name = map.get("name").toString();
-            List<Map<String, Object>> sub = (List<Map<String, Object>>) map.get("sub");
-            Promotion promotion = new Promotion(id, name);
-            LinkedList<Position> positions = new LinkedList<>();
-            if (sub != null) {
-                for (Map<String, Object> subMap : sub) {
-                    String positionId = subMap.get("id").toString();
-                    String positionName = subMap.get("name").toString();
-                    Position position = new Position(id, positionId, positionName);
-                    positions.add(position);
-                }
-            }
-            this.promotionListMap.put(promotion, positions);
-            this.promotionList.add(promotion);
-        }
-
+        this.guideEntities.addAll(guideEntities);
         this.promotionAdapter.notifyDataSetChanged();
-
-        this.currentPromotion = promotionList.get(0);
+        this.currentGuideEntity = this.guideEntities.get(0);
         this.positionAdapter.notifyDataSetChanged();
-//        new Handler().postDelayed(new Runnable() {
-//            @Override
-//            public void run() {
-//                View view = lv_act_brand_promotion.getAdapter().getView(0, null, null);
-//                view.setBackground(BrandActivity.this.getResources().getDrawable(R.drawable.shape_rect_bg_shadow));
-//            }
-//        },300);
     }
 
     private void guideListError() {
@@ -247,180 +222,71 @@ public class BrandActivity extends BaseActivity {
         }
         this.pb_act_brand_progress.setVisibility(View.VISIBLE);
         this.rl_act_brand_create.setVisibility(View.GONE);
-        createGuide(this.getString(R.string.string_tao_promotion_new_name), weiXinAccount, this.getString(R.string.string_tao_position_new_name));
+        createGuide(this.getString(R.string.string_tao_promotion_new_name), this.getString(R.string.string_tao_position_new_name),weiXinAccount);
     }
 
     private void getGuideList() {
-        RequestParams requestParams = new RequestParams(AuthorActivity.URL_AD_ZONE);
-        CookieManager cookieManager = CookieManager.getInstance();
-        String CookieStr = cookieManager.getCookie(AuthorActivity.URL_LOGIN_MESSAGE);
-        requestParams.addHeader("Cookie", CookieStr);
-        Callback.Cancelable cancelable = x.http().get(requestParams, new Callback.CommonCallback<String>() {
-            @Override
-            public void onSuccess(String result) {
-                Map rootMap = JSON.parseObject(result, Map.class);
-                Map<String, Object> dataMap = (Map<String, Object>) rootMap.get(AuthorActivity.KEY_DATA);
-                List<Map<String, Object>> adZoneList = (List<Map<String, Object>>) dataMap.get(AuthorActivity.KEY_OTHER_ADZONES);
-                if (adZoneList != null && adZoneList.size() > 0) {
-                    guideListSuccess(adZoneList);
-                } else {
-                    onNoGuideList();
-                }
-            }
-
-            @Override
-            public void onError(Throwable ex, boolean isOnCallback) {
-                ex.printStackTrace();
-                Toast.makeText(BrandActivity.this, "获取导购推广出错了", Toast.LENGTH_SHORT).show();
-            }
-
-            @Override
-            public void onCancelled(CancelledException cex) {
-
-            }
-
-            @Override
-            public void onFinished() {
-
-            }
-        });
-    }
-
-    private void createGuide(final String name, String account, final String positionName) {
-        RequestParams requestParams = new RequestParams(AuthorActivity.URL_ADD_GUIDE);
-        CookieManager cookieManager = CookieManager.getInstance();
-        String CookieStr = cookieManager.getCookie(AuthorActivity.URL_LOGIN_MESSAGE);
-        requestParams.addHeader("Cookie", CookieStr);
-        requestParams.addParameter(AuthorActivity.KEY_NAME, name);
-        requestParams.addParameter(AuthorActivity.KEY_CATEGORY_ID, 14);
-        requestParams.addParameter(AuthorActivity.KEY_ACCOUNT1, account);
-        Callback.Cancelable cancelable = x.http().post(requestParams, new Callback.CommonCallback<String>() {
-            @Override
-            public void onSuccess(String result) {
-                Map rootMap = JSON.parseObject(result, Map.class);
-                Map<String, Object> infoMap = (Map<String, Object>) rootMap.get(AuthorActivity.KEY_INFO);
-                if (Boolean.parseBoolean(infoMap.get(AuthorActivity.KEY_OK).toString())) {
-                    getNewGuideInfo(name, positionName);
-                }
-            }
-
-            @Override
-            public void onError(Throwable ex, boolean isOnCallback) {
-                ex.printStackTrace();
-                Toast.makeText(BrandActivity.this, "创建导购推广出错了", Toast.LENGTH_SHORT).show();
-            }
-
-            @Override
-            public void onCancelled(CancelledException cex) {
-
-            }
-
-            @Override
-            public void onFinished() {
-
-            }
-        });
-    }
-
-    private void getNewGuideInfo(final String newGuideName, final String positionName) {
-        RequestParams requestParams = new RequestParams(AuthorActivity.URL_GUIDE_LIST);
-        CookieManager cookieManager = CookieManager.getInstance();
-        String CookieStr = cookieManager.getCookie(AuthorActivity.URL_LOGIN_MESSAGE);
-        requestParams.addHeader("Cookie", CookieStr);
-        Callback.Cancelable cancelable = x.http().get(requestParams, new Callback.CommonCallback<String>() {
-            @Override
-            public void onSuccess(String result) {
-                Map rootMap = JSON.parseObject(result, Map.class);
-                Map<String, Object> dataMap = (Map<String, Object>) rootMap.get(AuthorActivity.KEY_DATA);
-                List<Map<String, Object>> adZoneList = (List<Map<String, Object>>) dataMap.get(AuthorActivity.KEY_GUIDE_LIST);
-                if (adZoneList != null && adZoneList.size() > 0) {
-                    Map<String, Object> stringObjectMap = adZoneList.get(0);
-                    String name = stringObjectMap.get(AuthorActivity.KEY_NAME).toString();
-                    String guideId = stringObjectMap.get(AuthorActivity.KEY_GUIDE_ID).toString();
-                    if (newGuideName.equals(name)) {
-                        createADZone(guideId, positionName);
+        try {
+            String url = this.getString(R.string.string_url_domain) + this.getString(R.string.string_url_ali_goods_brands);
+            CookieManager cookieManager = CookieManager.getInstance();
+            String cookie = cookieManager.getCookie(AuthorActivity.URL_LOGIN_MESSAGE);
+            TokenModel session = SharedPreferencesUtils.getSession(BrandActivity.this);
+            BrandListRequestModel requestModel = new BrandListRequestModel(session, cookie);
+            requestModel.setSign(session.getEncryptSing());
+            NetworkManager.requestByPostNew(url, requestModel, new INetWorkManager.OnNetworkCallback() {
+                @Override
+                public void onSuccess(String result) {
+                    BrandListResponseModel responseModel = JSON.parseObject(result, BrandListResponseModel.class);
+                    if (responseModel.getCode() == ResponseModel.RC_SUCCESS) {
+                        guideListSuccess(responseModel.getBrands());
+                    } else if (responseModel.getCode() == ResponseModel.RC_NOT_FOUND) {
+                        onNoGuideList();
                     }
+                    Toast.makeText(BrandActivity.this, responseModel.getMessage(), Toast.LENGTH_SHORT).show();
                 }
-            }
 
-            @Override
-            public void onError(Throwable ex, boolean isOnCallback) {
-                ex.printStackTrace();
-                Toast.makeText(BrandActivity.this, "获取新建导购推广出错了", Toast.LENGTH_SHORT).show();
-            }
-
-            @Override
-            public void onCancelled(CancelledException cex) {
-
-            }
-
-            @Override
-            public void onFinished() {
-
-            }
-        });
-    }
-
-    private void createADZone(String siteId, String positionName) {
-        RequestParams requestParams = new RequestParams(AuthorActivity.URL_ADD_AD_ZONE);
-        CookieManager cookieManager = CookieManager.getInstance();
-        String CookieStr = cookieManager.getCookie(AuthorActivity.URL_LOGIN_MESSAGE);
-        requestParams.addHeader("Cookie", CookieStr);
-        requestParams.addParameter(AuthorActivity.KEY_TAG, 29);
-        requestParams.addParameter(AuthorActivity.KEY_SITE_ID, siteId);
-        requestParams.addParameter(AuthorActivity.KEY_T, System.currentTimeMillis());
-        requestParams.addParameter(AuthorActivity.KEY_NEW_AD_ZONE_NAME, positionName);
-        requestParams.addParameter(AuthorActivity.KEY_GCID, 8);
-        requestParams.addParameter(AuthorActivity.KEY_TB_TOKEN_, getTaoBaoTokenFormCookie(CookieStr));
-        requestParams.addParameter(AuthorActivity.KEY_SELECT_ACT, "add");
-        Callback.Cancelable cancelable = x.http().post(requestParams, new Callback.CommonCallback<String>() {
-            @Override
-            public void onSuccess(String result) {
-                Map rootMap = JSON.parseObject(result, Map.class);
-                Map<String, Object> dataMap = (Map<String, Object>) rootMap.get(AuthorActivity.KEY_DATA);
-                Map<String, Object> infoMap = (Map<String, Object>) rootMap.get(AuthorActivity.KEY_INFO);
-                if (Boolean.parseBoolean(infoMap.get(AuthorActivity.KEY_OK).toString())) {
-                    Position position1 = new Position(dataMap.get("siteId").toString(),dataMap.get("adzoneId").toString(),"");
-                    position1.setPromotion(currentPromotion);
-                    SharedPreferencesUtils.saveCurrentPP(BrandActivity.this, position1);
-                    getGuideList();
+                @Override
+                public void onError(Throwable ex, boolean isOnCallback) {
+                    Toast.makeText(BrandActivity.this, "网络错误，请重试", Toast.LENGTH_SHORT).show();
                 }
-            }
-
-            @Override
-            public void onError(Throwable ex, boolean isOnCallback) {
-                ex.printStackTrace();
-                Toast.makeText(BrandActivity.this, "创建导购推广位出错了", Toast.LENGTH_SHORT).show();
-            }
-
-            @Override
-            public void onCancelled(CancelledException cex) {
-
-            }
-
-            @Override
-            public void onFinished() {
-
-            }
-        });
-    }
-
-    private static String getTaoBaoTokenFormCookie(String cookie) {
-        String taoBaoToken = null;
-        if (cookie != null) {
-            String[] split = cookie.split(";");
-            if (split != null) {
-                for (String item : split) {
-                    if (item.contains(AuthorActivity.KEY_TB_TOKEN_)) {
-                        String[] split1 = item.split("=");
-                        if (split1.length > 1) {
-                            taoBaoToken = split1[1];
-                        }
-                        break;
-                    }
-                }
-            }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+            Toast.makeText(BrandActivity.this, "发生错误，请重试", Toast.LENGTH_SHORT).show();
         }
-        return taoBaoToken;
+    }
+
+    private void createGuide(String guideName, String adZoneName, String weChat) {
+        try {
+            String url = this.getString(R.string.string_url_domain) + this.getString(R.string.string_url_ali_goods_create_brands);
+            CookieManager cookieManager = CookieManager.getInstance();
+            String cookie = cookieManager.getCookie(AuthorActivity.URL_LOGIN_MESSAGE);
+            TokenModel session = SharedPreferencesUtils.getSession(BrandActivity.this);
+            BrandCreateRequestModel requestModel = new BrandCreateRequestModel(session, cookie);
+            requestModel.setGuideName(guideName);
+            requestModel.setAdZoneName(adZoneName);
+            requestModel.setWeChat(weChat);
+            requestModel.setSign(session.getEncryptSing());
+            NetworkManager.requestByPostNew(url, requestModel, new INetWorkManager.OnNetworkCallback() {
+                @Override
+                public void onSuccess(String result) {
+                    BrandCreateResponseModel responseModel = JSON.parseObject(result, BrandCreateResponseModel.class);
+                    if (responseModel.getCode() == ResponseModel.RC_SUCCESS) {
+                        guideListSuccess(responseModel.getBrands());
+                    } else {
+                        onNoGuideList();
+                    }
+                    Toast.makeText(BrandActivity.this, responseModel.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+
+                @Override
+                public void onError(Throwable ex, boolean isOnCallback) {
+                    Toast.makeText(BrandActivity.this, "网络错误，请重试", Toast.LENGTH_SHORT).show();
+                }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+            Toast.makeText(BrandActivity.this, "发生错误，请重试", Toast.LENGTH_SHORT).show();
+        }
     }
 }

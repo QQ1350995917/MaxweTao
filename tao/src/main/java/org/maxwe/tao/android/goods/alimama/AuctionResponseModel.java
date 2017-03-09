@@ -7,18 +7,18 @@ import org.maxwe.tao.android.response.ResponseModel;
  * Email: www.dingpengwei@foxmail.com www.dingpegnwei@gmail.com
  * Description: 转链响应模型
  */
-public class ConvertResponseModel extends ResponseModel<ConvertRequestModel> {
-    private ConvertEntity auction;
+public class AuctionResponseModel extends ResponseModel<AuctionRequestModel> {
+    private AuctionEntity auction;
 
-    public ConvertResponseModel() {
+    public AuctionResponseModel() {
         super();
     }
 
-    public ConvertEntity getAuction() {
+    public AuctionEntity getAuction() {
         return auction;
     }
 
-    public void setAuction(ConvertEntity auction) {
+    public void setAuction(AuctionEntity auction) {
         this.auction = auction;
     }
 }

@@ -49,7 +49,7 @@ public class LinkFragment extends BaseFragment {
     @ViewInject(R.id.bt_frg_link_result)
     private Button bt_frg_link_result;
 
-    private String url = null;
+    private String convertUrl = null;
 
     @Event(value = R.id.et_frg_link_paste, type = View.OnClickListener.class)
     private void paste(View view) {
@@ -98,8 +98,8 @@ public class LinkFragment extends BaseFragment {
 
     @Event(value = R.id.bt_act_link_action, type = View.OnClickListener.class)
     private void onLinkConvertAction(View view) {
-        this.url = et_frg_link_content.getText().toString();
-        if (TextUtils.isEmpty(this.url)) {
+        this.convertUrl = et_frg_link_content.getText().toString();
+        if (TextUtils.isEmpty(this.convertUrl)) {
             Toast.makeText(LinkFragment.this.getContext(), "请输入要转换的链接", Toast.LENGTH_SHORT).show();
         } else {
             AuthorActivity.requestTaoLoginStatus(this.getContext(), new AuthorActivity.TaoLoginStatusCallback() {
@@ -178,7 +178,7 @@ public class LinkFragment extends BaseFragment {
         String url = this.getString(R.string.string_url_domain) + this.getString(R.string.string_url_ali_goods_search);
         TokenModel sessionModel = SharedPreferencesUtils.getSession(this.getContext());
         GoodsRequestModel aliGoodsRequestModel = new GoodsRequestModel();
-        aliGoodsRequestModel.setQ(this.url);
+        aliGoodsRequestModel.setQ(this.convertUrl);
         aliGoodsRequestModel.setT(sessionModel.getT());
         aliGoodsRequestModel.setId(sessionModel.getId());
         aliGoodsRequestModel.setCellphone(sessionModel.getCellphone());
