@@ -23,6 +23,8 @@ import org.maxwe.tao.android.R;
 import org.maxwe.tao.android.account.model.TokenModel;
 import org.maxwe.tao.android.common.AuthorActivity;
 import org.maxwe.tao.android.common.BrandActivity;
+import org.maxwe.tao.android.goods.alimama.GoodsEntity;
+import org.maxwe.tao.android.goods.alimama.GoodsRequestModel;
 import org.maxwe.tao.android.index.GoodsDetailActivity;
 import org.maxwe.tao.android.utils.SharedPreferencesUtils;
 import org.xutils.view.annotation.ContentView;
@@ -145,9 +147,9 @@ public class LinkFragment extends BaseFragment {
         }
     }
 
-    private AliGoodsEntity aliGoodsEntity;
+    private GoodsEntity aliGoodsEntity;
 
-    private void onRequestFinishBySuccess(List<AliGoodsEntity> aliGoodsEntities) {
+    private void onRequestFinishBySuccess(List<GoodsEntity> aliGoodsEntities) {
         if (aliGoodsEntities != null && aliGoodsEntities.size() > 0) {
             aliGoodsEntity = aliGoodsEntities.get(0);
             this.bt_frg_link_result.setVisibility(View.VISIBLE);
@@ -175,7 +177,7 @@ public class LinkFragment extends BaseFragment {
     private void requestTaoConvert() {
         String url = this.getString(R.string.string_url_domain) + this.getString(R.string.string_url_ali_goods_search);
         TokenModel sessionModel = SharedPreferencesUtils.getSession(this.getContext());
-        AliGoodsRequestModel aliGoodsRequestModel = new AliGoodsRequestModel();
+        GoodsRequestModel aliGoodsRequestModel = new GoodsRequestModel();
         aliGoodsRequestModel.setQ(this.url);
         aliGoodsRequestModel.setT(sessionModel.getT());
         aliGoodsRequestModel.setId(sessionModel.getId());
@@ -189,7 +191,7 @@ public class LinkFragment extends BaseFragment {
             NetworkManager.requestByPost(url, aliGoodsRequestModel, new INetWorkManager.OnNetworkCallback() {
                 @Override
                 public void onSuccess(String result) {
-                    List<AliGoodsEntity> aliGoodsEntities = JSON.parseArray(result, AliGoodsEntity.class);
+                    List<GoodsEntity> aliGoodsEntities = JSON.parseArray(result, GoodsEntity.class);
                     if (aliGoodsEntities != null) {
                         onRequestFinishBySuccess(aliGoodsEntities);
                     }
