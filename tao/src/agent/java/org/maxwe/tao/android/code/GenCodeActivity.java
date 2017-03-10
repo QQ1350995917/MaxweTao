@@ -19,6 +19,7 @@ import org.maxwe.tao.android.account.model.TokenModel;
 import org.maxwe.tao.android.activity.BaseActivity;
 import org.maxwe.tao.android.activity.LoginActivity;
 import org.maxwe.tao.android.response.IResponse;
+import org.maxwe.tao.android.response.ResponseModel;
 import org.maxwe.tao.android.trade.GrantRequestModel;
 import org.maxwe.tao.android.trade.GrantResponseModel;
 import org.maxwe.tao.android.utils.SharedPreferencesUtils;
@@ -80,35 +81,17 @@ public class GenCodeActivity extends BaseActivity {
             tradeModel.setAuthenticatePassword(password);
             tradeModel.setSign(sessionModel.getEncryptSing());
             String url = this.getString(R.string.string_url_domain) + this.getString(R.string.string_url_trade_grant);
-            NetworkManager.requestByPost(url, tradeModel, new INetWorkManager.OnNetworkCallback() {
+            NetworkManager.requestByPostNew(url, tradeModel, new INetWorkManager.OnNetworkCallback() {
                 @Override
                 public void onSuccess(String result) {
                     Intent intent = new Intent();
-                    GrantResponseModel tradeModel = JSON.parseObject(result, GrantResponseModel.class);
-                    intent.putExtra(Constants.KEY_INTENT_SESSION, tradeModel);
-                    GenCodeActivity.this.setResult(RESULT_CODE_GEN_ACT_CODE_OK, intent);
-                    GenCodeActivity.this.finish();
-                }
-
-                @Override
-                public void onParamsError(String result) {
-                    Toast.makeText(GenCodeActivity.this,R.string.string_toast_password_different,Toast.LENGTH_SHORT).show();
-                    resetPasswordInput();
-                    view.setClickable(true);
-                }
-
-                @Override
-                public void onAccessBad(String result) {
-                    Toast.makeText(GenCodeActivity.this,R.string.string_gen_act_code_forbidden,Toast.LENGTH_SHORT).show();
-                    view.setClickable(true);
-                }
-
-                @Override
-                public void onLoginTimeout(String result) {
-                    SharedPreferencesUtils.clearSession(GenCodeActivity.this);
-                    Intent intent = new Intent(GenCodeActivity.this, LoginActivity.class);
-                    GenCodeActivity.this.startActivity(intent);
-                    GenCodeActivity.this.finish();
+                    GrantResponseModel responseModel = JSON.parseObject(result, GrantResponseModel.class);
+                    if (responseModel.getCode() == ResponseModel.RC_SUCCESS){
+                        intent.putExtra(Constants.KEY_INTENT_SESSION, responseModel);
+                        GenCodeActivity.this.setResult(RESULT_CODE_GEN_ACT_CODE_OK, intent);
+                        GenCodeActivity.this.finish();
+                    }
+                    Toast.makeText(GenCodeActivity.this,responseModel.getMessage(),Toast.LENGTH_SHORT).show();
                 }
 
                 @Override
@@ -117,14 +100,6 @@ public class GenCodeActivity extends BaseActivity {
                     GenCodeActivity.this.startActivity(intent);
                     GenCodeActivity.this.finish();
                 }
-
-                @Override
-                public void onOther(int code, String result) {
-                    if (code == IResponse.ResultCode.RC_ACCESS_BAD_2.getCode()){
-                        Toast.makeText(GenCodeActivity.this,R.string.string_agent_code_no_enough,Toast.LENGTH_SHORT).show();
-                    }
-                    view.setClickable(true);
-                }
             });
         } catch (Exception e) {
             view.setClickable(true);
@@ -132,6 +107,4 @@ public class GenCodeActivity extends BaseActivity {
             Toast.makeText(this, "请求失败", Toast.LENGTH_SHORT).show();
         }
     }
-
-
 }

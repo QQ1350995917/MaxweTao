@@ -4,6 +4,7 @@ package org.maxwe.tao.android.account.agent;
 import com.alibaba.fastjson.annotation.JSONField;
 
 import org.maxwe.tao.android.account.model.AuthenticateModel;
+import org.maxwe.tao.android.account.model.TokenModel;
 import org.maxwe.tao.android.utils.StringUtils;
 
 /**
@@ -17,6 +18,16 @@ public class AgentBankRequestModel extends AuthenticateModel {
 
     public AgentBankRequestModel() {
         super();
+    }
+
+    public AgentBankRequestModel(TokenModel tokenModel) {
+        super(tokenModel);
+    }
+
+    public AgentBankRequestModel(TokenModel tokenModel,String trueName,String zhifubao) {
+        super(tokenModel);
+        this.trueName = trueName;
+        this.zhifubao = zhifubao;
     }
 
     public String getTrueName() {

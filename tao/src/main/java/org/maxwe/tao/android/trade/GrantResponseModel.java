@@ -1,12 +1,14 @@
 package org.maxwe.tao.android.trade;
 
+import org.maxwe.tao.android.response.ResponseModel;
+
 /**
  * Created by Pengwei Ding on 2017-03-04 11:43.
  * Email: www.dingpengwei@foxmail.com www.dingpegnwei@gmail.com
  * Description: 生成单个授权码的相应模型
  * 给普通用户使用，此时仅仅是生成码的相应，而不是用户真正使用
  */
-public class GrantResponseModel extends GrantRequestModel {
+public class GrantResponseModel extends ResponseModel<GrantRequestModel> {
     private String actCode;
     private int codeNum;
     private float price;

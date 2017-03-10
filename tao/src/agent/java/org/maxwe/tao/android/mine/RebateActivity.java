@@ -22,6 +22,7 @@ import org.maxwe.tao.android.activity.BaseActivity;
 import org.maxwe.tao.android.history.RebateModel;
 import org.maxwe.tao.android.history.RebateRequestModel;
 import org.maxwe.tao.android.history.RebateResponseModel;
+import org.maxwe.tao.android.response.ResponseModel;
 import org.maxwe.tao.android.utils.DateTimeUtils;
 import org.maxwe.tao.android.utils.SharedPreferencesUtils;
 import org.xutils.view.annotation.ContentView;
@@ -99,22 +100,14 @@ public class RebateActivity extends BaseActivity {
             RebateRequestModel rebateRequestModel = new RebateRequestModel(tokenModel, currentYearMonthDate[0], currentYearMonthDate[1], 3);
             rebateRequestModel.setSign(tokenModel.getEncryptSing());
             String url = this.getString(R.string.string_url_domain) + this.getString(R.string.string_url_history_rebate);
-            NetworkManager.requestByPost(url, rebateRequestModel, new INetWorkManager.OnNetworkCallback() {
+            NetworkManager.requestByPostNew(url, rebateRequestModel, new INetWorkManager.OnNetworkCallback() {
                 @Override
                 public void onSuccess(String result) {
                     RebateResponseModel responseModel = JSON.parseObject(result, RebateResponseModel.class);
-                    onResponseSuccess(responseModel);
-                }
-
-                @Override
-                public void onLoginTimeout(String result) {
-                    SharedPreferencesUtils.clearSession(RebateActivity.this);
-                    Toast.makeText(RebateActivity.this, R.string.string_toast_timeout, Toast.LENGTH_SHORT).show();
-                }
-
-                @Override
-                public void onEmptyResult(String result) {
-                    Toast.makeText(RebateActivity.this, R.string.string_no_data, Toast.LENGTH_SHORT).show();
+                    if (responseModel.getCode() == ResponseModel.RC_SUCCESS){
+                        onResponseSuccess(responseModel);
+                    }
+                    Toast.makeText(RebateActivity.this, responseModel.getMessage(), Toast.LENGTH_SHORT).show();
                 }
 
                 @Override

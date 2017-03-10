@@ -1,7 +1,5 @@
 package org.maxwe.tao.android.mate;
 
-import com.alibaba.fastjson.annotation.JSONField;
-
 import org.maxwe.tao.android.account.model.AuthenticateModel;
 import org.maxwe.tao.android.account.model.TokenModel;
 
@@ -18,7 +16,7 @@ public class BranchBegRequestModel extends AuthenticateModel {
         super();
     }
 
-    public BranchBegRequestModel(TokenModel tokenModel,int trunkId,String weChat) {
+    public BranchBegRequestModel(TokenModel tokenModel, int trunkId, String weChat) {
         super(tokenModel);
         this.trunkId = trunkId;
         this.weChat = weChat;
@@ -40,11 +38,4 @@ public class BranchBegRequestModel extends AuthenticateModel {
         this.weChat = weChat;
     }
 
-    @JSONField(serialize = false)
-    public BranchBegResponseModel getBranchBegResponseModel(){
-        BranchBegResponseModel branchBegResponseModel = new BranchBegResponseModel();
-        branchBegResponseModel.setTrunkId(this.getTrunkId());
-        branchBegResponseModel.setWeChat(this.getWeChat());
-        return branchBegResponseModel;
-    }
 }

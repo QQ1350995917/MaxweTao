@@ -2,8 +2,6 @@ package org.maxwe.tao.android.account.agent;
 
 import org.maxwe.tao.android.account.AccountEntity;
 
-import java.io.Serializable;
-
 /**
  * Created by Pengwei Ding on 2017-01-10 17:54.
  * Email: www.dingpengwei@foxmail.com www.dingpegnwei@gmail.com
@@ -19,6 +17,7 @@ public class AgentEntity extends AccountEntity {
     private String zhifubao;// 支付宝账户
     private long pIdTime;
     private long reachTime;
+    private long bankTime;
 
     public AgentEntity() {
         super();
@@ -96,6 +95,13 @@ public class AgentEntity extends AccountEntity {
         this.reachTime = reachTime;
     }
 
+    public long getBankTime() {
+        return bankTime;
+    }
+
+    public void setBankTime(long bankTime) {
+        this.bankTime = bankTime;
+    }
 
     public String getCodeStatusString(){
         return this.getSpendCodes() + "/"  + this.getLeftCodes() + "/" + this.getHaveCodes();

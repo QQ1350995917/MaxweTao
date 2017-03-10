@@ -1,6 +1,7 @@
 package org.maxwe.tao.android.mate;
 
 import org.maxwe.tao.android.level.LevelEntity;
+import org.maxwe.tao.android.response.ResponseModel;
 
 import java.util.List;
 
@@ -9,7 +10,7 @@ import java.util.List;
  * Email: www.dingpengwei@foxmail.com www.dingpegnwei@gmail.com
  * Description: 代理查看下级信息的响应模型
  */
-public class BranchInfoResponseModel extends BranchInfoRequestModel {
+public class BranchInfoResponseModel extends ResponseModel<BranchInfoRequestModel> {
     private MateModel branch;
     private List<LevelEntity> levels;
 

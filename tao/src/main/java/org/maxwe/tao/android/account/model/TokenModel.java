@@ -18,7 +18,6 @@ public class TokenModel implements Serializable {
     private String t;//token字符串
     private int id;//用户ID
     private String cellphone;//电话号码
-    private String verification;
     private int apt; // 登录类型,在内存中标记token的类型
     private String sign;
 
@@ -62,14 +61,6 @@ public class TokenModel implements Serializable {
 
     public void setCellphone(String cellphone) {
         this.cellphone = cellphone;
-    }
-
-    public String getVerification() {
-        return verification;
-    }
-
-    public void setVerification(String verification) {
-        this.verification = verification;
     }
 
     public int getApt() {

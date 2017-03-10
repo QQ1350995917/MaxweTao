@@ -1,13 +1,14 @@
 package org.maxwe.tao.android.mate;
 
 import org.maxwe.tao.android.account.agent.AgentEntity;
+import org.maxwe.tao.android.response.ResponseModel;
 
 /**
  * Created by Pengwei Ding on 2017-03-03 15:56.
  * Email: www.dingpengwei@foxmail.com www.dingpegnwei@gmail.com
  * Description: 获取上级代理的响应模型
  */
-public class TrunkInfoResponseModel extends TrunkInfoRequestModel {
+public class TrunkInfoResponseModel extends ResponseModel<TrunkInfoRequestModel> {
 
     private MateModel trunk;
     private AgentEntity branch;
@@ -16,7 +17,7 @@ public class TrunkInfoResponseModel extends TrunkInfoRequestModel {
         super();
     }
 
-    public TrunkInfoResponseModel(MateModel trunk,AgentEntity branch){
+    public TrunkInfoResponseModel(MateModel trunk, AgentEntity branch) {
         this.trunk = trunk;
         this.branch = branch;
     }

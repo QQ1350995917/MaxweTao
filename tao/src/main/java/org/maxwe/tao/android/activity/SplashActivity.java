@@ -14,6 +14,9 @@ import org.maxwe.tao.android.utils.SharedPreferencesUtils;
 import org.xutils.view.annotation.ContentView;
 import org.xutils.view.annotation.ViewInject;
 
+import java.io.File;
+import java.io.IOException;
+
 /**
  * Created by Pengwei Ding on 2016-12-30 13:03.
  * Email: www.dingpengwei@foxmail.com www.dingpegnwei@gmail.com

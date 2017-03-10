@@ -1,11 +1,13 @@
 package org.maxwe.tao.android.mate;
 
+import org.maxwe.tao.android.response.ResponseModel;
+
 /**
  * Created by Pengwei Ding on 2017-03-03 16:35.
  * Email: www.dingpengwei@foxmail.com www.dingpegnwei@gmail.com
  * Description: 向下级授权的响应模型
  */
-public class GrantBranchResponseModel extends GrantBranchRequestModel {
+public class GrantBranchResponseModel extends ResponseModel<GrantBranchRequestModel> {
     private MateModel branch;
 
     public GrantBranchResponseModel() {

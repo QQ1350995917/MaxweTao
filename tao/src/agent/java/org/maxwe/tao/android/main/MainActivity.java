@@ -18,6 +18,9 @@ import org.maxwe.tao.android.mine.MineFragment;
 import org.xutils.view.annotation.ContentView;
 import org.xutils.view.annotation.ViewInject;
 
+import java.io.File;
+import java.io.IOException;
+
 /**
  * 默认显示已经被激活的状态，在访问状态下进行校验
  */

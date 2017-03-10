@@ -25,6 +25,7 @@ import org.maxwe.tao.android.account.model.TokenModel;
 import org.maxwe.tao.android.mate.BranchesRequestModel;
 import org.maxwe.tao.android.mate.BranchesResponseModel;
 import org.maxwe.tao.android.mate.MateModel;
+import org.maxwe.tao.android.response.ResponseModel;
 import org.maxwe.tao.android.utils.SharedPreferencesUtils;
 import org.xutils.view.annotation.ContentView;
 import org.xutils.view.annotation.Event;
@@ -142,7 +143,6 @@ public class AgentFragment extends BaseFragment implements SwipeRefreshLayout.On
         this.startActivity(intent);
     }
 
-
     // 成功返回空数据
     private void onResponseSuccessEmpty() {
         this.srl_frg_agent_list_container.setRefreshing(false);
@@ -176,23 +176,14 @@ public class AgentFragment extends BaseFragment implements SwipeRefreshLayout.On
             BranchesRequestModel branchModel = new BranchesRequestModel(session, pageIndex, pageSize);
             branchModel.setSign(session.getEncryptSing());
             String url = this.getString(R.string.string_url_domain) + this.getString(R.string.string_url_mate_mates);
-            NetworkManager.requestByPost(url, branchModel, new INetWorkManager.OnNetworkCallback() {
+            NetworkManager.requestByPostNew(url, branchModel, new INetWorkManager.OnNetworkCallback() {
                 @Override
                 public void onSuccess(String result) {
                     BranchesResponseModel responseModel = JSON.parseObject(result, BranchesResponseModel.class);
-                    onResponseSuccess(responseModel.getBranches());
-                }
-
-                @Override
-                public void onLoginTimeout(String result) {
-                    onResponseError();
-                    SharedPreferencesUtils.clearSession(AgentFragment.this.getContext());
-                    Toast.makeText(AgentFragment.this.getContext(), R.string.string_toast_timeout, Toast.LENGTH_SHORT).show();
-                }
-
-                @Override
-                public void onEmptyResult(String result) {
-                    onResponseSuccessEmpty();
+                    if (responseModel.getCode() == ResponseModel.RC_SUCCESS){
+                        onResponseSuccess(responseModel.getBranches());
+                    }
+                    Toast.makeText(AgentFragment.this.getContext(), responseModel.getMessage(), Toast.LENGTH_SHORT).show();
                 }
 
                 @Override
@@ -200,7 +191,6 @@ public class AgentFragment extends BaseFragment implements SwipeRefreshLayout.On
                     onResponseError();
                     Toast.makeText(AgentFragment.this.getContext(), R.string.string_toast_network_error, Toast.LENGTH_SHORT).show();
                 }
-
             });
         } catch (Exception e) {
             e.printStackTrace();
@@ -208,5 +198,4 @@ public class AgentFragment extends BaseFragment implements SwipeRefreshLayout.On
             this.srl_frg_agent_list_container.setRefreshing(false);
         }
     }
-
 }

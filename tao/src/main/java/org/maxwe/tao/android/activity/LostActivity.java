@@ -16,16 +16,13 @@ import org.maxwe.android.support.ValidationCode;
 import org.maxwe.tao.android.Constants;
 import org.maxwe.tao.android.INetWorkManager;
 import org.maxwe.tao.android.NetworkManager;
+import org.maxwe.tao.android.R;
 import org.maxwe.tao.android.account.model.AccountLostRequestModel;
 import org.maxwe.tao.android.account.model.AccountLostResponseModel;
-import org.maxwe.tao.android.account.model.RegisterModel;
-import org.maxwe.tao.android.account.model.TokenModel;
 import org.maxwe.tao.android.meta.SMSCodeRequestModel;
 import org.maxwe.tao.android.meta.SMSCodeResponseModel;
-import org.maxwe.tao.android.meta.SMSModel;
 import org.maxwe.tao.android.response.ResponseModel;
 import org.maxwe.tao.android.utils.CellPhoneUtils;
-import org.maxwe.tao.android.R;
 import org.maxwe.tao.android.utils.SharedPreferencesUtils;
 import org.xutils.view.annotation.ContentView;
 import org.xutils.view.annotation.Event;
@@ -84,7 +81,7 @@ public class LostActivity extends BaseActivity {
 
 
     @Event(value = R.id.bt_act_cellphone_code_get_vcode, type = View.OnClickListener.class)
-    private void onGetVCode(View view){
+    private void onGetVCode(View view) {
         bt_act_cellphone_code_get_vcode.refresh();
     }
 
@@ -96,13 +93,13 @@ public class LostActivity extends BaseActivity {
             return;
         }
 
-        if (!bt_act_cellphone_code_get_vcode.isEqualsIgnoreCase(et_act_lost_cellphone_code_vcode.getText().toString())){
+        if (!bt_act_cellphone_code_get_vcode.isEqualsIgnoreCase(et_act_lost_cellphone_code_vcode.getText().toString())) {
             Toast.makeText(this, "图形验证码错误", Toast.LENGTH_SHORT).show();
             return;
         }
 
         String url = this.getString(R.string.string_url_domain) + this.getString(R.string.string_url_meta_smsCode);
-        SMSCodeRequestModel smsModel = new SMSCodeRequestModel(cellphone,this.getResources().getInteger(R.integer.integer_app_type));
+        SMSCodeRequestModel smsModel = new SMSCodeRequestModel(cellphone, this.getResources().getInteger(R.integer.integer_app_type));
         NetworkManager.requestByPostNew(url, smsModel, new NetworkManager.OnNetworkCallback() {
             @Override
             public void onSuccess(String result) {
@@ -149,7 +146,7 @@ public class LostActivity extends BaseActivity {
             return;
         }
 
-        if (TextUtils.isEmpty(password)  || password.length() < 6) {
+        if (TextUtils.isEmpty(password) || password.length() < 6) {
             Toast.makeText(this, this.getString(R.string.string_toast_password), Toast.LENGTH_SHORT).show();
             return;
         }
@@ -165,13 +162,13 @@ public class LostActivity extends BaseActivity {
         }
         view.setClickable(false);
         String url = this.getString(R.string.string_url_domain) + this.getString(R.string.string_url_account_lost);
-        AccountLostRequestModel registerModel = new AccountLostRequestModel(cellphone,cellphoneCode,password,this.getResources().getInteger(R.integer.integer_app_type));
+        AccountLostRequestModel registerModel = new AccountLostRequestModel(cellphone, cellphoneCode, password, this.getResources().getInteger(R.integer.integer_app_type));
         NetworkManager.requestByPostNew(url, registerModel, new INetWorkManager.OnNetworkCallback() {
             @Override
             public void onSuccess(String result) {
                 AccountLostResponseModel responseModel = JSON.parseObject(result, AccountLostResponseModel.class);
-                if (responseModel.getCode() == ResponseModel.RC_SUCCESS){
-                    SharedPreferencesUtils.saveSession(LostActivity.this,responseModel.getToken());
+                if (responseModel.getCode() == ResponseModel.RC_SUCCESS) {
+                    SharedPreferencesUtils.saveSession(LostActivity.this, responseModel.getToken());
                     Intent intent = new Intent();
                     intent.putExtra(Constants.KEY_INTENT_SESSION, responseModel);
                     LostActivity.this.setResult(LoginActivity.RESPONSE_CODE_SUCCESS, intent);

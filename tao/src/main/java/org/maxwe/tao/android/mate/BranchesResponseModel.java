@@ -1,5 +1,7 @@
 package org.maxwe.tao.android.mate;
 
+import org.maxwe.tao.android.response.ResponseModel;
+
 import java.util.List;
 
 /**
@@ -7,7 +9,7 @@ import java.util.List;
  * Email: www.dingpengwei@foxmail.com www.dingpegnwei@gmail.com
  * Description: 获取枝干下所有分支的响应模型
  */
-public class BranchesResponseModel extends BranchesRequestModel {
+public class BranchesResponseModel extends ResponseModel<BranchesRequestModel> {
     private int total;
     private int totalPages;
     private List<MateModel> branches;

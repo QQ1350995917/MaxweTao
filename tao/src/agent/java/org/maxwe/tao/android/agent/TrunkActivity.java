@@ -24,6 +24,7 @@ import org.maxwe.tao.android.mate.MateModel;
 import org.maxwe.tao.android.mate.TrunkInfoRequestModel;
 import org.maxwe.tao.android.mate.TrunkInfoResponseModel;
 import org.maxwe.tao.android.response.IResponse;
+import org.maxwe.tao.android.response.ResponseModel;
 import org.maxwe.tao.android.utils.SharedPreferencesUtils;
 import org.w3c.dom.Text;
 import org.xutils.view.annotation.ContentView;
@@ -80,34 +81,19 @@ public class TrunkActivity extends BaseActivity {
             tokenModel.setSign(tokenModel.getEncryptSing());
             TrunkInfoRequestModel trunkModel = new TrunkInfoRequestModel(tokenModel);
             trunkModel.setSign(tokenModel.getEncryptSing());
-            NetworkManager.requestByPost(url, trunkModel, new INetWorkManager.OnNetworkCallback() {
+            NetworkManager.requestByPostNew(url, trunkModel, new INetWorkManager.OnNetworkCallback() {
                 @Override
                 public void onSuccess(String result) {
                     TrunkInfoResponseModel responseModel = JSON.parseObject(result, TrunkInfoResponseModel.class);
-                    showTrunkInfoView(responseModel.getTrunk(),responseModel.getBranch());
-                }
-
-                @Override
-                public void onEmptyResult(String result) {
-                    showUnTrunkView();
-                }
-
-                @Override
-                public void onLoginTimeout(String result) {
-                    Toast.makeText(TrunkActivity.this, R.string.string_toast_timeout, Toast.LENGTH_SHORT).show();
-                    SharedPreferencesUtils.clearSession(TrunkActivity.this);
+                    if (responseModel.getCode() == ResponseModel.RC_SUCCESS){
+                        showTrunkInfoView(responseModel.getTrunk(),responseModel.getBranch());
+                    }
+                    Toast.makeText(TrunkActivity.this, responseModel.getMessage(), Toast.LENGTH_SHORT).show();
                 }
 
                 @Override
                 public void onError(Throwable ex, boolean isOnCallback) {
                     Toast.makeText(TrunkActivity.this, R.string.string_toast_network_error, Toast.LENGTH_SHORT).show();
-                }
-
-                @Override
-                public void onOther(int code, String result) {
-                    if (code == IResponse.ResultCode.RC_ACCESS_BAD_2.getCode()) {
-                        Toast.makeText(TrunkActivity.this, R.string.string_the_mark_no_reach, Toast.LENGTH_SHORT).show();
-                    }
                 }
             });
         } catch (Exception e) {
@@ -187,45 +173,20 @@ public class TrunkActivity extends BaseActivity {
             branchBegRequestModel.setAuthenticatePassword(password);
             branchBegRequestModel.setSign(session.getEncryptSing());
             branchBegRequestModel.setApt(this.getResources().getInteger(R.integer.integer_app_type));
-            NetworkManager.requestByPost(url, branchBegRequestModel, new INetWorkManager.OnNetworkCallback() {
+            NetworkManager.requestByPostNew(url, branchBegRequestModel, new INetWorkManager.OnNetworkCallback() {
                 @Override
                 public void onSuccess(String result) {
                     BranchBegResponseModel responseModel = JSON.parseObject(result, BranchBegResponseModel.class);
-                    showTrunkInfoView(responseModel.getTrunk(),responseModel.getBranch());
+                    if (responseModel.getCode() == ResponseModel.RC_SUCCESS){
+                        showTrunkInfoView(responseModel.getTrunk(),responseModel.getBranch());
+                    }
                     view.setClickable(true);
-                }
-
-                @Override
-                public void onAccessBad(String result) {
-                    super.onAccessBad(result);
-                    Toast.makeText(TrunkActivity.this, "密码错误", Toast.LENGTH_SHORT).show();
-                    view.setClickable(true);
-                }
-
-                @Override
-                public void onEmptyResult(String result) {
-                    Toast.makeText(TrunkActivity.this, R.string.string_no_mark, Toast.LENGTH_SHORT).show();
-                    view.setClickable(true);
-                }
-
-                @Override
-                public void onLoginTimeout(String result) {
-                    Toast.makeText(TrunkActivity.this, R.string.string_toast_timeout, Toast.LENGTH_SHORT).show();
-                    SharedPreferencesUtils.clearSession(TrunkActivity.this);
-                    view.setClickable(true);
+                    Toast.makeText(TrunkActivity.this, responseModel.getMessage(), Toast.LENGTH_SHORT).show();
                 }
 
                 @Override
                 public void onError(Throwable ex, boolean isOnCallback) {
                     Toast.makeText(TrunkActivity.this, R.string.string_toast_network_error, Toast.LENGTH_SHORT).show();
-                    view.setClickable(true);
-                }
-
-                @Override
-                public void onOther(int code, String result) {
-                    if (code == IResponse.ResultCode.RC_ACCESS_BAD_2.getCode()) {
-                        Toast.makeText(TrunkActivity.this, R.string.string_the_mark_no_reach, Toast.LENGTH_SHORT).show();
-                    }
                     view.setClickable(true);
                 }
             });

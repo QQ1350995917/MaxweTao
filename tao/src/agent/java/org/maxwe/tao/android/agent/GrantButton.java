@@ -19,6 +19,7 @@ import org.maxwe.tao.android.account.model.TokenModel;
 import org.maxwe.tao.android.mate.GrantBranchRequestModel;
 import org.maxwe.tao.android.mate.GrantBranchResponseModel;
 import org.maxwe.tao.android.mate.MateModel;
+import org.maxwe.tao.android.response.ResponseModel;
 import org.maxwe.tao.android.utils.SharedPreferencesUtils;
 
 /**
@@ -88,18 +89,14 @@ public class GrantButton extends Button implements View.OnClickListener {
             GrantBranchRequestModel trunkModel = new GrantBranchRequestModel(session, agentEntity.getId());
             trunkModel.setSign(session.getEncryptSing());
             String url = GrantButton.this.getContext().getString(R.string.string_url_domain) + GrantButton.this.getContext().getString(R.string.string_url_mate_grant);
-            NetworkManager.requestByPost(url, trunkModel, new INetWorkManager.OnNetworkCallback() {
+            NetworkManager.requestByPostNew(url, trunkModel, new INetWorkManager.OnNetworkCallback() {
                 @Override
                 public void onSuccess(String result) {
-//                    GrantBranchResponseModel responseModel = JSON.parseObject(result, GrantBranchResponseModel.class);
-                    onRequestGrantSuccess();
-                }
-
-                @Override
-                public void onLoginTimeout(String result) {
-                    SharedPreferencesUtils.clearSession(GrantButton.this.getContext());
-                    Toast.makeText(GrantButton.this.getContext(), R.string.string_toast_timeout, Toast.LENGTH_SHORT).show();
-                    onRequestGrantFail();
+                    GrantBranchResponseModel responseModel = JSON.parseObject(result, GrantBranchResponseModel.class);
+                    if (responseModel.getCode() == ResponseModel.RC_SUCCESS){
+                        onRequestGrantSuccess();
+                    }
+                    Toast.makeText(GrantButton.this.getContext(), responseModel.getMessage(), Toast.LENGTH_SHORT).show();
                 }
 
                 @Override

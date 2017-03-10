@@ -25,7 +25,9 @@ import org.maxwe.tao.android.common.AuthorActivity;
 import org.maxwe.tao.android.common.BrandActivity;
 import org.maxwe.tao.android.goods.alimama.GoodsEntity;
 import org.maxwe.tao.android.goods.alimama.GoodsRequestModel;
+import org.maxwe.tao.android.goods.alimama.GoodsResponseModel;
 import org.maxwe.tao.android.index.GoodsDetailActivity;
+import org.maxwe.tao.android.response.ResponseModel;
 import org.maxwe.tao.android.utils.SharedPreferencesUtils;
 import org.xutils.view.annotation.ContentView;
 import org.xutils.view.annotation.Event;
@@ -188,26 +190,14 @@ public class LinkFragment extends BaseFragment {
         aliGoodsRequestModel.setCookie(cookie);
         try {
             aliGoodsRequestModel.setSign(sessionModel.getEncryptSing());
-            NetworkManager.requestByPost(url, aliGoodsRequestModel, new INetWorkManager.OnNetworkCallback() {
+            NetworkManager.requestByPostNew(url, aliGoodsRequestModel, new INetWorkManager.OnNetworkCallback() {
                 @Override
                 public void onSuccess(String result) {
-                    List<GoodsEntity> aliGoodsEntities = JSON.parseArray(result, GoodsEntity.class);
-                    if (aliGoodsEntities != null) {
-                        onRequestFinishBySuccess(aliGoodsEntities);
+                    GoodsResponseModel responseModel = JSON.parseObject(result, GoodsResponseModel.class);
+                    if (responseModel.getCode() == ResponseModel.RC_SUCCESS) {
+                        onRequestFinishBySuccess(responseModel.getGoodsEntities());
                     }
-                }
-
-                @Override
-                public void onEmptyResult(String result) {
-                    super.onEmptyResult(result);
-                    Toast.makeText(LinkFragment.this.getContext(), "没有数据了", Toast.LENGTH_SHORT).show();
-                }
-
-                @Override
-                public void onLoginTimeout(String result) {
-                    SharedPreferencesUtils.clearSession(LinkFragment.this.getContext());
-                    SharedPreferencesUtils.clearAuthor(LinkFragment.this.getContext());
-                    Toast.makeText(LinkFragment.this.getContext(), R.string.string_toast_timeout, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(LinkFragment.this.getContext(), responseModel.getMessage(), Toast.LENGTH_SHORT).show();
                 }
 
                 @Override

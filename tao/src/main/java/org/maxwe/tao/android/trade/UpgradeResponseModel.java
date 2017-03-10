@@ -1,6 +1,7 @@
 package org.maxwe.tao.android.trade;
 
 import org.maxwe.tao.android.mate.MateModel;
+import org.maxwe.tao.android.response.ResponseModel;
 
 import java.io.Serializable;
 
@@ -9,7 +10,7 @@ import java.io.Serializable;
  * Email: www.dingpengwei@foxmail.com www.dingpegnwei@gmail.com
  * Description: 提升代理级别的响应模型
  */
-public class UpgradeResponseModel implements Serializable {
+public class UpgradeResponseModel extends ResponseModel<UpgradeRequestModel> {
     private MateModel branch;//分支代理
     private int codeNum;//交易码量
 

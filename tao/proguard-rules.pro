@@ -40,7 +40,6 @@
 -keep class com.alibaba.fastjson.**{*;}
 -keep class * implements java.io.Serializable { *; }
 -keep public class * extends org.maxwe.tao.android.account.agent.AgentEntity
--keep public class * extends org.maxwe.tao.android.response.IResponse
 -keep public class * extends android.app.Fragment
 -keep public class * extends android.app.Activity
 -keep public class * extends android.app.Application

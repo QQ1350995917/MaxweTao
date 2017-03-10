@@ -10,14 +10,11 @@ import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
 
-import org.maxwe.tao.android.Constants;
 import org.maxwe.tao.android.INetWorkManager;
 import org.maxwe.tao.android.NetworkManager;
 import org.maxwe.tao.android.R;
 import org.maxwe.tao.android.account.model.AccountSignInRequestModel;
 import org.maxwe.tao.android.account.model.AccountSignInResponseModel;
-import org.maxwe.tao.android.account.model.LoginModel;
-import org.maxwe.tao.android.account.model.TokenModel;
 import org.maxwe.tao.android.main.MainActivity;
 import org.maxwe.tao.android.response.ResponseModel;
 import org.maxwe.tao.android.utils.CellPhoneUtils;
@@ -76,13 +73,13 @@ public class LoginActivity extends BaseActivity {
         view.setClickable(false);
         SharedPreferencesUtils.saveLastLoginCellphone(this, cellphone);
         String url = this.getString(R.string.string_url_domain) + this.getString(R.string.string_url_account_login);
-        AccountSignInRequestModel loginModel = new AccountSignInRequestModel(cellphone, password,this.getResources().getInteger(R.integer.integer_app_type));
+        AccountSignInRequestModel loginModel = new AccountSignInRequestModel(cellphone, password, this.getResources().getInteger(R.integer.integer_app_type));
         NetworkManager.requestByPostNew(url, loginModel, new INetWorkManager.OnNetworkCallback() {
             @Override
             public void onSuccess(String result) {
                 AccountSignInResponseModel responseModel = JSON.parseObject(result, AccountSignInResponseModel.class);
-                if (responseModel.getCode() == ResponseModel.RC_SUCCESS){
-                    SharedPreferencesUtils.saveSession(LoginActivity.this,responseModel.getToken());
+                if (responseModel.getCode() == ResponseModel.RC_SUCCESS) {
+                    SharedPreferencesUtils.saveSession(LoginActivity.this, responseModel.getToken());
                     onLoginSuccessCallback();
                 }
                 Toast.makeText(LoginActivity.this, responseModel.getMessage(), Toast.LENGTH_SHORT).show();

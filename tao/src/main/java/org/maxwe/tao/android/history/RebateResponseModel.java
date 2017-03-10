@@ -1,6 +1,8 @@
 package org.maxwe.tao.android.history;
 
 
+import org.maxwe.tao.android.response.ResponseModel;
+
 import java.util.List;
 
 /**
@@ -8,7 +10,7 @@ import java.util.List;
  * Email: www.dingpengwei@foxmail.com www.dingpegnwei@gmail.com
  * Description: 代理返点请求模型
  */
-public class RebateResponseModel extends RebateRequestModel {
+public class RebateResponseModel extends ResponseModel<RebateRequestModel> {
     private List<RebateModel> rebates;
 
     public RebateResponseModel() {

@@ -1,6 +1,5 @@
 package org.maxwe.tao.android.agent;
 
-
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
@@ -30,6 +29,7 @@ import org.maxwe.tao.android.mate.BranchInfoRequestModel;
 import org.maxwe.tao.android.mate.BranchInfoResponseModel;
 import org.maxwe.tao.android.mate.MateModel;
 import org.maxwe.tao.android.response.IResponse;
+import org.maxwe.tao.android.response.ResponseModel;
 import org.maxwe.tao.android.trade.TradeRequestModel;
 import org.maxwe.tao.android.trade.TradeResponseModel;
 import org.maxwe.tao.android.trade.UpgradeRequestModel;
@@ -106,17 +106,14 @@ public class TradeActivity extends BaseActivity implements View.OnFocusChangeLis
             BranchInfoRequestModel trunkModel = new BranchInfoRequestModel(session, branchAgentModel.getAgent().getId());
             trunkModel.setSign(session.getEncryptSing());
             String url = this.getString(R.string.string_url_domain) + this.getString(R.string.string_url_mate_mate);
-            NetworkManager.requestByPost(url, trunkModel, new INetWorkManager.OnNetworkCallback() {
+            NetworkManager.requestByPostNew(url, trunkModel, new INetWorkManager.OnNetworkCallback() {
                 @Override
                 public void onSuccess(String result) {
                     BranchInfoResponseModel responseModel = JSON.parseObject(result, BranchInfoResponseModel.class);
-                    onRequestBranchAgentInfoSuccess(responseModel);
-                }
-
-                @Override
-                public void onLoginTimeout(String result) {
-                    SharedPreferencesUtils.clearSession(TradeActivity.this);
-                    Toast.makeText(TradeActivity.this, R.string.string_toast_timeout, Toast.LENGTH_SHORT).show();
+                    if (responseModel.getCode() == ResponseModel.RC_SUCCESS){
+                        onRequestBranchAgentInfoSuccess(responseModel);
+                    }
+                    Toast.makeText(TradeActivity.this, responseModel.getMessage(), Toast.LENGTH_SHORT).show();
                 }
 
                 @Override
@@ -124,7 +121,6 @@ public class TradeActivity extends BaseActivity implements View.OnFocusChangeLis
                     ex.printStackTrace();
                     Toast.makeText(TradeActivity.this, R.string.string_toast_network_error, Toast.LENGTH_SHORT).show();
                 }
-
             });
         } catch (Exception e) {
             e.printStackTrace();
@@ -296,7 +292,7 @@ public class TradeActivity extends BaseActivity implements View.OnFocusChangeLis
             tradeModel.setSign(session.getEncryptSing());
             tradeModel.setAuthenticatePassword(password);
             String url = this.getString(R.string.string_url_domain) + this.getString(R.string.string_url_trade_trade);
-            NetworkManager.requestByPost(url, tradeModel, new INetWorkManager.OnNetworkCallback() {
+            NetworkManager.requestByPostNew(url, tradeModel, new INetWorkManager.OnNetworkCallback() {
                 @Override
                 public void onSuccess(String result) {
                     TradeResponseModel responseModel = JSON.parseObject(result, TradeResponseModel.class);
@@ -383,40 +379,22 @@ public class TradeActivity extends BaseActivity implements View.OnFocusChangeLis
             upgradeRequestModel.setSign(session.getEncryptSing());
             upgradeRequestModel.setAuthenticatePassword(password);
             String url = this.getString(R.string.string_url_domain) + this.getString(R.string.string_url_trade_upgrade);
-            NetworkManager.requestByPost(url, upgradeRequestModel, new INetWorkManager.OnNetworkCallback() {
+            NetworkManager.requestByPostNew(url, upgradeRequestModel, new INetWorkManager.OnNetworkCallback() {
                 @Override
                 public void onSuccess(String result) {
                     UpgradeResponseModel responseModel = JSON.parseObject(result, UpgradeResponseModel.class);
-                    onResponseSuccess(new TradeResponseModel(responseModel.getBranch(), responseModel.getCodeNum()));
-                    onUpgradeAction(null);
-                    Toast.makeText(TradeActivity.this, R.string.string_input_trade_success, Toast.LENGTH_SHORT).show();
+                    if (responseModel.getCode() == ResponseModel.RC_SUCCESS){
+                        onResponseSuccess(new TradeResponseModel(responseModel.getBranch(), responseModel.getCodeNum()));
+                        onUpgradeAction(null);
+                    }
+                    Toast.makeText(TradeActivity.this, responseModel.getMessage(), Toast.LENGTH_SHORT).show();
                 }
 
-                @Override
-                public void onAccessBad(String result) {
-                    onResponseError();
-                    Toast.makeText(TradeActivity.this, "密码错误", Toast.LENGTH_SHORT).show();
-                }
-
-                @Override
-                public void onLoginTimeout(String result) {
-                    onResponseError();
-                    SharedPreferencesUtils.clearSession(TradeActivity.this);
-                    Toast.makeText(TradeActivity.this, R.string.string_toast_timeout, Toast.LENGTH_SHORT).show();
-                }
 
                 @Override
                 public void onError(Throwable ex, boolean isOnCallback) {
                     onResponseError();
                     Toast.makeText(TradeActivity.this, R.string.string_toast_network_error, Toast.LENGTH_SHORT).show();
-                }
-
-                @Override
-                public void onOther(int code, String result) {
-                    if (code == IResponse.ResultCode.RC_ACCESS_BAD_2.getCode()) {
-                        Toast.makeText(TradeActivity.this, R.string.string_trade_num_by_level, Toast.LENGTH_SHORT).show();
-                    }
-                    onResponseError();
                 }
             });
         } catch (Exception e) {

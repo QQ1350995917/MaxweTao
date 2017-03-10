@@ -24,13 +24,16 @@ import org.maxwe.tao.android.R;
 import org.maxwe.tao.android.account.model.TokenModel;
 import org.maxwe.tao.android.activity.BaseActivity;
 import org.maxwe.tao.android.history.HistoryEntity;
-import org.maxwe.tao.android.history.HistoryModel;
+import org.maxwe.tao.android.history.HistoryListRequestModel;
+import org.maxwe.tao.android.history.HistoryListResponseModel;
+import org.maxwe.tao.android.response.ResponseModel;
 import org.maxwe.tao.android.utils.SharedPreferencesUtils;
 import org.xutils.view.annotation.ContentView;
 import org.xutils.view.annotation.Event;
 import org.xutils.view.annotation.ViewInject;
 
 import java.util.LinkedList;
+import java.util.List;
 
 /**
  * Created by Pengwei Ding on 2017-01-11 17:27.
@@ -171,7 +174,7 @@ public class HistoryActivity extends BaseActivity implements SwipeRefreshLayout.
     }
 
     // 成功返回
-    private void onResponseSuccess(LinkedList<HistoryEntity> historyEntities) {
+    private void onResponseSuccess(List<HistoryEntity> historyEntities) {
         this.srl_act_history_list_container.setRefreshing(false);
         this.historyEntityLinkedList.addAll(historyEntities);
         this.historyItemAdapter.notifyDataSetChanged();
@@ -194,26 +197,17 @@ public class HistoryActivity extends BaseActivity implements SwipeRefreshLayout.
         this.srl_act_history_list_container.setRefreshing(true);
         try {
             TokenModel session = SharedPreferencesUtils.getSession(this);
-            HistoryModel historyModel = new HistoryModel(session, pageIndex, pageSize);
-            historyModel.setSign(session.getEncryptSing());
+            final HistoryListRequestModel requestModel = new HistoryListRequestModel(session, pageIndex, pageSize);
+            requestModel.setSign(session.getEncryptSing());
             String url = this.getString(R.string.string_url_domain) + this.getString(R.string.string_url_history_history);
-            NetworkManager.requestByPost(url, historyModel, new INetWorkManager.OnNetworkCallback() {
+            NetworkManager.requestByPostNew(url, requestModel, new INetWorkManager.OnNetworkCallback() {
                 @Override
                 public void onSuccess(String result) {
-                    HistoryModel responseModel = JSON.parseObject(result, HistoryModel.class);
-                    onResponseSuccess(responseModel.getHistoryEntities());
-                }
-
-                @Override
-                public void onLoginTimeout(String result) {
-                    onResponseError();
-                    SharedPreferencesUtils.clearSession(HistoryActivity.this);
-                    Toast.makeText(HistoryActivity.this, R.string.string_toast_timeout, Toast.LENGTH_SHORT).show();
-                }
-
-                @Override
-                public void onEmptyResult(String result) {
-                    onResponseSuccessEmpty();
+                    HistoryListResponseModel responseModel = JSON.parseObject(result, HistoryListResponseModel.class);
+                    if (responseModel.getCode() == ResponseModel.RC_SUCCESS) {
+                        onResponseSuccess(responseModel.getHistories());
+                    }
+                    Toast.makeText(HistoryActivity.this, responseModel.getMessage(), Toast.LENGTH_SHORT).show();
                 }
 
                 @Override

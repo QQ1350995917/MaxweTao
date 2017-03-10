@@ -3,6 +3,7 @@ package org.maxwe.tao.android.mine;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
+import android.text.format.DateUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -16,12 +17,15 @@ import org.maxwe.tao.android.Constants;
 import org.maxwe.tao.android.INetWorkManager;
 import org.maxwe.tao.android.NetworkManager;
 import org.maxwe.tao.android.R;
+import org.maxwe.tao.android.account.agent.AgentBankRequestModel;
+import org.maxwe.tao.android.account.agent.AgentBankResponseModel;
 import org.maxwe.tao.android.account.agent.AgentEntity;
 import org.maxwe.tao.android.account.agent.AgentModel;
-import org.maxwe.tao.android.account.agent.BankModel;
 import org.maxwe.tao.android.account.model.TokenModel;
 import org.maxwe.tao.android.activity.BaseActivity;
 import org.maxwe.tao.android.response.IResponse;
+import org.maxwe.tao.android.response.ResponseModel;
+import org.maxwe.tao.android.utils.DateTimeUtils;
 import org.maxwe.tao.android.utils.SharedPreferencesUtils;
 import org.xutils.view.annotation.ContentView;
 import org.xutils.view.annotation.Event;
@@ -48,6 +52,9 @@ public class BankActivity extends BaseActivity {
     private TextView tv_act_bank_true_name;
     @ViewInject(R.id.tv_act_bank_zhifubao)
     private TextView tv_act_bank_zhifubao;
+    @ViewInject(R.id.tv_act_bank_time)
+    private TextView tv_act_bank_time;
+
 
     @ViewInject(R.id.ll_act_bank_bind)
     private LinearLayout ll_act_bank_bind;
@@ -90,21 +97,21 @@ public class BankActivity extends BaseActivity {
 
         this.tv_act_bank_true_name.setText(this.getString(R.string.string_your_true_name) + agentEntity.getTrueName());
         this.tv_act_bank_zhifubao.setText(this.getString(R.string.string_your_zhifubao) + agentEntity.getZhifubao());
+        this.tv_act_bank_time.setText(DateTimeUtils.parseLongToFullTime(agentEntity.getBankTime()));
     }
 
-    private void onResponseSuccess(BankModel bankModel) {
+    private void onResponseSuccess(AgentBankResponseModel responseModel) {
         this.tv_act_bank_no_data.setVisibility(View.GONE);
         this.ll_act_bank_display.setVisibility(View.VISIBLE);
         this.ll_act_bank_bind.setVisibility(View.GONE);
 
-        AgentEntity agentEntity = new AgentEntity();
-        agentEntity.setTrueName(bankModel.getTrueName());
-        agentEntity.setZhifubao(bankModel.getZhifubao());
-        this.agentEntityModel.getAgentEntity().setZhifubao(bankModel.getZhifubao());
-        this.agentEntityModel.getAgentEntity().setTrueName(bankModel.getTrueName());
+        this.agentEntityModel.getAgentEntity().setTrueName(responseModel.getRequest().getTrueName());
+        this.agentEntityModel.getAgentEntity().setZhifubao(responseModel.getRequest().getZhifubao());
+        this.agentEntityModel.getAgentEntity().setBankTime(responseModel.getBankTime());
 
-        this.tv_act_bank_true_name.setText(this.getString(R.string.string_your_true_name) + agentEntity.getTrueName());
-        this.tv_act_bank_zhifubao.setText(this.getString(R.string.string_your_zhifubao) + agentEntity.getZhifubao());
+        this.tv_act_bank_true_name.setText(this.getString(R.string.string_your_true_name) + responseModel.getRequest().getTrueName());
+        this.tv_act_bank_zhifubao.setText(this.getString(R.string.string_your_zhifubao) + responseModel.getRequest().getZhifubao());
+        this.tv_act_bank_time.setText(this.getString(R.string.string_your_time) + DateTimeUtils.parseLongToFullTime(responseModel.getBankTime()));
     }
 
     private void onResponseError() {
@@ -137,36 +144,24 @@ public class BankActivity extends BaseActivity {
         this.bt_act_bank_action.setClickable(false);
         try {
             TokenModel session = SharedPreferencesUtils.getSession(this);
-            BankModel bankModel = new BankModel(session, trueName, zhifubao);
-            bankModel.setVerification(password);
-            bankModel.setSign(session.getEncryptSing());
+            AgentBankRequestModel requestModel = new AgentBankRequestModel(session, trueName, zhifubao);
+            requestModel.setAuthenticatePassword(password);
+            requestModel.setSign(session.getEncryptSing());
             String url = this.getString(R.string.string_url_domain) + this.getString(R.string.string_url_account_bank);
-            NetworkManager.requestByPost(url, bankModel, new INetWorkManager.OnNetworkCallback() {
+            NetworkManager.requestByPostNew(url, requestModel, new INetWorkManager.OnNetworkCallback() {
                 @Override
                 public void onSuccess(String result) {
-                    BankModel responseModel = JSON.parseObject(result, BankModel.class);
-                    onResponseSuccess(responseModel);
-                }
-
-                @Override
-                public void onLoginTimeout(String result) {
-                    onResponseError();
-                    SharedPreferencesUtils.clearSession(BankActivity.this);
-                    Toast.makeText(BankActivity.this, R.string.string_toast_timeout, Toast.LENGTH_SHORT).show();
+                    AgentBankResponseModel responseModel = JSON.parseObject(result, AgentBankResponseModel.class);
+                    if (responseModel.getCode() == ResponseModel.RC_SUCCESS) {
+                        onResponseSuccess(responseModel);
+                    }
+                    Toast.makeText(BankActivity.this, responseModel.getMessage(), Toast.LENGTH_SHORT).show();
                 }
 
                 @Override
                 public void onError(Throwable ex, boolean isOnCallback) {
                     onResponseError();
                     Toast.makeText(BankActivity.this, R.string.string_toast_network_error, Toast.LENGTH_SHORT).show();
-                }
-
-                @Override
-                public void onOther(int code, String result) {
-                    if (code == IResponse.ResultCode.RC_ACCESS_BAD_2.getCode()) {
-                        Toast.makeText(BankActivity.this, R.string.string_bank_error, Toast.LENGTH_SHORT).show();
-                    }
-                    onResponseError();
                 }
             });
         } catch (Exception e) {
