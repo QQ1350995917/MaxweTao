@@ -18,6 +18,7 @@ import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -52,10 +53,17 @@ import java.util.List;
 @ContentView(R.layout.activity_goods)
 public class GoodsListActivity extends BaseActivity implements SwipeRefreshLayout.OnRefreshListener, AbsListView.OnScrollListener, AdapterView.OnItemClickListener, SearchView.OnQueryTextListener {
     public static final String INTENT_KEY_URL_TYPE = "urlType";
+    public static final int GOODS_TAO_BAO = 0; // 淘宝普通商品
+    public static final int GOODS_GAO_YONG = 1;// 淘宝高佣商品
+    public static final int GOODS_TAO_MA_MI = 2;// 淘妈咪商品
+    public static final int GOODS_OTHER = 3;// 其他商品
+
     private int currentUrlType = 0;
 
     @ViewInject(R.id.sv_act_goods_search)
     private SearchView sv_act_goods_search;
+    @ViewInject(R.id.ll_act_goods_tools_bar)
+    private LinearLayout ll_act_goods_tools_bar;
     @ViewInject(R.id.ib_act_goods_brokerage)
     private Button ib_act_goods_brokerage;
     @ViewInject(R.id.ib_act_goods_price)
@@ -82,6 +90,13 @@ public class GoodsListActivity extends BaseActivity implements SwipeRefreshLayou
         super.onCreate(savedInstanceState);
         this.currentUrlType = this.getIntent().getIntExtra(INTENT_KEY_URL_TYPE, currentUrlType);
         this.goodsRequestModel.setUrlType(this.currentUrlType);
+        if (currentUrlType == GOODS_TAO_BAO || currentUrlType == GOODS_GAO_YONG) {
+            this.sv_act_goods_search.setVisibility(View.VISIBLE);
+            this.ll_act_goods_tools_bar.setVisibility(View.VISIBLE);
+        } else if (currentUrlType == GOODS_TAO_MA_MI) {
+            this.sv_act_goods_search.setVisibility(View.GONE);
+            this.ll_act_goods_tools_bar.setVisibility(View.GONE);
+        }
         init();
     }
 
@@ -250,7 +265,7 @@ public class GoodsListActivity extends BaseActivity implements SwipeRefreshLayou
                 @Override
                 public void onSuccess(String result) {
                     GoodsResponseModel responseModel = JSON.parseObject(result, GoodsResponseModel.class);
-                    if (responseModel.getCode() == ResponseModel.RC_SUCCESS){
+                    if (responseModel.getCode() == ResponseModel.RC_SUCCESS) {
                         onRequestFinishBySuccess(responseModel.getGoodsEntities());
                     }
                     Toast.makeText(GoodsListActivity.this, responseModel.getMessage(), Toast.LENGTH_SHORT).show();

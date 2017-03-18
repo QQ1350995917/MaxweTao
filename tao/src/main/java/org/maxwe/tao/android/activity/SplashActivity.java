@@ -1,10 +1,15 @@
 package org.maxwe.tao.android.activity;
 
 import android.content.Intent;
+import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.Nullable;
+import android.view.animation.Animation;
+import android.view.animation.AnimationSet;
+import android.view.animation.ScaleAnimation;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import org.maxwe.tao.android.R;
@@ -24,7 +29,7 @@ import java.io.IOException;
  */
 @ContentView(R.layout.activity_splash)
 public class SplashActivity extends BaseActivity {
-    private static final int DELAY = 2000;
+    private static final int DELAY = 3000;
     private static final int WHAT_0 = 0;
     private static final int WHAT_1 = 1;
     private static final int WHAT_2 = 2;
@@ -52,6 +57,11 @@ public class SplashActivity extends BaseActivity {
         }
     };
 
+    @ViewInject(R.id.iv_act_splash_tao)
+    private ImageView iv_act_splash_tao;
+    @ViewInject(R.id.iv_act_splash_slogan)
+    private ImageView iv_act_splash_slogan;
+
     @ViewInject(R.id.tv_act_splash_version)
     private TextView tv_act_splash_version;
 
@@ -66,6 +76,15 @@ public class SplashActivity extends BaseActivity {
         } else {
             this.handler.sendEmptyMessageDelayed(WHAT_1, DELAY);
         }
+
+        AnimationDrawable animationDrawableTao = (AnimationDrawable) iv_act_splash_tao.getDrawable();
+        animationDrawableTao.start();
+
+        AnimationSet sloganAnimationSet = new AnimationSet(true);
+        ScaleAnimation scaleAnimation = new ScaleAnimation(0,1,0,1, Animation.RELATIVE_TO_SELF,0.5f, Animation.RELATIVE_TO_SELF,0.5f);
+        scaleAnimation.setDuration(2500);
+        sloganAnimationSet.addAnimation(scaleAnimation);
+        this.iv_act_splash_slogan.startAnimation(sloganAnimationSet);
     }
 
     @Override

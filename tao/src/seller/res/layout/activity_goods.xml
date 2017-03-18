@@ -41,6 +41,7 @@
             android:background="@drawable/selector_button_block_red"
             android:text="优惠券" />
     </LinearLayout>
+
     <android.support.v4.widget.SwipeRefreshLayout
         android:id="@+id/srl_act_goods_swipe_container"
         android:layout_width="match_parent"

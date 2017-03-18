@@ -6,13 +6,15 @@
 
     <RelativeLayout
         android:id="@+id/rl_act_trade_nav"
-        style="@style/nav_header_of_act">
+        style="@style/nav_header_of_act"
+        android:background="@drawable/shape_agent_gradient">
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:gravity="center"
             android:text="@string/string_access_trade"
+            android:textColor="@color/white"
             android:textSize="24dp" />
 
         <Button
@@ -21,7 +23,8 @@
             android:layout_height="match_parent"
             android:layout_centerVertical="true"
             android:background="#00000000"
-            android:text="@string/string_back" />
+            android:text="@string/string_back"
+            android:textColor="@color/white" />
     </RelativeLayout>
 
     <TextView
@@ -30,6 +33,7 @@
         android:layout_height="match_parent"
         android:layout_centerInParent="true"
         android:gravity="center"
+        android:textColor="#A1A1A1"
         android:text="@string/string_no_data" />
 
     <RelativeLayout
@@ -59,8 +63,8 @@
                 <Button
                     android:id="@+id/tv_act_trade_upgrade"
                     style="@style/table_cell_of_agent"
-                    android:visibility="gone"
-                    android:text="升级"/>
+                    android:text="升级"
+                    android:visibility="gone" />
             </TableRow>
 
             <TableRow>
@@ -114,8 +118,8 @@
             android:layout_marginTop="20dp"
             android:orientation="vertical"
             android:paddingLeft="20dp"
-            android:visibility="gone"
-            android:paddingRight="20dp">
+            android:paddingRight="20dp"
+            android:visibility="gone">
 
             <TextView
                 style="@style/trade_detail"
@@ -127,18 +131,22 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:orientation="vertical">
+
                 <RadioButton
                     android:id="@+id/rb_act_trade_level1"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
+
                 <RadioButton
                     android:id="@+id/rb_act_trade_level2"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
+
                 <RadioButton
                     android:id="@+id/rb_act_trade_level3"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
+
                 <RadioButton
                     android:id="@+id/rb_act_trade_level4"
                     android:layout_width="match_parent"

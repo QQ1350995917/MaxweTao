@@ -6,13 +6,15 @@
 
     <RelativeLayout
         android:id="@+id/rl_act_rebate_nav"
-        style="@style/nav_header_of_act">
+        style="@style/nav_header_of_act"
+        android:background="@drawable/shape_agent_gradient">
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:gravity="center"
             android:text="返点详情"
+            android:textColor="@color/white"
             android:textSize="24dp" />
 
         <Button
@@ -21,6 +23,7 @@
             android:layout_height="match_parent"
             android:layout_centerVertical="true"
             android:background="#00000000"
+            android:textColor="@color/white"
             android:text="@string/string_back" />
     </RelativeLayout>
 
@@ -29,6 +32,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="center"
+        android:textColor="#A1A1A1"
         android:text="@string/string_no_data" />
 
     <LinearLayout

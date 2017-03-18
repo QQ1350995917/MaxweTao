@@ -5,6 +5,17 @@
     android:background="#FFFFFF"
     android:orientation="vertical">
 
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:background="#8BD5E0">
+        <ImageView
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:layout_centerInParent="true"
+            android:background="@mipmap/tao_anim_030"/>
+    </RelativeLayout>
+
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -45,7 +56,7 @@
                 style="@style/button_list_green"
                 android:layout_below="@+id/bt_frg_mine_about_us"
                 android:layout_marginTop="30dp"
-                android:background="@drawable/selector_button_list_red"
+                android:background="@drawable/selector_button_list_blue"
                 android:text="立即获取淘口令"
                 android:textColor="@color/white" />
         </LinearLayout>

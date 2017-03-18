@@ -36,7 +36,7 @@
             android:layout_height="60dp"
             android:gravity="center_horizontal"
             android:text="0/0/0"
-            android:textColor="#000000" />
+            android:textColor="#332C2B" />
     </LinearLayout>
 
     <LinearLayout
@@ -81,6 +81,8 @@
         android:layout_below="@+id/ll_frg_code_gen"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="20dp"
+        android:textColor="@color/white"
+        android:background="@drawable/shape_button_bg"
         android:text="@string/string_click_gen_code" />
 
     <Button

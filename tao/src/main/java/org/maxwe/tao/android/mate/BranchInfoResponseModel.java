@@ -12,7 +12,7 @@ import java.util.List;
  */
 public class BranchInfoResponseModel extends ResponseModel<BranchInfoRequestModel> {
     private MateModel branch;
-    private List<LevelEntity> levels;
+    private List<LevelEntity> levels;//当前所有的代理级别
 
     public BranchInfoResponseModel() {
         super();

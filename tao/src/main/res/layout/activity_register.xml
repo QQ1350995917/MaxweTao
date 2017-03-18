@@ -1,17 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/white">
 
     <RelativeLayout
         android:id="@+id/rl_act_register_nav"
-        style="@style/nav_header_of_act">
+        style="@style/nav_header_of_act"
+        android:background="#8BD5E0">
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:gravity="center"
             android:text="@string/string_register"
+            android:textColor="@color/white"
             android:textSize="24dp" />
 
         <Button
@@ -20,7 +23,8 @@
             android:layout_height="match_parent"
             android:layout_centerVertical="true"
             android:background="#00000000"
-            android:text="@string/string_back" />
+            android:text="@string/string_back"
+            android:textColor="@color/white" />
     </RelativeLayout>
 
     <RelativeLayout
@@ -31,14 +35,15 @@
 
         <EditText
             android:id="@+id/et_act_register_cellphone"
-            style="@style/editor"
+            style="@style/editor_register"
             android:hint="@string/string_input_cellphone"
             android:inputType="phone"
+            android:layout_marginTop="10dp"
             android:maxLength="11" />
 
         <EditText
             android:id="@+id/et_act_register_cellphone_code_vcode"
-            style="@style/editor"
+            style="@style/editor_register"
             android:layout_below="@+id/et_act_register_cellphone"
             android:hint="请输入图形验证码"
             android:inputType="text"
@@ -48,14 +53,14 @@
             android:id="@+id/bt_act_cellphone_code_get_vcode"
             android:layout_width="150dp"
             android:layout_height="50dp"
-            android:layout_below="@+id/et_act_register_cellphone"
             android:layout_alignRight="@+id/et_act_register_cellphone_code_vcode"
-            android:layout_marginRight="2dp"
-            android:layout_marginBottom="10dp"/>
+            android:layout_below="@+id/et_act_register_cellphone"
+            android:layout_marginBottom="10dp"
+            android:layout_marginRight="2dp" />
 
         <EditText
             android:id="@+id/et_act_register_cellphone_code"
-            style="@style/editor"
+            style="@style/editor_register"
             android:layout_below="@+id/et_act_register_cellphone_code_vcode"
             android:hint="@string/string_input_cellphone_code"
             android:inputType="number"
@@ -68,11 +73,12 @@
             android:layout_alignBaseline="@+id/et_act_register_cellphone_code"
             android:layout_alignRight="@+id/et_act_register_cellphone_code"
             android:layout_marginBottom="10dp"
+            android:background="#BFBFBF"
             android:text="@string/string_get_cellphone_code" />
 
         <EditText
             android:id="@+id/et_act_register_password"
-            style="@style/editor"
+            style="@style/editor_register"
             android:layout_below="@+id/et_act_register_cellphone_code"
             android:hint="@string/string_input_password"
             android:inputType="textPassword"
@@ -80,7 +86,7 @@
 
         <EditText
             android:id="@+id/et_act_register_password_confirm"
-            style="@style/editor"
+            style="@style/editor_register"
             android:layout_below="@+id/et_act_register_password"
             android:hint="@string/string_input_password_confirm"
             android:inputType="textPassword"
@@ -92,6 +98,8 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/et_act_register_password_confirm"
             android:layout_marginTop="20dp"
+            android:background="@drawable/shape_ellipse_blue_back_ground"
+            android:textColor="@color/white"
             android:text="@string/string_register" />
 
     </RelativeLayout>

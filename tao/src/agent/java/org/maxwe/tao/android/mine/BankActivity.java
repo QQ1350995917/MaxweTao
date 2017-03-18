@@ -40,6 +40,7 @@ import java.io.Serializable;
  */
 @ContentView(R.layout.activity_bank)
 public class BankActivity extends BaseActivity {
+    public static final String KEY_INTENT_AGENT = "KEY_INTENT_AGENT";
 
     private AgentModel agentEntityModel;
 
@@ -71,7 +72,7 @@ public class BankActivity extends BaseActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Serializable serializableExtra = this.getIntent().getSerializableExtra(Constants.KEY_INTENT_AGENT);
+        Serializable serializableExtra = this.getIntent().getSerializableExtra(BankActivity.KEY_INTENT_AGENT);
         if (serializableExtra != null && serializableExtra instanceof AgentModel) {
             this.agentEntityModel = (AgentModel) serializableExtra;
             AgentEntity agentEntity = this.agentEntityModel.getAgentEntity();

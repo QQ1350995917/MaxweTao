@@ -16,25 +16,28 @@
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:layout_alignParentBottom="true"
-        android:background="@color/white"
+        android:background="@drawable/shape_agent_gradient"
         android:orientation="horizontal">
 
         <RadioButton
             android:id="@+id/rb_act_main_active_code"
-            style="@style/radio_group_md_blue"
+            style="@style/radio_group_md_blue_code"
+            android:background="@color/transparent"
             android:text="@string/string_active_code"
             android:checked="true" />
 
         <RadioButton
             android:id="@+id/rb_act_main_agent"
-            style="@style/radio_group_md_blue"
+            style="@style/radio_group_md_blue_agents"
             android:clickable="true"
+            android:background="@color/transparent"
             android:text="@string/string_agent" />
 
         <RadioButton
             android:id="@+id/rb_act_main_mine"
-            style="@style/radio_group_md_blue"
+            style="@style/radio_group_md_blue_mine"
             android:clickable="true"
+            android:background="@color/transparent"
             android:text="@string/string_mine" />
     </RadioGroup>
 </RelativeLayout>

@@ -17,7 +17,6 @@ import android.widget.Toast;
 import com.alibaba.fastjson.JSON;
 
 import org.maxwe.tao.android.AgentApplication;
-import org.maxwe.tao.android.Constants;
 import org.maxwe.tao.android.INetWorkManager;
 import org.maxwe.tao.android.NetworkManager;
 import org.maxwe.tao.android.R;
@@ -28,7 +27,6 @@ import org.maxwe.tao.android.level.LevelEntity;
 import org.maxwe.tao.android.mate.BranchInfoRequestModel;
 import org.maxwe.tao.android.mate.BranchInfoResponseModel;
 import org.maxwe.tao.android.mate.MateModel;
-import org.maxwe.tao.android.response.IResponse;
 import org.maxwe.tao.android.response.ResponseModel;
 import org.maxwe.tao.android.trade.TradeRequestModel;
 import org.maxwe.tao.android.trade.TradeResponseModel;
@@ -39,7 +37,6 @@ import org.xutils.view.annotation.ContentView;
 import org.xutils.view.annotation.Event;
 import org.xutils.view.annotation.ViewInject;
 
-import java.io.Serializable;
 import java.util.List;
 import java.util.regex.Pattern;
 
@@ -50,9 +47,11 @@ import java.util.regex.Pattern;
  */
 @ContentView(R.layout.activity_trade)
 public class TradeActivity extends BaseActivity implements View.OnFocusChangeListener, CompoundButton.OnCheckedChangeListener {
-
-    private MateModel branchAgentModel;
-    private LevelEntity upgradeLevel;
+    public static final String KEY_INTENT_AGENT_ID = "KEY_INTENT_AGENT_ID";
+    private int currentAgentId;
+    private MateModel currentMateModel;
+    private LevelEntity willInitLevel;//将要升级的级别变量
+    private LevelEntity willBeUpgradeLevel;//将要升级的级别变量
 
     @ViewInject(R.id.tv_act_trade_id)
     private TextView tv_act_trade_id;
@@ -77,7 +76,7 @@ public class TradeActivity extends BaseActivity implements View.OnFocusChangeLis
     @ViewInject(R.id.ll_act_trade_detail_level)
     private LinearLayout ll_act_trade_detail_level;
     @ViewInject(R.id.rg_act_levels)
-    private RadioGroup rg_act_levels; // 承载一个重要属性，当前用户的级别属性
+    private RadioGroup rg_act_levels;
 
     @ViewInject(R.id.et_act_trade_number)
     private EditText et_act_trade_number;
@@ -91,11 +90,10 @@ public class TradeActivity extends BaseActivity implements View.OnFocusChangeLis
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Serializable serializableExtra = this.getIntent().getSerializableExtra(Constants.KEY_INTENT_AGENT);
-        if (serializableExtra != null && serializableExtra instanceof MateModel) {
-            this.branchAgentModel = (MateModel) serializableExtra;
+        int id = this.getIntent().getIntExtra(KEY_INTENT_AGENT_ID,0);
+        if (id > 0) {
+            this.currentAgentId = id;
             onRequestBranchAgentInfo();
-            this.rg_act_levels.setTag(this.branchAgentModel.getLevel());
             this.et_act_trade_number.setOnFocusChangeListener(this);
         }
     }
@@ -103,10 +101,10 @@ public class TradeActivity extends BaseActivity implements View.OnFocusChangeLis
     private void onRequestBranchAgentInfo() {
         try {
             TokenModel session = SharedPreferencesUtils.getSession(this);
-            BranchInfoRequestModel trunkModel = new BranchInfoRequestModel(session, branchAgentModel.getAgent().getId());
-            trunkModel.setSign(session.getEncryptSing());
+            BranchInfoRequestModel requestModel = new BranchInfoRequestModel(session, this.currentAgentId);
+            requestModel.setSign(session.getEncryptSing());
             String url = this.getString(R.string.string_url_domain) + this.getString(R.string.string_url_mate_mate);
-            NetworkManager.requestByPostNew(url, trunkModel, new INetWorkManager.OnNetworkCallback() {
+            NetworkManager.requestByPostNew(url, requestModel, new INetWorkManager.OnNetworkCallback() {
                 @Override
                 public void onSuccess(String result) {
                     BranchInfoResponseModel responseModel = JSON.parseObject(result, BranchInfoResponseModel.class);
@@ -129,6 +127,8 @@ public class TradeActivity extends BaseActivity implements View.OnFocusChangeLis
     }
 
     private void onRequestBranchAgentInfoSuccess(BranchInfoResponseModel responseModel) {
+        this.currentMateModel = responseModel.getBranch();
+        this.rg_act_levels.setTag(this.currentMateModel.getLevel());
         this.tv_act_trade_no_data.setVisibility(View.GONE);
         this.rl_act_trade_container.setVisibility(View.VISIBLE);
         AgentEntity agentEntity = responseModel.getBranch().getAgent();
@@ -162,7 +162,7 @@ public class TradeActivity extends BaseActivity implements View.OnFocusChangeLis
                 }
             }
 
-            upgradeLevel = null;
+            willBeUpgradeLevel = null;
         }
     }
 
@@ -176,17 +176,19 @@ public class TradeActivity extends BaseActivity implements View.OnFocusChangeLis
             tv_act_trade_upgrade.setTag(null);
             this.ll_act_trade_detail_level.setVisibility(View.GONE);
             tv_act_trade_upgrade.setText("升级");
-            this.upgradeLevel = null;
+            this.willBeUpgradeLevel = null;
         }
     }
 
     @Override
     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-        if (branchAgentModel.getLevel() == null) {
-            this.rg_act_levels.setTag(buttonView.getTag());
+        if (this.currentMateModel.getLevel() == null) {
+            if (isChecked){
+                willInitLevel = (LevelEntity) buttonView.getTag();
+            }
         } else {
             if (isChecked){
-                upgradeLevel = (LevelEntity) buttonView.getTag();
+                willBeUpgradeLevel = (LevelEntity) buttonView.getTag();
             }
         }
     }
@@ -218,9 +220,9 @@ public class TradeActivity extends BaseActivity implements View.OnFocusChangeLis
             agentEntity.setLeftCodes(agentEntity.getLeftCodes() - responseModel.getCodeNum());
         }
 
-        if (this.branchAgentModel != null) {
-            this.branchAgentModel.setLevel(responseModel.getBranchAgent().getLevel());
-            AgentEntity agentEntity = this.branchAgentModel.getAgent();
+        if (this.currentMateModel != null) {
+            this.currentMateModel.setLevel(responseModel.getBranchAgent().getLevel());
+            AgentEntity agentEntity = this.currentMateModel.getAgent();
             agentEntity.setHaveCodes(agentEntity.getHaveCodes() + responseModel.getCodeNum());
             agentEntity.setLeftCodes(agentEntity.getLeftCodes() + responseModel.getCodeNum());
             this.tv_act_trade_level.setText(responseModel.getBranchAgent().getLevel().getName());
@@ -243,8 +245,12 @@ public class TradeActivity extends BaseActivity implements View.OnFocusChangeLis
         }
     }
 
+    /**
+     * 初始化和普通交易
+     * @param view
+     */
     private void onTradeRequest(View view) {
-        if (this.rg_act_levels.getTag() == null) {
+        if (this.currentMateModel.getLevel() == null && this.willInitLevel == null) {
             Toast.makeText(this, "请为您的代理选择级别", Toast.LENGTH_SHORT).show();
             return;
         }
@@ -261,9 +267,8 @@ public class TradeActivity extends BaseActivity implements View.OnFocusChangeLis
             return;
         }
 
-        LevelEntity currentLevel = (LevelEntity) this.rg_act_levels.getTag();
-        if (branchAgentModel.getLevel() == null) {
-            if (Integer.parseInt(number) < currentLevel.getMinNum()) {
+        if (currentMateModel.getLevel() == null) {
+            if (Integer.parseInt(number) < this.willInitLevel.getMinNum()) {
                 Toast.makeText(this, R.string.string_trade_num_by_level, Toast.LENGTH_SHORT).show();
                 return;
             }
@@ -287,8 +292,10 @@ public class TradeActivity extends BaseActivity implements View.OnFocusChangeLis
         view.setClickable(false);
         try {
             TokenModel session = SharedPreferencesUtils.getSession(this);
-            branchAgentModel.setLevel(currentLevel);
-            TradeRequestModel tradeModel = new TradeRequestModel(session, branchAgentModel, Integer.parseInt(number));
+            if (this.currentMateModel.getLevel() == null){
+                this.currentMateModel.setLevel(willInitLevel);
+            }
+            TradeRequestModel tradeModel = new TradeRequestModel(session, this.currentMateModel, Integer.parseInt(number));
             tradeModel.setSign(session.getEncryptSing());
             tradeModel.setAuthenticatePassword(password);
             String url = this.getString(R.string.string_url_domain) + this.getString(R.string.string_url_trade_trade);
@@ -296,35 +303,15 @@ public class TradeActivity extends BaseActivity implements View.OnFocusChangeLis
                 @Override
                 public void onSuccess(String result) {
                     TradeResponseModel responseModel = JSON.parseObject(result, TradeResponseModel.class);
-                    onResponseSuccess(responseModel);
+                    if (responseModel.getCode() == ResponseModel.RC_SUCCESS){
+                        onResponseSuccess(responseModel);
+                    }
                     Toast.makeText(TradeActivity.this, R.string.string_input_trade_success, Toast.LENGTH_SHORT).show();
                 }
-
-                @Override
-                public void onAccessBad(String result) {
-                    onResponseError();
-                    Toast.makeText(TradeActivity.this, "密码错误", Toast.LENGTH_SHORT).show();
-                }
-
-                @Override
-                public void onLoginTimeout(String result) {
-                    onResponseError();
-                    SharedPreferencesUtils.clearSession(TradeActivity.this);
-                    Toast.makeText(TradeActivity.this, R.string.string_toast_timeout, Toast.LENGTH_SHORT).show();
-                }
-
                 @Override
                 public void onError(Throwable ex, boolean isOnCallback) {
                     onResponseError();
                     Toast.makeText(TradeActivity.this, R.string.string_toast_network_error, Toast.LENGTH_SHORT).show();
-                }
-
-                @Override
-                public void onOther(int code, String result) {
-                    if (code == IResponse.ResultCode.RC_ACCESS_BAD_2.getCode()) {
-                        Toast.makeText(TradeActivity.this, R.string.string_trade_num_by_level, Toast.LENGTH_SHORT).show();
-                    }
-                    onResponseError();
                 }
             });
         } catch (Exception e) {
@@ -335,12 +322,12 @@ public class TradeActivity extends BaseActivity implements View.OnFocusChangeLis
     }
 
     private void onUpgradeRequest(View view) {
-        if (upgradeLevel == null) {
+        if (willBeUpgradeLevel == null) {
             Toast.makeText(this, "亲,要选择升级的级别哟", Toast.LENGTH_SHORT).show();
             return;
         }
 
-        if (upgradeLevel.getLevel() > branchAgentModel.getLevel().getLevel()) {
+        if (willBeUpgradeLevel.getLevel() > this.currentMateModel.getLevel().getLevel()) {
             Toast.makeText(this, "亲，不要伤害您的小伙伴哟", Toast.LENGTH_SHORT).show();
             return;
         }
@@ -357,7 +344,7 @@ public class TradeActivity extends BaseActivity implements View.OnFocusChangeLis
             return;
         }
 
-        if ((Integer.parseInt(number) + branchAgentModel.getAgent().getHaveCodes()) < upgradeLevel.getMinNum()) {
+        if ((Integer.parseInt(number) + this.currentMateModel.getAgent().getHaveCodes()) < willBeUpgradeLevel.getMinNum()) {
             Toast.makeText(this, "亲,转码量不足以让您的小伙伴升级哟", Toast.LENGTH_SHORT).show();
             return;
         }
@@ -375,7 +362,7 @@ public class TradeActivity extends BaseActivity implements View.OnFocusChangeLis
         view.setClickable(false);
         try {
             TokenModel session = SharedPreferencesUtils.getSession(this);
-            UpgradeRequestModel upgradeRequestModel = new UpgradeRequestModel(session, branchAgentModel, upgradeLevel, Integer.parseInt(number));
+            UpgradeRequestModel upgradeRequestModel = new UpgradeRequestModel(session, this.currentMateModel, willBeUpgradeLevel, Integer.parseInt(number));
             upgradeRequestModel.setSign(session.getEncryptSing());
             upgradeRequestModel.setAuthenticatePassword(password);
             String url = this.getString(R.string.string_url_domain) + this.getString(R.string.string_url_trade_upgrade);
@@ -389,7 +376,6 @@ public class TradeActivity extends BaseActivity implements View.OnFocusChangeLis
                     }
                     Toast.makeText(TradeActivity.this, responseModel.getMessage(), Toast.LENGTH_SHORT).show();
                 }
-
 
                 @Override
                 public void onError(Throwable ex, boolean isOnCallback) {

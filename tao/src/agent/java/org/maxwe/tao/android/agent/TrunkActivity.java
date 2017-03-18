@@ -23,10 +23,8 @@ import org.maxwe.tao.android.mate.BranchBegResponseModel;
 import org.maxwe.tao.android.mate.MateModel;
 import org.maxwe.tao.android.mate.TrunkInfoRequestModel;
 import org.maxwe.tao.android.mate.TrunkInfoResponseModel;
-import org.maxwe.tao.android.response.IResponse;
 import org.maxwe.tao.android.response.ResponseModel;
 import org.maxwe.tao.android.utils.SharedPreferencesUtils;
-import org.w3c.dom.Text;
 import org.xutils.view.annotation.ContentView;
 import org.xutils.view.annotation.Event;
 import org.xutils.view.annotation.ViewInject;
@@ -85,8 +83,10 @@ public class TrunkActivity extends BaseActivity {
                 @Override
                 public void onSuccess(String result) {
                     TrunkInfoResponseModel responseModel = JSON.parseObject(result, TrunkInfoResponseModel.class);
-                    if (responseModel.getCode() == ResponseModel.RC_SUCCESS){
-                        showTrunkInfoView(responseModel.getTrunk(),responseModel.getBranch());
+                    if (responseModel.getCode() == ResponseModel.RC_SUCCESS) {
+                        showTrunkInfoView(responseModel.getTrunk(), responseModel.getBranch());
+                    } else if (responseModel.getCode() == ResponseModel.RC_NOT_FOUND) {
+                        showUnTrunkView();
                     }
                     Toast.makeText(TrunkActivity.this, responseModel.getMessage(), Toast.LENGTH_SHORT).show();
                 }
@@ -123,7 +123,7 @@ public class TrunkActivity extends BaseActivity {
         this.ll_act_trunk_before_status.setVisibility(View.GONE);
         this.ll_act_trunk_after_status.setVisibility(View.VISIBLE);
 
-        this.tv_act_trunk_leader_grant_status.setText("状态：" + (branchAgent.getReach() == 1 ? "已经批准":"未批准"));
+        this.tv_act_trunk_leader_grant_status.setText("状态：" + (branchAgent.getReach() == 1 ? "已经批准" : "未批准"));
         this.tv_act_trunk_leader_id.setText(this.getString(R.string.string_ID) + trunkMateModel.getAgent().getId());
         this.tv_act_trunk_leader_level.setText(this.getString(R.string.string_level) + trunkMateModel.getLevel().getName());
     }
@@ -155,7 +155,7 @@ public class TrunkActivity extends BaseActivity {
             return;
         }
 
-        if (weChat.length() < 1 || weChat.length() > 36){
+        if (weChat.length() < 1 || weChat.length() > 36) {
             Toast.makeText(this, "微信号码不合格", Toast.LENGTH_SHORT).show();
             return;
         }
@@ -177,8 +177,8 @@ public class TrunkActivity extends BaseActivity {
                 @Override
                 public void onSuccess(String result) {
                     BranchBegResponseModel responseModel = JSON.parseObject(result, BranchBegResponseModel.class);
-                    if (responseModel.getCode() == ResponseModel.RC_SUCCESS){
-                        showTrunkInfoView(responseModel.getTrunk(),responseModel.getBranch());
+                    if (responseModel.getCode() == ResponseModel.RC_SUCCESS) {
+                        showTrunkInfoView(responseModel.getTrunk(), responseModel.getBranch());
                     }
                     view.setClickable(true);
                     Toast.makeText(TrunkActivity.this, responseModel.getMessage(), Toast.LENGTH_SHORT).show();

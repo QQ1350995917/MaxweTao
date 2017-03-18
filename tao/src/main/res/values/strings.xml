@@ -16,7 +16,7 @@
     <string name="string_input_password_confirm">请确认密码</string>
     <string name="string_get_cellphone_code">点击获取验证码</string>
     <string name="string_get_cellphone_code_delay">s后重新获取</string>
-    <string name="string_get_password_back">忘记密码？立即找回</string>
+    <string name="string_get_password_back">忘记密码</string>
     <string name="string_toast_cellphone">请输入有效的手机号码</string>
     <string name="string_toast_cellphone_code">请输入手机验证码</string>
     <string name="string_toast_password">请输入6~12位密码</string>

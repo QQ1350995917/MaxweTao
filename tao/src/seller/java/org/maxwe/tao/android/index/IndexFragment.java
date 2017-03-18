@@ -20,6 +20,7 @@ import org.xutils.view.annotation.Event;
  */
 @ContentView(R.layout.fragment_index)
 public class IndexFragment extends BaseFragment {
+
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -31,32 +32,7 @@ public class IndexFragment extends BaseFragment {
      */
     @Event(value = R.id.bt_frg_index_tao_goods, type = View.OnClickListener.class)
     private void onTaoGoodsAction(View view) {
-        AuthorActivity.requestTaoLoginStatus(this.getContext(), new AuthorActivity.TaoLoginStatusCallback() {
-            @Override
-            public void onNeedLoginCallback() {
-                Intent intent = new Intent(IndexFragment.this.getContext(), AuthorActivity.class);
-                intent.putExtra(GoodsListActivity.INTENT_KEY_URL_TYPE,0);
-                IndexFragment.this.startActivity(intent);
-            }
-
-            @Override
-            public void onNeedBrandCallback() {
-
-            }
-
-            @Override
-            public void onNeedOkCallback() {
-                Intent intent = new Intent(IndexFragment.this.getContext(), GoodsListActivity.class);
-                intent.putExtra(GoodsListActivity.INTENT_KEY_URL_TYPE,0);
-                IndexFragment.this.startActivity(intent);
-            }
-
-            @Override
-            public void onNeedErrorCallback() {
-                Toast.makeText(IndexFragment.this.getContext(),"发生错误,请重试",Toast.LENGTH_SHORT).show();
-            }
-        });
-
+        onGoodsAction(GoodsListActivity.GOODS_TAO_BAO);
     }
 
     /**
@@ -65,9 +41,7 @@ public class IndexFragment extends BaseFragment {
      */
     @Event(value = R.id.bt_frg_index_tao_mami, type = View.OnClickListener.class)
     private void onTaoMaMiAction(View view) {
-//        Intent intent = new Intent(IndexFragment.this.getContext(), GoodsListActivity.class);
-//        IndexFragment.this.startActivity(intent);
-        Toast.makeText(this.getContext(),"开发中，敬请关注",Toast.LENGTH_SHORT).show();
+        onGoodsAction(GoodsListActivity.GOODS_TAO_MA_MI);
     }
 
     /**
@@ -76,32 +50,7 @@ public class IndexFragment extends BaseFragment {
      */
     @Event(value = R.id.bt_frg_index_tao_money, type = View.OnClickListener.class)
     private void onMoneyAction(View view) {
-        AuthorActivity.requestTaoLoginStatus(this.getContext(), new AuthorActivity.TaoLoginStatusCallback() {
-            @Override
-            public void onNeedLoginCallback() {
-                Intent intent = new Intent(IndexFragment.this.getContext(), AuthorActivity.class);
-                intent.putExtra(GoodsListActivity.INTENT_KEY_URL_TYPE,0);
-                IndexFragment.this.startActivity(intent);
-            }
-
-            @Override
-            public void onNeedBrandCallback() {
-
-            }
-
-            @Override
-            public void onNeedOkCallback() {
-                Intent intent = new Intent(IndexFragment.this.getContext(), GoodsListActivity.class);
-                intent.putExtra(GoodsListActivity.INTENT_KEY_URL_TYPE,1);
-                IndexFragment.this.startActivity(intent);
-            }
-
-            @Override
-            public void onNeedErrorCallback() {
-                Toast.makeText(IndexFragment.this.getContext(),"发生错误,请重试",Toast.LENGTH_SHORT).show();
-            }
-        });
-
+        onGoodsAction(GoodsListActivity.GOODS_GAO_YONG);
     }
 
     /**
@@ -113,6 +62,35 @@ public class IndexFragment extends BaseFragment {
 //        Intent intent = new Intent(IndexFragment.this.getContext(), GoodsListActivity.class);
 //        IndexFragment.this.startActivity(intent);
         Toast.makeText(this.getContext(),"开发中，敬请关注",Toast.LENGTH_SHORT).show();
+    }
+
+
+    private void onGoodsAction(final int type){
+        AuthorActivity.requestTaoLoginStatus(this.getContext(), new AuthorActivity.TaoLoginStatusCallback() {
+            @Override
+            public void onNeedLoginCallback() {
+                Intent intent = new Intent(IndexFragment.this.getContext(), AuthorActivity.class);
+                intent.putExtra(GoodsListActivity.INTENT_KEY_URL_TYPE,0);
+                IndexFragment.this.startActivity(intent);
+            }
+
+            @Override
+            public void onNeedBrandCallback() {
+
+            }
+
+            @Override
+            public void onNeedOkCallback() {
+                Intent intent = new Intent(IndexFragment.this.getContext(), GoodsListActivity.class);
+                intent.putExtra(GoodsListActivity.INTENT_KEY_URL_TYPE,type);
+                IndexFragment.this.startActivity(intent);
+            }
+
+            @Override
+            public void onNeedErrorCallback() {
+                Toast.makeText(IndexFragment.this.getContext(),"发生错误,请重试",Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
 

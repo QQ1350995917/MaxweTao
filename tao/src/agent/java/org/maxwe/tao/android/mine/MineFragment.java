@@ -93,7 +93,7 @@ public class MineFragment extends BaseFragment {
     @Event(value = R.id.bt_frg_agent_rebate, type = View.OnClickListener.class)
     private void onRebateAction(View view) {
         Intent intent = new Intent(this.getContext(), RebateActivity.class);
-        intent.putExtra(Constants.KEY_INTENT_AGENT, AgentApplication.currentAgentModel);
+        intent.putExtra(RebateActivity.KEY_INTENT_AGENT, AgentApplication.currentAgentModel);
         this.getContext().startActivity(intent);
     }
 
@@ -101,7 +101,7 @@ public class MineFragment extends BaseFragment {
     @Event(value = R.id.bt_frg_mine_bank, type = View.OnClickListener.class)
     private void onBankBindAction(View view) {
         Intent intent = new Intent(this.getContext(), BankActivity.class);
-        intent.putExtra(Constants.KEY_INTENT_AGENT, AgentApplication.currentAgentModel);
+        intent.putExtra(BankActivity.KEY_INTENT_AGENT, AgentApplication.currentAgentModel);
         this.getContext().startActivity(intent);
     }
 

@@ -11,6 +11,8 @@ import org.xutils.common.Callback;
 import org.xutils.http.RequestParams;
 import org.xutils.x;
 
+import java.nio.charset.Charset;
+
 /**
  * Created by Pengwei Ding on 2016-12-30 18:50.
  * Email: www.dingpengwei@foxmail.com www.dingpegnwei@gmail.com
@@ -21,7 +23,7 @@ public class NetworkManager implements INetWorkManager {
     public static Callback.Cancelable requestByPostNew(String url, final Object object, final OnNetworkCallback onNetworkCallback) {
         final RequestParams requestParams = new RequestParams(url);
         String jsonParams = JSON.toJSONString(object);
-        String encodeToString = Base64.encodeToString(jsonParams.getBytes(), Base64.NO_WRAP);
+        String encodeToString = Base64.encodeToString(jsonParams.getBytes(Charset.forName("UTF-8")), Base64.NO_WRAP);
         String encryptionParams = CryptionUtils.parseByte2HexStr(CryptionUtils.encrypt(encodeToString));
         requestParams.addParameter(Constants.PARAMS, encryptionParams);
         Callback.Cancelable cancelable = x.http().post(requestParams, new Callback.CommonCallback<String>() {

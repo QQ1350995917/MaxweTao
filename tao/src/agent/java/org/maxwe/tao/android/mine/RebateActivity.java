@@ -38,6 +38,7 @@ import java.util.List;
  */
 @ContentView(R.layout.activity_rebate)
 public class RebateActivity extends BaseActivity {
+    public static final String KEY_INTENT_AGENT = "KEY_INTENT_AGENT";
 
     @ViewInject(R.id.tv_act_rebate_no_data)
     TextView tv_act_rebate_no_data;

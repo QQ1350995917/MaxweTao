@@ -47,6 +47,7 @@
         android:layout_below="@+id/tv_frg_mine_id"
         android:layout_centerHorizontal="true"
         android:background="#00000000"
+        android:textColor="#A1A1A1"
         android:text="@string/string_click_copy" />
 
     <TableLayout
@@ -172,7 +173,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="30dp"
-                android:background="@drawable/selector_button_list_red"
+                android:background="@drawable/shape_button_bg"
                 android:text="@string/string_exit"
                 android:textColor="@color/white" />
 

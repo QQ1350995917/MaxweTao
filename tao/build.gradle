@@ -18,9 +18,10 @@ android {
     signingConfigs {
         release {
             storeFile file("../maxwetao.keystore")
-            storePassword System.getenv("MAXWETAOPWD")
-            keyAlias System.getenv("MAXWETAOKEYALIAS")
-            keyPassword System.getenv("MAXWETAOPWD")
+//            storePassword System.getenv("MAXWETAOPWD")
+//            keyAlias System.getenv("MAXWETAOKEYALIAS")
+//            keyPassword System.getenv("MAXWETAOPWD")
+
         }
     }
 
@@ -41,13 +42,13 @@ android {
     productFlavors {
 //        agent {
 //            applicationId "org.maxwe.tao.agent.android"
-//            versionCode 13
-//            versionName "snapshot-1.0.12"
+//            versionCode 15
+//            versionName "snapshot-1.0.14"
 //        }
         seller {
             applicationId "org.maxwe.tao.seller.android"
-            versionCode 20
-            versionName "snapshot-1.0.19"
+            versionCode 23
+            versionName "snapshot-1.0.22"
         }
     }
 
@@ -56,16 +57,19 @@ android {
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
+//    compile files('libs/open_sdk_r5781_lite.jar')
     testCompile 'junit:junit:4.12'
-    compile project(':tao-umeng')
     compile 'com.android.support:appcompat-v7:23.4.0'
     compile 'org.xutils:xutils:3.3.40'
     compile 'com.alibaba:fastjson:1.2.21'
     compile 'com.alibaba:fastjson:1.1.55.android'
     compile 'com.facebook.fresco:fresco:1.0.1'
-    compile 'com.tencent.bugly:crashreport:latest.release'
     //其中latest.release指代最新Bugly SDK版本号，也可以指定明确的版本号，例如2.1.9
-    compile 'com.tencent.bugly:nativecrashreport:latest.release'
+    compile 'com.tencent.bugly:crashreport:latest.release'
     //其中latest.release指代最新Bugly NDK版本号，也可以指定明确的版本号，例如3.0
+    compile 'com.tencent.bugly:nativecrashreport:latest.release'
+    compile 'com.tencent.mm.opensdk:wechat-sdk-android-without-mta:1.1.2'
     compile project(':tao_vcode')
+
+
 }

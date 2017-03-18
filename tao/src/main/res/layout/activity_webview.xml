@@ -1,16 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:orientation="vertical">
+
     <RelativeLayout
         android:id="@+id/rl_act_webview_nav"
-        style="@style/nav_header_of_act">
+        style="@style/nav_header_of_act"
+        android:background="#8BD5E0">
 
         <TextView
             android:id="@+id/wb_act_webview_title"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:gravity="center"
+            android:textColor="@color/white"
             android:textSize="24dp" />
 
         <Button
@@ -19,11 +24,12 @@
             android:layout_height="match_parent"
             android:layout_centerVertical="true"
             android:background="#00000000"
-            android:text="@string/string_back" />
+            android:text="@string/string_back"
+            android:textColor="@color/white" />
     </RelativeLayout>
+
     <WebView
         android:id="@+id/wb_act_webview"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/red"/>
+        android:layout_height="match_parent" />
 </LinearLayout>

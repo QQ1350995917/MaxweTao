@@ -68,7 +68,7 @@ public class GrantButton extends Button implements View.OnClickListener {
             onRequestGrantAgent(this.mateModel.getAgent());
         } else {
             Intent intent = new Intent(this.getContext(), TradeActivity.class);
-            intent.putExtra(Constants.KEY_INTENT_AGENT, mateModel);
+            intent.putExtra(TradeActivity.KEY_INTENT_AGENT_ID, mateModel.getAgent().getId());
             this.getContext().startActivity(intent);
         }
     }
