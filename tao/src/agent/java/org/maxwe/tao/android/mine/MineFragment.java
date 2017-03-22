@@ -20,6 +20,7 @@ import org.maxwe.tao.android.account.model.AccountSignOutRequestModel;
 import org.maxwe.tao.android.account.model.TokenModel;
 import org.maxwe.tao.android.activity.LoginActivity;
 import org.maxwe.tao.android.activity.ModifyActivity;
+import org.maxwe.tao.android.activity.WebViewActivity;
 import org.maxwe.tao.android.agent.TradeActivity;
 import org.maxwe.tao.android.utils.SharedPreferencesUtils;
 import org.xutils.view.annotation.ContentView;
@@ -102,6 +103,22 @@ public class MineFragment extends BaseFragment {
     private void onBankBindAction(View view) {
         Intent intent = new Intent(this.getContext(), BankActivity.class);
         intent.putExtra(BankActivity.KEY_INTENT_AGENT, AgentApplication.currentAgentModel);
+        this.getContext().startActivity(intent);
+    }
+
+    @Event(value = R.id.bt_frg_mine_aboutus, type = View.OnClickListener.class)
+    private void onAboutUsAction(View view) {
+        Intent intent = new Intent(this.getContext(), WebViewActivity.class);
+        String url = this.getString(R.string.string_url_domain) + this.getString(R.string.string_url_aboutus);
+        intent.putExtra(WebViewActivity.INTENT_KEY_PAGE_URL, url);
+        this.getContext().startActivity(intent);
+    }
+
+    @Event(value = R.id.bt_frg_mine_tutorial, type = View.OnClickListener.class)
+    private void onTutorialAction(View view) {
+        Intent intent = new Intent(this.getContext(), WebViewActivity.class);
+        String url = this.getString(R.string.string_url_domain) + this.getString(R.string.string_url_tutorial);
+        intent.putExtra(WebViewActivity.INTENT_KEY_PAGE_URL, url);
         this.getContext().startActivity(intent);
     }
 

@@ -96,7 +96,7 @@ public class MineFragment extends BaseFragment {
         Intent intent = new Intent(this.getContext(), WebViewActivity.class);
         intent.putExtra(WebViewActivity.INTENT_KEY_PAGE_URL,
                 this.getString(R.string.string_url_domain) +
-                        this.getString(R.string.string_url_system_aboutus)
+                        this.getString(R.string.string_url_aboutus)
         );
         this.startActivity(intent);
     }

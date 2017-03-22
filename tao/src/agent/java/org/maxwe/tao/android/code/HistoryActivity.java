@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
+import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -78,18 +79,7 @@ public class HistoryActivity extends BaseActivity implements SwipeRefreshLayout.
             tv_act_history_item_time.setText(historyEntity.getSwapTimeString());
             if (historyEntity.getType() == 1) {
                 tv_act_history_item_number.setText(historyEntity.getActCode());
-                if (historyEntity.getToId() == 0) {
-                    tv_act_history_item_number.setClickable(true);
-                    inflate.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            ClipboardManager clipboardManager = (ClipboardManager) HistoryItemAdapter.this.context.getSystemService(Context.CLIPBOARD_SERVICE);
-                            String code = tv_act_history_item_number.getText().toString();
-                            clipboardManager.setPrimaryClip(ClipData.newPlainText(null, code));
-                            Toast.makeText(HistoryItemAdapter.this.context, R.string.string_copy_success, Toast.LENGTH_SHORT).show();
-                        }
-                    });
-                }
+
             } else {
                 tv_act_history_item_number.setText(historyEntity.getCodeNum() + "");
             }
@@ -124,6 +114,18 @@ public class HistoryActivity extends BaseActivity implements SwipeRefreshLayout.
         this.lv_act_history_list.setOnScrollListener(this);
         this.historyItemAdapter = new HistoryItemAdapter(this);
         this.lv_act_history_list.setAdapter(historyItemAdapter);
+        this.lv_act_history_list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                HistoryEntity currentHistoryEntity = historyEntityLinkedList.get(position);
+                if (currentHistoryEntity.getToId() == 0) {
+                    ClipboardManager clipboardManager = (ClipboardManager) HistoryActivity.this.getSystemService(Context.CLIPBOARD_SERVICE);
+                    String code = currentHistoryEntity.getActCode();
+                    clipboardManager.setPrimaryClip(ClipData.newPlainText(null, code));
+                    Toast.makeText(HistoryActivity.this, R.string.string_copy_success, Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
         this.onRequestHistory();
     }
 

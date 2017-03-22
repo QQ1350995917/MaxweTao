@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white">
+
+    <RelativeLayout
+        android:id="@+id/rl_act_lost_nav"
+        style="@style/nav_header_of_act"
+        android:background="@drawable/shape_agent_gradient">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:textColor="@color/white"
+            android:text="@string/string_forget_password"
+            android:textSize="24dp" />
+
+        <Button
+            android:id="@+id/bt_act_lost_back"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_centerVertical="true"
+            android:background="#00000000"
+            android:textColor="@color/white"
+            android:text="@string/string_back" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/rl_act_lost_nav"
+        android:layout_margin="20dp">
+
+        <EditText
+            android:id="@+id/et_act_lost_cellphone"
+            style="@style/editor_register"
+            android:hint="@string/string_input_cellphone"
+            android:inputType="phone"
+            android:maxLength="11" />
+
+        <EditText
+            android:id="@+id/et_act_lost_cellphone_code_vcode"
+            style="@style/editor_register"
+            android:layout_below="@+id/et_act_lost_cellphone"
+            android:hint="请输入图形验证码"
+            android:inputType="text"
+            android:maxLength="6" />
+
+        <org.maxwe.android.support.ValidationCode
+            android:id="@+id/bt_act_cellphone_code_get_vcode"
+            android:layout_width="150dp"
+            android:layout_height="50dp"
+            android:layout_below="@+id/et_act_lost_cellphone"
+            android:layout_alignRight="@+id/et_act_lost_cellphone_code_vcode"
+            android:layout_marginRight="2dp"
+            android:layout_marginBottom="10dp"
+            android:clickable="true"
+            android:text="@string/string_get_cellphone_code"/>
+
+        <EditText
+            android:id="@+id/et_act_lost_cellphone_code"
+            style="@style/editor_register"
+            android:layout_below="@+id/et_act_lost_cellphone_code_vcode"
+            android:hint="@string/string_input_cellphone_code"
+            android:inputType="number"
+            android:maxLength="6" />
+
+        <Button
+            android:id="@+id/bt_act_cellphone_code"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:layout_alignBaseline="@+id/et_act_lost_cellphone_code"
+            android:layout_alignRight="@+id/et_act_lost_cellphone_code"
+            android:layout_marginBottom="10dp"
+            android:text="@string/string_get_cellphone_code" />
+
+        <EditText
+            android:id="@+id/et_act_lost_password"
+            style="@style/editor_register"
+            android:layout_below="@+id/et_act_lost_cellphone_code"
+            android:hint="@string/string_input_password"
+            android:inputType="textPassword"
+            android:maxLength="12" />
+
+        <EditText
+            android:id="@+id/et_act_lost_password_confirm"
+            style="@style/editor_register"
+            android:layout_below="@+id/et_act_lost_password"
+            android:hint="@string/string_input_password_confirm"
+            android:inputType="textPassword"
+            android:maxLength="12" />
+
+        <Button
+            android:id="@+id/bt_act_lost"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/et_act_lost_password_confirm"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/shape_button_bg"
+            android:textColor="@color/white"
+            android:text="@string/string_reset_password" />
+
+    </RelativeLayout>
+
+</RelativeLayout>

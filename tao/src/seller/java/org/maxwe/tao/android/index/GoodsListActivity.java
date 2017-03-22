@@ -20,6 +20,8 @@ import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -63,15 +65,15 @@ public class GoodsListActivity extends BaseActivity implements SwipeRefreshLayou
     @ViewInject(R.id.sv_act_goods_search)
     private SearchView sv_act_goods_search;
     @ViewInject(R.id.ll_act_goods_tools_bar)
-    private LinearLayout ll_act_goods_tools_bar;
+    private RadioGroup ll_act_goods_tools_bar;
     @ViewInject(R.id.ib_act_goods_brokerage)
-    private Button ib_act_goods_brokerage;
+    private RadioButton ib_act_goods_brokerage;
     @ViewInject(R.id.ib_act_goods_price)
-    private Button ib_act_goods_price;
+    private RadioButton ib_act_goods_price;
     @ViewInject(R.id.ib_act_goods_sale)
-    private Button ib_act_goods_sale;
+    private RadioButton ib_act_goods_sale;
     @ViewInject(R.id.ib_act_goods_ticket)
-    private Button ib_act_goods_ticket;
+    private RadioButton ib_act_goods_ticket;
     @ViewInject(R.id.srl_act_goods_swipe_container)
     private SwipeRefreshLayout srl_act_goods_swipe_container;
     @ViewInject(R.id.lv_act_goods_container)
@@ -121,7 +123,7 @@ public class GoodsListActivity extends BaseActivity implements SwipeRefreshLayou
             @Override
             public View getView(int position, View convertView, ViewGroup parent) {
                 GoodsEntity goodsEntity = goodsEntities.get(position);
-                View view = inflater.inflate(R.layout.include_index_fragment_goods, null);
+                View view = inflater.inflate(R.layout.activity_goods_item, null);
                 SimpleDraweeView imageView = (SimpleDraweeView) view.findViewById(R.id.iv_inc_index_frg_item_goods_image);
                 TextView title = (TextView) view.findViewById(R.id.iv_inc_index_frg_item_goods_title);
                 TextView hasCoupon = (TextView) view.findViewById(R.id.iv_inc_index_frg_item_goods_is_coupon);
@@ -298,6 +300,7 @@ public class GoodsListActivity extends BaseActivity implements SwipeRefreshLayou
         this.resetAction();
         this.ib_act_goods_brokerage.setSelected(true);
         this.goodsRequestModel.setSortType(1);
+        this.goodsRequestModel.setDpyhq(0);
         onRefresh();
     }
 
@@ -312,6 +315,7 @@ public class GoodsListActivity extends BaseActivity implements SwipeRefreshLayou
             this.goodsRequestModel.setSortType(4);
             view.setText("价格 ↑");
         }
+        this.goodsRequestModel.setDpyhq(0);
         onRefresh();
     }
 
@@ -319,6 +323,7 @@ public class GoodsListActivity extends BaseActivity implements SwipeRefreshLayou
     private void onSaleAction(Button view) {
         this.resetAction();
         this.ib_act_goods_sale.setSelected(true);
+        this.goodsRequestModel.setDpyhq(0);
         this.goodsRequestModel.setSortType(9);
         onRefresh();
     }
@@ -327,7 +332,15 @@ public class GoodsListActivity extends BaseActivity implements SwipeRefreshLayou
     private void onTicketAction(Button view) {
         this.resetAction();
         this.ib_act_goods_ticket.setSelected(true);
-        this.goodsRequestModel.setSortType(9);
+        this.goodsRequestModel.setDpyhq(1);
         onRefresh();
+    }
+
+
+    @Event(value = R.id.ib_act_goods_list_back, type = View.OnClickListener.class)
+    private void onBackAction(View view) {
+        this.resetAction();
+        this.onBackPressed();
+        this.finish();
     }
 }

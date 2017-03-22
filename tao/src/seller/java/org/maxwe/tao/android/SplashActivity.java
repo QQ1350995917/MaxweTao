@@ -1,4 +1,4 @@
-package org.maxwe.tao.android.activity;
+package org.maxwe.tao.android;
 
 import android.content.Intent;
 import android.graphics.drawable.AnimationDrawable;
@@ -12,15 +12,13 @@ import android.view.animation.ScaleAnimation;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import org.maxwe.tao.android.R;
 import org.maxwe.tao.android.account.model.TokenModel;
+import org.maxwe.tao.android.activity.BaseActivity;
+import org.maxwe.tao.android.activity.LoginActivity;
 import org.maxwe.tao.android.main.MainActivity;
 import org.maxwe.tao.android.utils.SharedPreferencesUtils;
 import org.xutils.view.annotation.ContentView;
 import org.xutils.view.annotation.ViewInject;
-
-import java.io.File;
-import java.io.IOException;
 
 /**
  * Created by Pengwei Ding on 2016-12-30 13:03.

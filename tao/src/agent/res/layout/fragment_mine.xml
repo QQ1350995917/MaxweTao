@@ -149,12 +149,14 @@
                 android:text="绑定返点账号" />
 
             <Button
+                android:id="@+id/bt_frg_mine_aboutus"
                 style="@style/button_list_green"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="关于我们" />
 
             <Button
+                android:id="@+id/bt_frg_mine_tutorial"
                 style="@style/button_list_green"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

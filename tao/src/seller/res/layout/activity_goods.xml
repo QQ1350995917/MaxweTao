@@ -2,56 +2,74 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
-
-    <android.support.v7.widget.SearchView
-        android:id="@+id/sv_act_goods_search"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:iconifiedByDefault="false"
-        android:queryHint="请输入搜索内容"/>
+    android:orientation="vertical"
+    android:background="#E0F7F7">
 
     <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:background="#F7F7F7"
+        android:padding="5dp">
+        <ImageButton
+            android:id="@+id/ib_act_goods_list_back"
+            android:layout_width="50dp"
+            android:layout_height="35dp"
+            android:src="@mipmap/br_prev"
+            android:background="#00000000"/>
+
+        <android.support.v7.widget.SearchView
+            android:id="@+id/sv_act_goods_search"
+            android:layout_width="match_parent"
+            android:layout_height="35dp"
+            android:iconifiedByDefault="false"
+            android:queryHint="请输入搜索内容"
+            android:background="#FFFFFF"/>
+    </LinearLayout>
+
+
+    <RadioGroup
         android:id="@+id/ll_act_goods_tools_bar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:background="#F7F7F7">
 
-        <Button
+        <RadioButton
             android:id="@+id/ib_act_goods_brokerage"
-            style="@style/button_block_action_bar"
-            android:background="@drawable/selector_button_block_brown"
+            style="@style/goods_list_button_block_action_bar"
             android:text="佣金" />
 
-        <Button
+        <RadioButton
             android:id="@+id/ib_act_goods_price"
-            style="@style/button_block_action_bar"
-            android:background="@drawable/selector_button_block_blue"
+            style="@style/goods_list_button_block_action_bar"
             android:text="价格" />
 
-        <Button
+        <RadioButton
             android:id="@+id/ib_act_goods_sale"
-            style="@style/button_block_action_bar"
-            android:background="@drawable/selector_button_block_green"
+            style="@style/goods_list_button_block_action_bar"
             android:text="销量" />
 
-        <Button
+        <RadioButton
             android:id="@+id/ib_act_goods_ticket"
-            style="@style/button_block_action_bar"
-            android:background="@drawable/selector_button_block_red"
+            style="@style/goods_list_button_block_action_bar"
             android:text="优惠券" />
-    </LinearLayout>
+    </RadioGroup>
 
     <android.support.v4.widget.SwipeRefreshLayout
         android:id="@+id/srl_act_goods_swipe_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:paddingTop="2dp">
+        android:paddingTop="2dp"
+        android:background="#F7F7F7">
         <ListView
             android:id="@+id/lv_act_goods_container"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:background="#FFFFFF"
             android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"/>
+            android:layout_marginRight="10dp"
+            android:dividerHeight="4dp"
+            android:divider="#FFFFFF"/>
     </android.support.v4.widget.SwipeRefreshLayout>
 </LinearLayout>

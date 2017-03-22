@@ -480,7 +480,7 @@ public class GoodsDetailActivity extends BaseActivity {
         WXMediaMessage wxMediaMessage = new WXMediaMessage(wxImageObject);
 //        Toast.makeText(this,(wxImageObject.imageData.length / 1024) + "K",Toast.LENGTH_SHORT).show();
         SendMessageToWX.Req req = new SendMessageToWX.Req();
-        req.transaction = String.valueOf(System.currentTimeMillis());//transaction字段用于唯一标识一个请求，这个必须有，否则会出错
+        req.transaction = "img" + String.valueOf(System.currentTimeMillis());//transaction字段用于唯一标识一个请求，这个必须有，否则会出错
         req.message = wxMediaMessage;
         //表示发送给朋友圈  WXSceneTimeline  表示发送给朋友  WXSceneSession
         req.scene = isWeiChatZone ? SendMessageToWX.Req.WXSceneTimeline : SendMessageToWX.Req.WXSceneSession;

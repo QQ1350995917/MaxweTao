@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white">
+
+    <RelativeLayout
+        android:id="@+id/rl_act_modify_nav"
+        style="@style/nav_header_of_act"
+        android:background="@drawable/shape_agent_gradient">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:text="@string/string_modify_password"
+            android:textColor="@color/white"
+            android:textSize="24dp" />
+
+        <Button
+            android:id="@+id/bt_act_modify_back"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_centerVertical="true"
+            android:background="#00000000"
+            android:text="@string/string_back"
+            android:textColor="@color/white" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/rl_act_modify_nav"
+        android:layout_margin="20dp">
+
+        <EditText
+            android:id="@+id/et_act_modify_old_password"
+            style="@style/editor_register"
+            android:hint="@string/string_input_account_password"
+            android:inputType="textPassword"
+            android:maxLength="12" />
+
+        <EditText
+            android:id="@+id/et_act_modify_new_password"
+            style="@style/editor_register"
+            android:layout_below="@+id/et_act_modify_old_password"
+            android:hint="@string/string_input_new_password"
+            android:inputType="textPassword"
+            android:maxLength="12" />
+
+        <EditText
+            android:id="@+id/et_act_modify_new_password_confirm"
+            style="@style/editor_register"
+            android:layout_below="@+id/et_act_modify_new_password"
+            android:hint="@string/string_input_new_password_confirm"
+            android:inputType="textPassword"
+            android:maxLength="12" />
+
+        <Button
+            android:id="@+id/bt_act_modify"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/et_act_modify_new_password_confirm"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/shape_button_bg"
+            android:text="@string/string_modify_save"
+            android:textColor="@color/white" />
+
+    </RelativeLayout>
+
+</RelativeLayout>

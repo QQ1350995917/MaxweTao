@@ -68,6 +68,7 @@
                 android:background="#00A34E"
                 android:text="其他"
                 android:textSize="28sp"
+                android:visibility="gone"
                 android:textColor="@color/white" />
 
             <Button

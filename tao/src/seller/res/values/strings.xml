@@ -24,9 +24,10 @@
     <string name="string_act_success">授权成功</string>
     <string name="string_goods_detail">商品详情</string>
 
-    <!--<string name="string_url_domain">http://172.16.1.163:8080</string>-->
+    <!--<string name="string_url_domain">http://172.16.1.172:8080</string>-->
     <!--<string name="string_url_domain">http://58.218.207.186:8080</string>-->
     <!--<string name="string_url_domain">http://taomami.net</string>-->
+    <!--<string name="string_url_domain">http://10.0.4.176:8080</string>-->
     <!--<string name="string_url_domain">http://192.168.0.103:8080</string>-->
     <string name="string_url_domain">http://101.200.56.221:8080</string>
     <string name="string_url_account_exist">/user/exist</string>
@@ -48,10 +49,10 @@
     <string name="string_url_ali_goods_brands">/tao/brands</string>
     <string name="string_url_ali_goods_create_brands">/tao/createBrands</string>
 
-    <string name="string_url_system_aboutus">/webapp/widgets/static/aboutus.html</string>
-    <string name="string_url_system_readme">/webapp/widgets/static/readme.html</string>
-    <string name="string_url_system_introduction">/webapp/widgets/static/introduction.html</string>
-    <string name="string_url_system_tutorial">/webapp/widgets/static/tutorial.html</string>
+    <string name="string_url_readme">/webapp/widgets/static/readme-user.html</string>
+    <string name="string_url_aboutus">/webapp/widgets/static/aboutus-user.html</string>
+    <string name="string_url_introduction">/webapp/widgets/static/introduction-user.html</string>
+    <string name="string_url_tutorial">/webapp/widgets/static/tutorial-user.html</string>
 
     <integer name="integer_app_type">1</integer>
 

@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:fresco="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="120dp"
+    android:minHeight="120dp"
+    android:paddingLeft="2dp"
+    android:background="#FFFFFF"
+    android:orientation="horizontal">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="130dp"
+        android:background="@drawable/shape_goods_item_bg"
+        android:orientation="horizontal"
+        android:padding="2dp"
+        android:paddingLeft="5dp">
+        <com.facebook.drawee.view.SimpleDraweeView
+            android:id="@+id/iv_inc_index_frg_item_goods_image"
+            android:layout_width="120dp"
+            android:layout_height="120dp"
+            fresco:actualImageScaleType="focusCrop"
+            fresco:fadeDuration="300"
+            fresco:failureImageScaleType="centerInside"
+            fresco:placeholderImageScaleType="fitCenter"
+            fresco:progressBarAutoRotateInterval="1000"
+            fresco:progressBarImageScaleType="centerInside"
+            fresco:retryImageScaleType="centerCrop"
+            fresco:roundAsCircle="false"
+            fresco:roundBottomLeft="false"
+            fresco:roundBottomRight="true"
+            fresco:roundTopLeft="true"
+            fresco:roundTopRight="false"
+            fresco:roundedCornerRadius="1dp"
+            fresco:roundingBorderWidth="2dp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:padding="5dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:id="@+id/iv_inc_index_frg_item_goods_from"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:src="@mipmap/ic_tao" />
+
+                <TextView
+                    android:id="@+id/iv_inc_index_frg_item_goods_title"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:textColor="#909090"
+                    android:text="标题"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="30dp"
+                android:orientation="horizontal">
+                <TextView
+                    android:id="@+id/iv_inc_index_frg_item_goods_is_coupon"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_horizontal|bottom"
+                    android:text="券后"
+                    android:textColor="#CCCCCC"
+                    android:textSize="12dp"
+                    android:visibility="gone" />
+
+                <TextView
+                    android:id="@+id/iv_inc_index_frg_item_goods_price"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:gravity="center_horizontal|bottom"
+                    android:textColor="#F40015"
+                    android:textSize="20dp" />
+
+                <TextView
+                    android:id="@+id/iv_inc_index_frg_item_goods_price_reserve"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:gravity="center_horizontal|bottom"
+                    android:textColor="#CCCCCC"
+                    android:textSize="12dp" />
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                    <TextView
+                        android:id="@+id/iv_inc_index_frg_item_goods_coupon_price"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:gravity="center_horizontal|bottom"
+                        android:textColor="#CCCCCC"
+                        android:textSize="12dp"
+                        android:visibility="gone" />
+
+                    <TextView
+                        android:id="@+id/iv_inc_index_frg_item_goods_coupon"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_toLeftOf="@+id/iv_inc_index_frg_item_goods_coupon_price"
+                        android:background="#FF826C"
+                        android:gravity="center_horizontal|bottom"
+                        android:text="优惠券"
+                        android:textColor="#FFFFFF"
+                        android:textSize="12dp"
+                        android:visibility="gone" />
+                </RelativeLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="30dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/iv_inc_index_frg_item_brokerage_label"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:gravity="center_horizontal|bottom"
+                    android:text="佣金"
+                    android:textColor="#CCCCCC"
+                    android:textSize="12dp" />
+
+                <TextView
+                    android:id="@+id/iv_inc_index_frg_item_brokerage"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:gravity="center_horizontal|bottom"
+                    android:textColor="#95000D"
+                    android:textSize="22dp" />
+
+                <TextView
+                    android:id="@+id/iv_inc_index_frg_item_brokerage_got"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:gravity="center_horizontal|bottom"
+                    android:textColor="#CCCCCC"
+                    android:textSize="12dp" />
+
+                <TextView
+                    android:id="@+id/iv_inc_index_frg_item_sale"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="right|bottom"
+                    android:textColor="#CCCCCC"
+                    android:textSize="12dp" />
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+</LinearLayout>

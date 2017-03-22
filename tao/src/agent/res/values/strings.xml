@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">agent</string>
+    <string name="app_name">代理管家</string>
     <string name="string_active_code">授权码</string>
     <string name="string_agent">代理</string>
     <string name="string_mine">我的</string>
@@ -100,6 +100,10 @@
     <string name="string_url_mate_mates">/mate/mates</string>
     <string name="string_url_mate_mate">/mate/mate</string>
     <string name="string_url_version_version">/version/version</string>
+    <string name="string_url_readme">/webapp/widgets/static/readme-agent.html</string>
+    <string name="string_url_aboutus">/webapp/widgets/static/aboutus-agent.html</string>
+    <string name="string_url_introduction">/webapp/widgets/static/introduction-agent.html</string>
+    <string name="string_url_tutorial">/webapp/widgets/static/tutorial-agent.html</string>
 
     <item name="tag_key_1" type="id"></item>
     <item name="tag_key_2" type="id"></item>

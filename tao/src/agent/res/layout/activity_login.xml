@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white">
+
+    <ImageView
+        android:id="@+id/iv_act_login_app_name"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="50dp"
+        android:src="@mipmap/tao_agent" />
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/iv_act_login_app_name"
+        android:layout_margin="20dp">
+
+        <EditText
+            android:id="@+id/et_act_login_cellphone"
+            style="@style/editor_login"
+            android:hint="@string/string_input_cellphone"
+            android:inputType="phone"
+            android:drawableLeft="@mipmap/username"
+            android:paddingLeft="10dp"
+            android:maxLength="11" />
+
+        <EditText
+            android:id="@+id/et_act_login_password"
+            style="@style/editor_login"
+            android:layout_below="@+id/et_act_login_cellphone"
+            android:hint="@string/string_input_account_password"
+            android:inputType="textPassword"
+            android:layout_marginTop="10dp"
+            android:drawableLeft="@mipmap/password"
+            android:paddingLeft="10dp"
+            android:maxLength="12" />
+
+
+        <Button
+            android:id="@+id/bt_act_login_action"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/et_act_login_password"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/shape_button_bg"
+            android:textColor="@color/white"
+            android:text="@string/string_login" />
+
+        <Button
+            android:id="@+id/bt_act_to_register"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/bt_act_login_action"
+            android:background="#00000000"
+            android:textColor="#00A1E3"
+            android:layout_marginTop="20dp"
+            android:text="注册账号" />
+
+        <Button
+            android:id="@+id/bt_act_login_lost_password"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_below="@+id/bt_act_login_action"
+            android:background="#00000000"
+            android:textColor="#00A1E3"
+            android:layout_marginTop="20dp"
+            android:text="@string/string_get_password_back" />
+
+    </RelativeLayout>
+
+</RelativeLayout>

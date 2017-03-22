@@ -103,7 +103,7 @@ public class IndexFragment extends BaseFragment {
         Intent intent = new Intent(this.getContext(), WebViewActivity.class);
         intent.putExtra(WebViewActivity.INTENT_KEY_PAGE_URL,
                 this.getString(R.string.string_url_domain) +
-                        this.getString(R.string.string_url_system_tutorial)
+                        this.getString(R.string.string_url_tutorial)
         );
         this.startActivity(intent);
     }
@@ -117,7 +117,7 @@ public class IndexFragment extends BaseFragment {
         Intent intent = new Intent(this.getContext(), WebViewActivity.class);
         intent.putExtra(WebViewActivity.INTENT_KEY_PAGE_URL,
                 this.getString(R.string.string_url_domain) +
-                        this.getString(R.string.string_url_system_readme)
+                        this.getString(R.string.string_url_readme)
         );
         this.startActivity(intent);
     }
@@ -131,7 +131,7 @@ public class IndexFragment extends BaseFragment {
         Intent intent = new Intent(this.getContext(), WebViewActivity.class);
         intent.putExtra(WebViewActivity.INTENT_KEY_PAGE_URL,
                 this.getString(R.string.string_url_domain) +
-                        this.getString(R.string.string_url_system_introduction)
+                        this.getString(R.string.string_url_introduction)
         );
         this.startActivity(intent);
     }
