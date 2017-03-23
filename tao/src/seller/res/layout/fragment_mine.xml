@@ -16,42 +16,64 @@
             android:background="@mipmap/tao_anim_030"/>
     </RelativeLayout>
 
-    <LinearLayout
-        android:layout_margin="10dp"
-        android:orientation="vertical"
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-        <Button
-            android:id="@+id/bt_frg_mine_login_tao_bao"
-            style="@style/button_list_green"
-            android:text="登录淘宝" />
+        <LinearLayout
+            android:layout_margin="10dp"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <Button
+                android:id="@+id/bt_frg_mine_login_tao_bao"
+                style="@style/button_list_green"
+                android:text="登录淘宝" />
 
-        <Button
-            android:id="@+id/bt_frg_mine_promotion"
-            style="@style/button_list_green"
-            android:text="@string/string_promotion"
-            android:layout_below="@+id/bt_frg_mine_login_tao_bao"/>
+            <Button
+                android:id="@+id/bt_frg_mine_promotion"
+                style="@style/button_list_green"
+                android:text="@string/string_promotion"
+                android:layout_below="@+id/bt_frg_mine_login_tao_bao"/>
 
-        <Button
-            android:id="@+id/bt_frg_mine_password"
-            style="@style/button_list_green"
-            android:layout_below="@+id/bt_frg_mine_promotion"
-            android:text="@string/string_modify_password" />
+            <Button
+                android:id="@+id/bt_frg_mine_ask_for"
+                style="@style/button_list_green"
+                android:text="申请佣金理由"
+                android:layout_below="@+id/bt_frg_mine_promotion"/>
 
-        <Button
-            android:id="@+id/bt_frg_mine_about_us"
-            style="@style/button_list_green"
-            android:layout_below="@+id/bt_frg_mine_password"
-            android:text="@string/string_about_us" />
+            <Button
+                android:id="@+id/bt_frg_mine_promotion_common"
+                style="@style/button_list_green"
+                android:text="通用推广语"
+                android:layout_below="@+id/bt_frg_mine_ask_for"/>
 
-        <Button
-            android:id="@+id/bt_frg_mine_exit"
-            style="@style/button_list_green"
-            android:textColor="@color/white"
-            android:layout_below="@+id/bt_frg_mine_about_us"
-            android:layout_marginTop="30dp"
-            android:background="@drawable/selector_button_list_blue"
-            android:text="@string/string_exit"/>
-    </LinearLayout>
+            <Button
+                android:id="@+id/bt_frg_mine_password"
+                style="@style/button_list_green"
+                android:layout_below="@+id/bt_frg_mine_promotion_common"
+                android:text="@string/string_modify_password" />
 
+            <Button
+                android:id="@+id/bt_frg_mine_about_us"
+                style="@style/button_list_green"
+                android:layout_below="@+id/bt_frg_mine_password"
+                android:text="@string/string_about_us" />
+
+            <Button
+                android:id="@+id/bt_frg_mine_exit"
+                style="@style/button_list_green"
+                android:textColor="@color/white"
+                android:layout_below="@+id/bt_frg_mine_about_us"
+                android:layout_marginTop="30dp"
+                android:layout_marginBottom="30dp"
+                android:background="@drawable/selector_button_list_blue"
+                android:text="@string/string_exit"/>
+
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:background="#00000000"
+                android:visibility="invisible"/>
+        </LinearLayout>
+    </ScrollView>
 </LinearLayout>

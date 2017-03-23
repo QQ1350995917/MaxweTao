@@ -56,6 +56,7 @@ public class MineFragment extends BaseFragment {
             }
         });
     }
+
     @Event(value = R.id.bt_frg_mine_promotion, type = View.OnClickListener.class)
     private void onPromotionAction(View view) {
         AuthorActivity.requestTaoLoginStatus(this.getContext(), new AuthorActivity.TaoLoginStatusCallback() {
@@ -84,6 +85,19 @@ public class MineFragment extends BaseFragment {
             }
         });
     }
+
+    @Event(value = R.id.bt_frg_mine_ask_for, type = View.OnClickListener.class)
+    private void onAskForAction(View view) {
+        Intent intent = new Intent(this.getActivity(), AskForActivity.class);
+        this.getActivity().startActivity(intent);
+    }
+
+    @Event(value = R.id.bt_frg_mine_promotion_common, type = View.OnClickListener.class)
+    private void onPromotionCommonAction(View view) {
+        Intent intent = new Intent(this.getActivity(), PromotionSettingActivity.class);
+        this.getActivity().startActivity(intent);
+    }
+
 
     @Event(value = R.id.bt_frg_mine_password, type = View.OnClickListener.class)
     private void onModifyPasswordAction(View view) {

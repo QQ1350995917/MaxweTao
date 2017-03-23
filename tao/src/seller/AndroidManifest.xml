@@ -48,6 +48,8 @@
 
         <activity android:name=".index.GoodsListActivity"></activity>
         <activity android:name=".activity.WebViewActivity" android:launchMode="singleInstance"></activity>
+        <activity android:name=".mine.AskForActivity" android:launchMode="singleInstance"></activity>
+        <activity android:name=".mine.PromotionSettingActivity" android:launchMode="singleInstance"></activity>
 
         <activity
             android:name="com.tencent.tauth.AuthActivity"

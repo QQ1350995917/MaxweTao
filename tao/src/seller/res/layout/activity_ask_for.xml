@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <RelativeLayout style="@style/nav_header_of_act">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:text="申请佣金理由"
+            android:textSize="24dp" />
+
+        <ImageButton
+            android:id="@+id/bt_act_back"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:background="#00000000"
+            android:src="@mipmap/br_prev" />
+    </RelativeLayout>
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:layout_margin="10dp"
+        android:background="@drawable/selector_rect_board"
+        android:gravity="top"
+        android:padding="5dp"/>
+
+    <Button
+        android:id="@+id/bt_act_ask_for_save"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/shape_ellipse_blue_back_ground"
+        android:text="保存"
+        android:textColor="@color/white" />
+
+</LinearLayout>
