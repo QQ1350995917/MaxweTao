@@ -2,38 +2,55 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:background="#E0F7F7">
+    android:background="#E0F7F7"
+    android:orientation="vertical">
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
         android:background="#F7F7F7"
+        android:orientation="horizontal"
         android:padding="5dp">
+
         <ImageButton
             android:id="@+id/ib_act_goods_list_back"
             android:layout_width="50dp"
             android:layout_height="35dp"
-            android:src="@mipmap/br_prev"
-            android:background="#00000000"/>
+            android:background="#00000000"
+            android:src="@mipmap/br_prev" />
 
         <android.support.v7.widget.SearchView
             android:id="@+id/sv_act_goods_search"
             android:layout_width="match_parent"
             android:layout_height="35dp"
+            android:layout_toRightOf="@+id/ib_act_goods_list_back"
+            android:background="#FFFFFF"
             android:iconifiedByDefault="false"
-            android:queryHint="请输入搜索内容"
-            android:background="#FFFFFF"/>
-    </LinearLayout>
+            android:queryHint="请输入搜索内容" />
+
+        <Button
+            android:id="@+id/ib_act_goods_list_screen"
+            android:layout_width="50dp"
+            android:layout_height="35dp"
+            android:background="#00000000"
+            android:text="筛选"
+            android:visibility="gone"
+            android:layout_alignParentRight="true"/>
+    </RelativeLayout>
 
 
     <RadioGroup
         android:id="@+id/ll_act_goods_tools_bar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:background="#F7F7F7">
+        android:background="#F7F7F7"
+        android:orientation="horizontal">
+
+        <RadioButton
+            android:id="@+id/ib_act_goods_default"
+            style="@style/goods_list_button_block_action_bar"
+            android:checked="true"
+            android:text="默认" />
 
         <RadioButton
             android:id="@+id/ib_act_goods_brokerage"
@@ -60,16 +77,17 @@
         android:id="@+id/srl_act_goods_swipe_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:paddingTop="2dp"
-        android:background="#F7F7F7">
+        android:background="#F7F7F7"
+        android:paddingTop="2dp">
+
         <ListView
             android:id="@+id/lv_act_goods_container"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="#FFFFFF"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
-            android:dividerHeight="4dp"
-            android:divider="#FFFFFF"/>
+            android:background="#FFFFFF"
+            android:divider="#FFFFFF"
+            android:dividerHeight="4dp" />
     </android.support.v4.widget.SwipeRefreshLayout>
 </LinearLayout>

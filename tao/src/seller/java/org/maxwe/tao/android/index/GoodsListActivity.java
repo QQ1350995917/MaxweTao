@@ -17,8 +17,8 @@ import android.webkit.CookieManager;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
-import android.widget.Button;
-import android.widget.LinearLayout;
+import android.widget.CompoundButton;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
@@ -53,7 +53,9 @@ import java.util.List;
  * Description: TODO
  */
 @ContentView(R.layout.activity_goods)
-public class GoodsListActivity extends BaseActivity implements SwipeRefreshLayout.OnRefreshListener, AbsListView.OnScrollListener, AdapterView.OnItemClickListener, SearchView.OnQueryTextListener {
+public class GoodsListActivity extends BaseActivity implements SwipeRefreshLayout.OnRefreshListener,
+        AbsListView.OnScrollListener, AdapterView.OnItemClickListener, SearchView.OnQueryTextListener,
+        CompoundButton.OnCheckedChangeListener {
     public static final String INTENT_KEY_URL_TYPE = "urlType";
     public static final int GOODS_TAO_BAO = 0; // 淘宝普通商品
     public static final int GOODS_GAO_YONG = 1;// 淘宝高佣商品
@@ -99,6 +101,10 @@ public class GoodsListActivity extends BaseActivity implements SwipeRefreshLayou
             this.sv_act_goods_search.setVisibility(View.GONE);
             this.ll_act_goods_tools_bar.setVisibility(View.GONE);
         }
+        int childCount = this.ll_act_goods_tools_bar.getChildCount();
+        for (int i = 0; i < childCount; i++) {
+            ((RadioButton) this.ll_act_goods_tools_bar.getChildAt(i)).setOnCheckedChangeListener(this);
+        }
         init();
     }
 
@@ -122,9 +128,19 @@ public class GoodsListActivity extends BaseActivity implements SwipeRefreshLayou
 
             @Override
             public View getView(int position, View convertView, ViewGroup parent) {
-                GoodsEntity goodsEntity = goodsEntities.get(position);
                 View view = inflater.inflate(R.layout.activity_goods_item, null);
+                if (goodsEntities.size() < position) {
+                    return view;
+                }
+
+                GoodsEntity goodsEntity = goodsEntities.get(position);
                 SimpleDraweeView imageView = (SimpleDraweeView) view.findViewById(R.id.iv_inc_index_frg_item_goods_image);
+                ImageView goodsFrom = (ImageView) view.findViewById(R.id.iv_inc_index_frg_item_goods_from);
+                if (goodsEntity.getUserType() == 0) {
+                    goodsFrom.setImageResource(R.mipmap.ic_tao);
+                } else if (goodsEntity.getUserType() == 1) {
+                    goodsFrom.setImageResource(R.mipmap.ic_mao);
+                }
                 TextView title = (TextView) view.findViewById(R.id.iv_inc_index_frg_item_goods_title);
                 TextView hasCoupon = (TextView) view.findViewById(R.id.iv_inc_index_frg_item_goods_is_coupon);
                 TextView price = (TextView) view.findViewById(R.id.iv_inc_index_frg_item_goods_price);
@@ -215,6 +231,29 @@ public class GoodsListActivity extends BaseActivity implements SwipeRefreshLayou
     }
 
     @Override
+    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+        if (isChecked) {
+            switch (buttonView.getId()) {
+                case R.id.ib_act_goods_default:
+                    this.onDefaultAction();
+                    break;
+                case R.id.ib_act_goods_brokerage:
+                    this.onBrokerageAction();
+                    break;
+                case R.id.ib_act_goods_price:
+                    break;
+                case R.id.ib_act_goods_sale:
+                    this.onSaleAction();
+                    break;
+                case R.id.ib_act_goods_ticket:
+                    this.onTicketAction();
+                    break;
+            }
+            this.onRefresh();
+        }
+    }
+
+    @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         GoodsEntity goodsEntity = this.goodsEntities.get(position);
         Intent intent = new Intent(this, GoodsDetailActivity.class);
@@ -276,12 +315,48 @@ public class GoodsListActivity extends BaseActivity implements SwipeRefreshLayou
                 @Override
                 public void onError(Throwable ex, boolean isOnCallback) {
                     Toast.makeText(GoodsListActivity.this, R.string.string_toast_network_error, Toast.LENGTH_SHORT).show();
+                    hiddenLoading();
                 }
             });
         } catch (Exception e) {
             e.printStackTrace();
             onRequestFinishByError();
         }
+    }
+
+    public void onDefaultAction() {
+        RadioButton radioButton = (RadioButton) this.ll_act_goods_tools_bar.findViewById(R.id.ib_act_goods_price);
+        radioButton.setTag(null);
+        radioButton.setText("价格");
+        this.goodsRequestModel.setSortType(0);
+        this.goodsRequestModel.setDpyhq(0);
+    }
+
+    public void onBrokerageAction() {
+        this.onDefaultAction();
+        this.goodsRequestModel.setSortType(7);
+    }
+
+    public void onPriceAction(int sort) {
+        this.goodsRequestModel.setSortType(0);
+        this.goodsRequestModel.setDpyhq(0);
+        if (sort == 3) {
+            //高到低
+            this.goodsRequestModel.setSortType(3);
+        } else if (sort == 4) {
+            //低到高
+            this.goodsRequestModel.setSortType(4);
+        }
+    }
+
+    public void onSaleAction() {
+        this.onDefaultAction();
+        this.goodsRequestModel.setSortType(9);
+    }
+
+    public void onTicketAction() {
+        this.onDefaultAction();
+        this.goodsRequestModel.setDpyhq(1);
     }
 
     private void resetAction() {
@@ -295,48 +370,54 @@ public class GoodsListActivity extends BaseActivity implements SwipeRefreshLayou
         this.ib_act_goods_ticket.setSelected(false);
     }
 
-    @Event(value = R.id.ib_act_goods_brokerage, type = View.OnClickListener.class)
-    private void onBrokerageAction(Button view) {
-        this.resetAction();
-        this.ib_act_goods_brokerage.setSelected(true);
-        this.goodsRequestModel.setSortType(1);
-        this.goodsRequestModel.setDpyhq(0);
-        onRefresh();
-    }
+//    @Event(value = R.id.ib_act_goods_brokerage, type = View.OnClickListener.class)
+//    private void onBrokerageAction(Button view) {
+//        this.resetAction();
+//        this.ib_act_goods_brokerage.setSelected(true);
+//        this.goodsRequestModel.setSortType(1);
+//        this.goodsRequestModel.setDpyhq(0);
+//        onRefresh();
+//    }
 
     @Event(value = R.id.ib_act_goods_price, type = View.OnClickListener.class)
-    private void onPriceAction(Button view) {
-        this.resetAction();
-        this.ib_act_goods_price.setSelected(true);
-        if (this.goodsRequestModel.getSortType() != 3) {
-            this.goodsRequestModel.setSortType(3);
+    private void onPriceViewAction(RadioButton view) {
+        if (view.getTag() == null) {
+            this.onPriceAction(3);
             view.setText("价格 ↓");
-        } else if (this.goodsRequestModel.getSortType() != 4) {
-            this.goodsRequestModel.setSortType(4);
-            view.setText("价格 ↑");
+            view.setTag(3);
+        } else {
+            if (Integer.parseInt(view.getTag().toString()) == 3) {
+                this.onPriceAction(4);
+                view.setText("价格 ↑");
+                view.setTag(4);
+            } else if (Integer.parseInt(view.getTag().toString()) == 4) {
+                this.onPriceAction(3);
+                view.setText("价格 ↓");
+                view.setTag(3);
+            }
         }
-        this.goodsRequestModel.setDpyhq(0);
-        onRefresh();
+        this.onRefresh();
     }
 
-    @Event(value = R.id.ib_act_goods_sale, type = View.OnClickListener.class)
-    private void onSaleAction(Button view) {
-        this.resetAction();
-        this.ib_act_goods_sale.setSelected(true);
-        this.goodsRequestModel.setDpyhq(0);
-        this.goodsRequestModel.setSortType(9);
-        onRefresh();
-    }
-
-    @Event(value = R.id.ib_act_goods_ticket, type = View.OnClickListener.class)
-    private void onTicketAction(Button view) {
-        this.resetAction();
-        this.ib_act_goods_ticket.setSelected(true);
-        this.goodsRequestModel.setDpyhq(1);
-        onRefresh();
-    }
-
-
+    //
+//    @Event(value = R.id.ib_act_goods_sale, type = View.OnClickListener.class)
+//    private void onSaleAction(Button view) {
+//        this.resetAction();
+//        this.ib_act_goods_sale.setSelected(true);
+//        this.goodsRequestModel.setDpyhq(0);
+//        this.goodsRequestModel.setSortType(9);
+//        onRefresh();
+//    }
+//
+//    @Event(value = R.id.ib_act_goods_ticket, type = View.OnClickListener.class)
+//    private void onTicketAction(Button view) {
+//        this.resetAction();
+//        this.ib_act_goods_ticket.setSelected(true);
+//        this.goodsRequestModel.setDpyhq(1);
+//        onRefresh();
+//    }
+//
+//
     @Event(value = R.id.ib_act_goods_list_back, type = View.OnClickListener.class)
     private void onBackAction(View view) {
         this.resetAction();

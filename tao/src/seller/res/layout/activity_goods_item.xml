@@ -48,8 +48,7 @@
                 <ImageView
                     android:id="@+id/iv_inc_index_frg_item_goods_from"
                     android:layout_width="20dp"
-                    android:layout_height="20dp"
-                    android:src="@mipmap/ic_tao" />
+                    android:layout_height="20dp" />
 
                 <TextView
                     android:id="@+id/iv_inc_index_frg_item_goods_title"
