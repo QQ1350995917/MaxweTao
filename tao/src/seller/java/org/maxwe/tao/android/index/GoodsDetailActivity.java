@@ -17,6 +17,7 @@ import android.text.TextUtils;
 import android.view.View;
 import android.webkit.CookieManager;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
@@ -92,6 +93,8 @@ public class GoodsDetailActivity extends BaseActivity {
     private SimpleDraweeView iv_act_goods_detail_image;
     @ViewInject(R.id.tv_act_goods_detail_title)
     private TextView tv_act_goods_detail_title;
+    @ViewInject(R.id.tv_act_goods_detail_user_type)
+    private ImageView tv_act_goods_detail_user_type;
     @ViewInject(R.id.tv_act_goods_detail_nick)
     private TextView tv_act_goods_detail_nick;
     @ViewInject(R.id.tv_act_goods_detail_brokerage)
@@ -171,9 +174,15 @@ public class GoodsDetailActivity extends BaseActivity {
         this.goodsEntity = (GoodsEntity) this.getIntent().getExtras().get(KEY_GOODS);
         this.iv_act_goods_detail_image.setImageURI(Uri.parse(goodsEntity.getPictUrl()));
         this.tv_act_goods_detail_title.setText(goodsEntity.getTitle());
+        if (this.goodsEntity.getUserType() == 0){
+            this.tv_act_goods_detail_user_type.setImageResource(R.mipmap.ic_tao);
+        }else if (this.goodsEntity.getUserType() == 1){
+            this.tv_act_goods_detail_user_type.setImageResource(R.mipmap.ic_mao);
+        }
+
         this.tv_act_goods_detail_nick.setText(goodsEntity.getNick());
-        this.tv_act_goods_detail_brokerage.setText(goodsEntity.getHightestBrokage() + "%");
-        this.tv_act_goods_detail_brokerage_got.setText("赚" + new DecimalFormat("###.00").format((goodsEntity.getZkPrice() - goodsEntity.getCouponAmount()) * goodsEntity.getHightestBrokage() / 100) + "元");
+        this.tv_act_goods_detail_brokerage.setText(goodsEntity.getEventRate() + "%");
+        this.tv_act_goods_detail_brokerage_got.setText("赚" + new DecimalFormat("###.00").format((goodsEntity.getZkPrice() - goodsEntity.getCouponAmount()) * goodsEntity.getEventRate() / 100) + "元");
         if (goodsEntity.getCouponAmount() > 0) {
             iv_act_goods_detail_coupon_info.setVisibility(View.VISIBLE);
             iv_act_goods_detail_coupon_info.setText(goodsEntity.getCouponInfo());

@@ -162,8 +162,8 @@ public class GoodsListActivity extends BaseActivity implements SwipeRefreshLayou
                 title.setText(goodsEntity.getTitle());
                 price.setText("￥" + (goodsEntity.getZkPrice() - goodsEntity.getCouponAmount()));
                 priceReserve.setText("￥" + goodsEntity.getZkPrice());
-                brokerage.setText(goodsEntity.getHightestBrokage() + "%");
-                brokerageGot.setText("赚" + new DecimalFormat("###.00").format((goodsEntity.getZkPrice() - goodsEntity.getCouponAmount()) * goodsEntity.getHightestBrokage() / 100) + "元");
+                brokerage.setText(goodsEntity.getEventRate() + "%");
+                brokerageGot.setText("赚" + new DecimalFormat("###.00").format((goodsEntity.getZkPrice() - goodsEntity.getCouponAmount()) * goodsEntity.getEventRate() / 100) + "元");
                 sale.setText("月销:" + goodsEntity.getBiz30day());
                 return view;
             }

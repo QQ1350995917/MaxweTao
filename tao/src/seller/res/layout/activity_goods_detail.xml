@@ -3,7 +3,7 @@
     xmlns:fresco="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#CCCCCC"
+    android:background="#DEDEDE"
     android:orientation="vertical">
 
     <RelativeLayout
@@ -23,26 +23,28 @@
             android:layout_height="match_parent"
             android:layout_centerVertical="true"
             android:background="#00000000"
-            android:text="@string/string_back"
-            android:src="@mipmap/br_prev"/>
+            android:src="@mipmap/br_prev"
+            android:text="@string/string_back" />
     </RelativeLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@+id/rl_act_detail_nav"
+        android:background="#DEDEDE"
         android:orientation="vertical">
 
         <ScrollView
             android:id="@+id/sv_act_goods_detail_container"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="#CCCCCC"
+            android:background="#DEDEDE"
             android:fillViewport="true">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:background="#DEDEDE"
                 android:orientation="vertical">
 
                 <com.facebook.drawee.view.SimpleDraweeView
@@ -67,35 +69,50 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:background="#FFFFFF"
+                    android:background="#DEDEDE"
                     android:orientation="vertical">
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="5dp"
-                        android:layout_marginRight="5dp"
+                        android:padding="5dp"
+                        android:background="@color/white"
                         android:orientation="vertical">
 
                         <TextView
                             android:id="@+id/tv_act_goods_detail_title"
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content" />
+                            android:layout_height="wrap_content"
+                            android:background="@color/white"
+                            android:text="title" />
 
-                        <TextView
-                            android:id="@+id/tv_act_goods_detail_nick"
+                        <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:textColor="#ABABAB" />
+                            android:background="@color/white"
+                            android:orientation="horizontal">
 
+                            <ImageView
+                                android:id="@+id/tv_act_goods_detail_user_type"
+                                android:layout_width="15dp"
+                                android:layout_height="15dp" />
+
+                            <TextView
+                                android:id="@+id/tv_act_goods_detail_nick"
+                                android:layout_width="match_parent"
+                                android:layout_height="15dp"
+                                android:text="shopTitle"
+                                android:textColor="#ABABAB"
+                                android:gravity="center_vertical"/>
+                        </LinearLayout>
                     </LinearLayout>
                     <!--佣金-->
                     <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_height="30dp"
-                        android:layout_marginLeft="5dp"
-                        android:layout_marginRight="5dp"
+                        android:layout_height="40dp"
+                        android:padding="5dp"
                         android:layout_marginTop="5dp"
+                        android:background="@color/white"
                         android:orientation="horizontal">
 
                         <TextView
@@ -124,9 +141,8 @@
                     <!--价格-->
                     <RelativeLayout
                         android:layout_width="match_parent"
-                        android:layout_height="25dp"
-                        android:layout_marginLeft="5dp"
-                        android:layout_marginRight="5dp"
+                        android:layout_height="40dp"
+                        android:padding="5dp"
                         android:layout_marginTop="5dp"
                         android:background="#FFFFFF">
 
@@ -183,8 +199,7 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="5dp"
-                        android:layout_marginRight="5dp"
+                        android:padding="5dp"
                         android:layout_marginTop="5dp"
                         android:background="#FFFFFF"
                         android:orientation="horizontal">
@@ -199,9 +214,8 @@
                     <!--券数量情况-->
                     <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="5dp"
-                        android:layout_marginRight="5dp"
+                        android:layout_height="30dp"
+                        android:padding="5dp"
                         android:layout_marginTop="5dp"
                         android:background="#FFFFFF"
                         android:orientation="horizontal">
@@ -247,9 +261,8 @@
                     <!--券时间情况-->
                     <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="5dp"
-                        android:layout_marginRight="5dp"
+                        android:layout_height="30dp"
+                        android:padding="5dp"
                         android:layout_marginTop="5dp"
                         android:background="#FFFFFF"
                         android:orientation="horizontal">
@@ -323,8 +336,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:orientation="horizontal"
         android:background="@color/white"
+        android:orientation="horizontal"
         android:visibility="gone">
 
         <Button
@@ -354,55 +367,63 @@
         android:id="@+id/ll_act_goods_detail_share_panel"
         android:layout_width="match_parent"
         android:layout_height="120dp"
-        android:orientation="vertical"
+        android:layout_alignParentBottom="true"
         android:background="@color/white"
-        android:visibility="gone"
-        android:layout_alignParentBottom="true">
+        android:orientation="vertical"
+        android:visibility="gone">
+
         <TextView
             android:layout_width="match_parent"
             android:layout_height="2px"
-            android:background="#CCCCCC"/>
+            android:background="#CCCCCC" />
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:layout_marginTop="20dp"
             android:orientation="horizontal">
+
             <ImageView
                 android:id="@+id/iv_act_goods_detail_share_weibo"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:visibility="gone"/>
+                android:visibility="gone" />
+
             <ImageView
                 android:id="@+id/iv_act_goods_detail_share_weixin"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:src="@mipmap/ic_wechat"/>
+                android:src="@mipmap/ic_wechat" />
+
             <ImageView
                 android:id="@+id/iv_act_goods_detail_share_weixin_zone"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:src="@mipmap/ic_wechat_zone"/>
+                android:src="@mipmap/ic_wechat_zone" />
+
             <ImageView
                 android:id="@+id/iv_act_goods_detail_share_qq"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:src="@mipmap/ic_qq"/>
+                android:src="@mipmap/ic_qq" />
+
             <ImageView
                 android:id="@+id/iv_act_goods_detail_share_qq_zone"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:src="@mipmap/ic_qq_zone"/>
+                android:src="@mipmap/ic_qq_zone" />
         </LinearLayout>
+
         <TextView
             android:id="@+id/tv_act_goods_detail_share_cancel"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:text="取消分享"
-            android:gravity="center"/>
+            android:gravity="center"
+            android:text="取消分享" />
     </LinearLayout>
 </RelativeLayout>
