@@ -10,7 +10,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:gravity="center"
-            android:text="申请佣金理由"
+            android:text="通用推广语"
             android:textSize="24dp" />
 
         <ImageButton
@@ -22,6 +22,7 @@
     </RelativeLayout>
 
     <EditText
+        android:id="@+id/et_act_rhetoric_content"
         android:layout_width="match_parent"
         android:layout_height="200dp"
         android:layout_margin="10dp"
@@ -30,7 +31,7 @@
         android:padding="5dp"/>
 
     <Button
-        android:id="@+id/bt_act_ask_for_save"
+        android:id="@+id/bt_act_rhetoric_save"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="10dp"

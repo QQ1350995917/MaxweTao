@@ -441,17 +441,17 @@ public class GoodsEntity implements Serializable {
     }
 
 
-//    public float getHightestBrokage() {
-//        if (tkSpecialCampaignIdRateMap == null) {
-//            return 0;
-//        }
-//        float result = 0;
-//        Collection<String> values = tkSpecialCampaignIdRateMap.values();
-//        for (String value : values) {
-//            if (Float.parseFloat(value) > result){
-//                result = Float.parseFloat(value);
-//            }
-//        }
-//        return result;
-//    }
+    public float getHightestBrokage() {
+        if (tkSpecialCampaignIdRateMap == null) {
+            return this.getEventRate();
+        }
+        float result = 0;
+        Collection<String> values = tkSpecialCampaignIdRateMap.values();
+        for (String value : values) {
+            if (Float.parseFloat(value) > result) {
+                result = Float.parseFloat(value);
+            }
+        }
+        return result > this.getEventRate() ? result : this.getEventRate();
+    }
 }

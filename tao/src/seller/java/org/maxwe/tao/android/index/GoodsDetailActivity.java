@@ -9,7 +9,6 @@ import android.graphics.BitmapFactory;
 import android.graphics.Paint;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.Nullable;
@@ -38,7 +37,6 @@ import com.tencent.connect.share.QQShare;
 import com.tencent.mm.opensdk.modelmsg.SendMessageToWX;
 import com.tencent.mm.opensdk.modelmsg.WXImageObject;
 import com.tencent.mm.opensdk.modelmsg.WXMediaMessage;
-import com.tencent.mm.opensdk.modelmsg.WXWebpageObject;
 import com.tencent.mm.opensdk.openapi.IWXAPI;
 import com.tencent.mm.opensdk.openapi.WXAPIFactory;
 import com.tencent.tauth.IUiListener;
@@ -60,19 +58,13 @@ import org.maxwe.tao.android.goods.alimama.AuctionResponseModel;
 import org.maxwe.tao.android.goods.alimama.GoodsEntity;
 import org.maxwe.tao.android.response.ResponseModel;
 import org.maxwe.tao.android.utils.SharedPreferencesUtils;
-import org.maxwe.tao.android.utils.StringUtils;
 import org.xutils.view.annotation.ContentView;
 import org.xutils.view.annotation.Event;
 import org.xutils.view.annotation.ViewInject;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.InputStream;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.ByteBuffer;
 import java.text.DecimalFormat;
@@ -101,6 +93,9 @@ public class GoodsDetailActivity extends BaseActivity {
     private TextView tv_act_goods_detail_brokerage;
     @ViewInject(R.id.tv_act_goods_detail_brokerage_got)
     private TextView tv_act_goods_detail_brokerage_got;
+    @ViewInject(R.id.tv_act_goods_detail_brokerage_height)
+    private TextView tv_act_goods_detail_brokerage_height;
+
 
     @ViewInject(R.id.iv_act_goods_detail_coupon_info)
     private TextView iv_act_goods_detail_coupon_info;
@@ -174,15 +169,16 @@ public class GoodsDetailActivity extends BaseActivity {
         this.goodsEntity = (GoodsEntity) this.getIntent().getExtras().get(KEY_GOODS);
         this.iv_act_goods_detail_image.setImageURI(Uri.parse(goodsEntity.getPictUrl()));
         this.tv_act_goods_detail_title.setText(goodsEntity.getTitle());
-        if (this.goodsEntity.getUserType() == 0){
+        if (this.goodsEntity.getUserType() == 0) {
             this.tv_act_goods_detail_user_type.setImageResource(R.mipmap.ic_tao);
-        }else if (this.goodsEntity.getUserType() == 1){
+        } else if (this.goodsEntity.getUserType() == 1) {
             this.tv_act_goods_detail_user_type.setImageResource(R.mipmap.ic_mao);
         }
 
         this.tv_act_goods_detail_nick.setText(goodsEntity.getNick());
-        this.tv_act_goods_detail_brokerage.setText(goodsEntity.getEventRate() + "%");
-        this.tv_act_goods_detail_brokerage_got.setText("赚" + new DecimalFormat("###.00").format((goodsEntity.getZkPrice() - goodsEntity.getCouponAmount()) * goodsEntity.getEventRate() / 100) + "元");
+        this.tv_act_goods_detail_brokerage.setText(goodsEntity.getHightestBrokage() + "%");
+        this.tv_act_goods_detail_brokerage_got.setText("赚" + new DecimalFormat("###.00").format((goodsEntity.getZkPrice() - goodsEntity.getCouponAmount()) * goodsEntity.getHightestBrokage() / 100) + "元");
+        this.tv_act_goods_detail_brokerage_height.setText("可一键申请最高佣金：" + this.goodsEntity.getHightestBrokage() + "%");
         if (goodsEntity.getCouponAmount() > 0) {
             iv_act_goods_detail_coupon_info.setVisibility(View.VISIBLE);
             iv_act_goods_detail_coupon_info.setText(goodsEntity.getCouponInfo());
@@ -483,7 +479,7 @@ public class GoodsDetailActivity extends BaseActivity {
         BitmapFactory.Options options = new BitmapFactory.Options();
         options.inPreferredConfig = Bitmap.Config.RGB_565;//不要透明通道
         options.inPremultiplied = false;//不允许透明度
-        Bitmap sourceBitmap = BitmapFactory.decodeFile(GoodsDetailActivity.this.getFilesDir() + File.separator + "cache.jpg",options);
+        Bitmap sourceBitmap = BitmapFactory.decodeFile(GoodsDetailActivity.this.getFilesDir() + File.separator + "cache.jpg", options);
         WXImageObject wxImageObject = new WXImageObject(sourceBitmap);
         wxImageObject.setImagePath(GoodsDetailActivity.this.getFilesDir() + File.separator + "cache.jpg");
         WXMediaMessage wxMediaMessage = new WXMediaMessage(wxImageObject);
@@ -543,7 +539,7 @@ public class GoodsDetailActivity extends BaseActivity {
                     File file = new File(pictureName);
                     FileOutputStream out;
                     out = new FileOutputStream(file);
-                    bitmap.compress(Bitmap.CompressFormat.JPEG,85, out);
+                    bitmap.compress(Bitmap.CompressFormat.JPEG, 85, out);
                     out.flush();
                     out.close();
                 } catch (Exception e) {

@@ -88,13 +88,13 @@ public class MineFragment extends BaseFragment {
 
     @Event(value = R.id.bt_frg_mine_ask_for, type = View.OnClickListener.class)
     private void onAskForAction(View view) {
-        Intent intent = new Intent(this.getActivity(), AskForActivity.class);
+        Intent intent = new Intent(this.getActivity(), UpdateReasonActivity.class);
         this.getActivity().startActivity(intent);
     }
 
     @Event(value = R.id.bt_frg_mine_promotion_common, type = View.OnClickListener.class)
     private void onPromotionCommonAction(View view) {
-        Intent intent = new Intent(this.getActivity(), PromotionSettingActivity.class);
+        Intent intent = new Intent(this.getActivity(), UpdateRhetoricActivity.class);
         this.getActivity().startActivity(intent);
     }
 
