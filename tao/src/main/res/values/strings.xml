@@ -48,6 +48,7 @@
     <string name="string_tao_create">一键创建</string>
     <string name="string_tao_promotion_new_name">淘妈咪导购推广</string>
     <string name="string_tao_position_new_name">淘妈咪微信导购推广位</string>
+    <string name="string_url_agreement">/webapp/widgets/static/agreement.html</string>
 
     <integer name="integer_emoji_pointer_left">0x1F448</integer>
     <integer name="integer_emoji_pointer_right">0x1F449</integer>

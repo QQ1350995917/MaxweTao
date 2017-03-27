@@ -92,11 +92,20 @@
             android:inputType="textPassword"
             android:maxLength="12" />
 
+        <TextView
+            android:id="@+id/tv_act_register_agreement"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:autoLink="all"
+            android:layout_marginTop="20dp"
+            android:layout_below="@+id/et_act_register_password_confirm"
+            android:text="点击注册表示您同意《用户协议》"/>
+
         <Button
             android:id="@+id/bt_act_register"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/et_act_register_password_confirm"
+            android:layout_below="@+id/tv_act_register_agreement"
             android:layout_marginTop="20dp"
             android:background="@drawable/shape_button_bg"
             android:textColor="@color/white"

@@ -4,10 +4,12 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
+import android.text.Html;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
@@ -47,6 +49,8 @@ public class RegisterActivity extends BaseActivity {
     private EditText et_act_register_password;
     @ViewInject(R.id.et_act_register_password_confirm)
     private EditText et_act_register_password_confirm;
+    @ViewInject(R.id.tv_act_register_agreement)
+    private TextView tv_act_register_agreement;
     @ViewInject(R.id.bt_act_cellphone_code)
     private Button bt_act_cellphone_code;
 
@@ -65,6 +69,17 @@ public class RegisterActivity extends BaseActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        this.tv_act_register_agreement.setText(Html.fromHtml("点击注册表示您同意<u>"+"《用户协议》"+"</u>"));
+    }
+
+    @Event(value = R.id.tv_act_register_agreement, type = View.OnClickListener.class)
+    private void onAgreementAction(View view) {
+        Intent intent = new Intent(this, WebViewActivity.class);
+        intent.putExtra(WebViewActivity.INTENT_KEY_PAGE_URL,
+                this.getString(R.string.string_url_domain) +
+                        this.getString(R.string.string_url_agreement)
+        );
+        this.startActivity(intent);
     }
 
     @Event(value = R.id.bt_act_register_back, type = View.OnClickListener.class)

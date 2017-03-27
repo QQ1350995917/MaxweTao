@@ -2,6 +2,7 @@ package org.maxwe.tao.android.mine;
 
 import android.content.Intent;
 import android.view.View;
+import android.webkit.CookieManager;
 import android.widget.Toast;
 
 import org.maxwe.tao.android.BaseFragment;
@@ -42,12 +43,12 @@ public class MineFragment extends BaseFragment {
 
             @Override
             public void onNeedBrandCallback() {
-                Toast.makeText(MineFragment.this.getContext(),"您已经登录，赶快生成推广位吧",Toast.LENGTH_SHORT).show();
+                Toast.makeText(MineFragment.this.getContext(), "您已经登录，赶快生成推广位吧", Toast.LENGTH_SHORT).show();
             }
 
             @Override
             public void onNeedOkCallback() {
-                Toast.makeText(MineFragment.this.getContext(),"您已经登录，无需再次登录",Toast.LENGTH_SHORT).show();
+                Toast.makeText(MineFragment.this.getContext(), "您已经登录，无需再次登录", Toast.LENGTH_SHORT).show();
             }
 
             @Override
@@ -167,6 +168,9 @@ public class MineFragment extends BaseFragment {
             Intent intent = new Intent(MineFragment.this.getContext(), LoginActivity.class);
             MineFragment.this.getActivity().startActivity(intent);
             MineFragment.this.getActivity().finish();
+        } finally {
+            CookieManager cookieManager = CookieManager.getInstance();
+            cookieManager.removeAllCookie();
         }
     }
 

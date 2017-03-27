@@ -10,7 +10,6 @@ import android.graphics.Paint;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.Message;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.view.View;
@@ -23,16 +22,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
-import com.facebook.common.executors.CallerThreadExecutor;
-import com.facebook.common.references.CloseableReference;
-import com.facebook.datasource.DataSource;
-import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.drawee.view.SimpleDraweeView;
-import com.facebook.imagepipeline.core.ImagePipeline;
-import com.facebook.imagepipeline.datasource.BaseBitmapDataSubscriber;
-import com.facebook.imagepipeline.image.CloseableImage;
-import com.facebook.imagepipeline.request.ImageRequest;
-import com.facebook.imagepipeline.request.ImageRequestBuilder;
 import com.tencent.connect.share.QQShare;
 import com.tencent.mm.opensdk.modelmsg.SendMessageToWX;
 import com.tencent.mm.opensdk.modelmsg.WXImageObject;
@@ -58,6 +48,7 @@ import org.maxwe.tao.android.goods.alimama.AuctionResponseModel;
 import org.maxwe.tao.android.goods.alimama.GoodsEntity;
 import org.maxwe.tao.android.response.ResponseModel;
 import org.maxwe.tao.android.utils.SharedPreferencesUtils;
+import org.maxwe.tao.android.utils.StringUtils;
 import org.xutils.view.annotation.ContentView;
 import org.xutils.view.annotation.Event;
 import org.xutils.view.annotation.ViewInject;
@@ -66,7 +57,6 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.net.URL;
-import java.nio.ByteBuffer;
 import java.text.DecimalFormat;
 
 /**
@@ -368,7 +358,6 @@ public class GoodsDetailActivity extends BaseActivity {
         shareToQQ(true);
     }
 
-
     private void onResponseTaoConvertSuccess(AuctionEntity aliConvertEntity) {
         this.bt_act_goods_detail_get_link.setClickable(false);
         this.bt_act_goods_detail_get_link.setVisibility(View.GONE);
@@ -378,15 +367,22 @@ public class GoodsDetailActivity extends BaseActivity {
         if (aliConvertEntity != null) {
             this.convertEntity = aliConvertEntity;
             String copyText =
-                    BaseActivity.getEMOJIStringByUnicode(0x270C) + goodsEntity.getTitle() + "\r\n" +
-                            "【领券】" + this.goodsEntity.getCouponAmount() + "\r\n" +
-                            "【价格】￥" + (goodsEntity.getZkPrice() - goodsEntity.getCouponAmount()) + "\r\n" +
-                            BaseActivity.getEMOJIStringByUnicode(0x1F446) + "长按复制后打开" +
-                            BaseActivity.getEMOJIStringByUnicode(0x1F4F1) + "淘宝" +
-                            BaseActivity.getEMOJIStringByUnicode(0x1F449) +
-                            (TextUtils.isEmpty(aliConvertEntity.getCouponLinkTaoToken()) ?
-                                    aliConvertEntity.getTaoToken() : aliConvertEntity.getCouponLinkTaoToken()) +
-                            BaseActivity.getEMOJIStringByUnicode(0x1F448) + "\r\n";
+                    BaseActivity.getEMOJIStringByUnicode(0x270C) + goodsEntity.getTitle() + "\r\n";
+            if (this.goodsEntity.getCouponAmount() > 0) {
+                copyText = copyText + "【券后价格】￥" + (goodsEntity.getZkPrice() - goodsEntity.getCouponAmount()) + "\r\n";
+                copyText = copyText + "【领券下单】" + aliConvertEntity.getCouponShortLinkUrl() + "\r\n";
+            } else {
+                copyText = copyText + "【价格】￥" + (goodsEntity.getZkPrice() - goodsEntity.getCouponAmount()) + "\r\n";
+                copyText = copyText + "【下单链接】" + aliConvertEntity.getShortLinkUrl() + "\r\n";
+            }
+
+            copyText = copyText + BaseActivity.getEMOJIStringByUnicode(0x1F446) + "长按复制后打开" +
+                    BaseActivity.getEMOJIStringByUnicode(0x1F4F1) + "淘宝" +
+                    BaseActivity.getEMOJIStringByUnicode(0x1F449) +
+                    (TextUtils.isEmpty(aliConvertEntity.getCouponLinkTaoToken()) ?
+                            aliConvertEntity.getTaoToken() : aliConvertEntity.getCouponLinkTaoToken()) +
+                    BaseActivity.getEMOJIStringByUnicode(0x1F448) + "\r\n";
+            copyText = copyText + SellerApplication.currentUserEntity.getRhetoric() + "\r\n";
             tv_act_goods_detail_get_link_result.setText(copyText);
             new Handler().post(new Runnable() {
                 @Override
@@ -463,7 +459,15 @@ public class GoodsDetailActivity extends BaseActivity {
 
         params.putString(QQShare.SHARE_TO_QQ_TITLE, this.goodsEntity.getTitle());
         params.putString(QQShare.SHARE_TO_QQ_SUMMARY, tv_act_goods_detail_get_link_result.getText().toString());
-        params.putString(QQShare.SHARE_TO_QQ_TARGET_URL, this.goodsEntity.getAuctionUrl());
+        if (this.convertEntity != null) {
+            if (StringUtils.isEmpty(this.convertEntity.getCouponShortLinkUrl())) {
+                params.putString(QQShare.SHARE_TO_QQ_TARGET_URL, this.convertEntity.getShortLinkUrl());
+            } else {
+                params.putString(QQShare.SHARE_TO_QQ_TARGET_URL, this.convertEntity.getCouponShortLinkUrl());
+            }
+        } else {
+            params.putString(QQShare.SHARE_TO_QQ_TARGET_URL, this.goodsEntity.getAuctionUrl());
+        }
         params.putString(QQShare.SHARE_TO_QQ_IMAGE_URL, this.goodsEntity.getPictUrl());
         params.putString(QQShare.SHARE_TO_QQ_APP_NAME, "淘妈咪");
         if (isQQZone) {
@@ -493,37 +497,6 @@ public class GoodsDetailActivity extends BaseActivity {
 
     }
 
-
-    public static void getFrescoCacheBitmap(final Handler handler, Uri uri, Context context) {
-        ImageRequest imageRequest = ImageRequestBuilder.newBuilderWithSource(uri).setProgressiveRenderingEnabled(true).build();
-        ImagePipeline imagePipeline = Fresco.getImagePipeline();
-        DataSource<CloseableReference<CloseableImage>> dataSource = imagePipeline.fetchDecodedImage(imageRequest, context);
-        dataSource.subscribe(new BaseBitmapDataSubscriber() {
-            @Override
-            public void onNewResultImpl(Bitmap bitmap) {
-                if (bitmap == null) {
-                    handler.sendEmptyMessage(0);
-                    return;
-                }
-                Message message = new Message();
-                message.obj = bitmap;
-                handler.sendMessage(message);
-            }
-
-            @Override
-            public void onFailureImpl(DataSource dataSource) {
-                handler.sendEmptyMessage(0);
-            }
-        }, CallerThreadExecutor.getInstance());
-    }
-
-    private static byte[] bitmapToByteArray(Bitmap bitmap) {
-        int bytes = bitmap.getByteCount();
-        ByteBuffer buf = ByteBuffer.allocate(bytes);
-        bitmap.copyPixelsToBuffer(buf);
-        byte[] byteArray = buf.array();
-        return byteArray;
-    }
 
     private void saveBitmapFromUrl(final String url) {
         new Thread(new Runnable() {
