@@ -114,10 +114,10 @@ public class MineFragment extends BaseFragment {
         this.getContext().startActivity(intent);
     }
 
-    @Event(value = R.id.bt_frg_mine_tutorial, type = View.OnClickListener.class)
+    @Event(value = R.id.bt_frg_mine_announcement, type = View.OnClickListener.class)
     private void onTutorialAction(View view) {
         Intent intent = new Intent(this.getContext(), WebViewActivity.class);
-        String url = this.getString(R.string.string_url_domain) + this.getString(R.string.string_url_tutorial);
+        String url = this.getString(R.string.string_url_domain) + this.getString(R.string.string_url_announcement);
         intent.putExtra(WebViewActivity.INTENT_KEY_PAGE_URL, url);
         this.getContext().startActivity(intent);
     }

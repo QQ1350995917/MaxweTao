@@ -156,11 +156,11 @@
                 android:text="关于我们" />
 
             <Button
-                android:id="@+id/bt_frg_mine_tutorial"
+                android:id="@+id/bt_frg_mine_announcement"
                 style="@style/button_list_green"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="新手教程" />
+                android:text="代理公告" />
 
             <Button
                 android:id="@+id/bt_frg_mine_modify_password"
