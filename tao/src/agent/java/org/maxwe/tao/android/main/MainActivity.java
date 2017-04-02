@@ -1,16 +1,19 @@
 package org.maxwe.tao.android.main;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 
 import org.maxwe.tao.android.R;
 import org.maxwe.tao.android.activity.BaseFragmentActivity;
+import org.maxwe.tao.android.activity.ExistDialog;
 import org.maxwe.tao.android.activity.LoginActivity;
 import org.maxwe.tao.android.agent.AgentFragment;
 import org.maxwe.tao.android.code.ActCodeFragment;
@@ -135,5 +138,31 @@ public class MainActivity extends BaseFragmentActivity implements View.OnClickLi
             e.printStackTrace();
         }
         return 0;
+    }
+
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            ExistDialog.Builder builder = new ExistDialog.Builder(this);
+            builder.setMessage("亲，确定退出吗？");
+            builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.dismiss();
+                    MainActivity.this.finish();
+                }
+            });
+
+            builder.setNegativeButton("取消",
+                    new android.content.DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    });
+            builder.create().show();
+            return true;
+        } else if (keyCode == KeyEvent.KEYCODE_HOME) {
+            this.moveTaskToBack(true);
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
     }
 }

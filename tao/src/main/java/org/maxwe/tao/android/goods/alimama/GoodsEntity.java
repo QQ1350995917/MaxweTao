@@ -385,7 +385,7 @@ public class GoodsEntity implements Serializable {
     }
 
     public float getEventRate() {
-        return eventRate;
+        return eventRate ;
     }
 
     public void setEventRate(float eventRate) {
@@ -443,7 +443,7 @@ public class GoodsEntity implements Serializable {
 
     public float getHightestBrokage() {
         if (tkSpecialCampaignIdRateMap == null) {
-            return this.getEventRate();
+            return this.getEventRate() > this.getTkRate() ? this.getEventRate():this.getTkRate();
         }
         float result = 0;
         Collection<String> values = tkSpecialCampaignIdRateMap.values();

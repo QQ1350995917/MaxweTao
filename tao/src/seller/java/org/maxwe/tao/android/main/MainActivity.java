@@ -3,6 +3,7 @@ package org.maxwe.tao.android.main;
 import android.app.ActivityManager;
 import android.content.ComponentName;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
@@ -10,6 +11,7 @@ import android.content.pm.ResolveInfo;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
@@ -20,6 +22,7 @@ import org.maxwe.tao.android.R;
 import org.maxwe.tao.android.SellerApplication;
 import org.maxwe.tao.android.account.user.UserEntity;
 import org.maxwe.tao.android.activity.BaseFragmentActivity;
+import org.maxwe.tao.android.activity.ExistDialog;
 import org.maxwe.tao.android.activity.LoginActivity;
 import org.maxwe.tao.android.common.AuthorActivity;
 import org.maxwe.tao.android.common.BrandActivity;
@@ -299,5 +302,31 @@ public class MainActivity extends BaseFragmentActivity implements View.OnClickLi
             intent.setComponent(cn);
             startActivity(intent);
         }
+    }
+
+
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            ExistDialog.Builder builder = new ExistDialog.Builder(this);
+            builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.dismiss();
+                    MainActivity.this.finish();
+                }
+            });
+
+            builder.setNegativeButton("取消",
+                    new android.content.DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    });
+            builder.create().show();
+            return true;
+        } else if (keyCode == KeyEvent.KEYCODE_HOME) {
+            this.moveTaskToBack(true);
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
     }
 }
