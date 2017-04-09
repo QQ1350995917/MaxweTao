@@ -50,15 +50,15 @@ android {
 //            versionName "snapshot-1.0.24"
 //        }
 
-        agent {
-            applicationId "org.maxwe.tao.agent.android"
-            versionCode 18
-            versionName "1.1"
-        }
+//        agent {
+//            applicationId "org.maxwe.tao.agent.android"
+//            versionCode 18
+//            versionName "1.1"
+//        }
         seller {
             applicationId "org.maxwe.tao.seller.android"
-            versionCode 27
-            versionName "1.2"
+            versionCode 28
+            versionName "1.3"
         }
 
     }

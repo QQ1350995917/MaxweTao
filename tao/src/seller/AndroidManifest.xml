@@ -50,6 +50,7 @@
         <activity android:name=".activity.WebViewActivity" android:launchMode="singleInstance"></activity>
         <activity android:name=".mine.UpdateReasonActivity" android:launchMode="singleInstance"></activity>
         <activity android:name=".mine.UpdateRhetoricActivity" android:launchMode="singleInstance"></activity>
+        <activity android:name=".mine.ReferenceActivity" android:launchMode="singleInstance"></activity>
 
         <activity
             android:name="com.tencent.tauth.AuthActivity"

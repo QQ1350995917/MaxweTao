@@ -59,4 +59,8 @@ public class WebViewActivity extends BaseActivity {
         this.onBackPressed();
     }
 
+    @Override
+    public void onBackPressed() {
+        this.finish();
+    }
 }

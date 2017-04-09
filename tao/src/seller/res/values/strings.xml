@@ -27,8 +27,8 @@
     <!--<string name="string_url_domain">http://172.16.1.187:8080</string>-->
     <!--<string name="string_url_domain">http://58.218.207.186:8080</string>-->
     <!--<string name="string_url_domain">http://10.0.4.176:8080</string>-->
-    <!--<string name="string_url_domain">http://192.168.0.103:8080</string>-->
-    <string name="string_url_domain">http://taomami.net</string>
+    <string name="string_url_domain">http://192.168.0.103:8080</string>
+    <!--<string name="string_url_domain">http://taomami.net</string>-->
     <!--<string name="string_url_domain">http://101.200.56.221:8080</string>-->
     <string name="string_url_account_exist">/user/exist</string>
     <string name="string_url_account_register">/user/signup</string>
@@ -39,6 +39,7 @@
     <string name="string_url_account_updateRhetoric">/user/updateRhetoric</string>
     <string name="string_url_account_logout">/user/signout</string>
     <string name="string_url_account_mine">/user/mine</string>
+    <string name="string_url_account_reference">/user/referenceInfo</string>
     <string name="string_url_account_active">/user/active</string>
     <string name="string_url_meta_smsCode">/meta/smsCode</string>
     <string name="string_url_version_version">/version/version</string>

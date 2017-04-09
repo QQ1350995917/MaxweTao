@@ -100,6 +100,18 @@ public class MineFragment extends BaseFragment {
     }
 
 
+    @Event(value = R.id.bt_frg_mine_reference, type = View.OnClickListener.class)
+    private void onReferenceAction(View view) {
+        Intent intent = new Intent(this.getContext(), ReferenceActivity.class);
+        intent.putExtra(ReferenceActivity.INTENT_KEY_PAGE_URL,
+                this.getString(R.string.string_url_domain) +
+                        this.getString(R.string.string_url_account_reference) +
+                        "?id=" + SellerApplication.currentUserEntity.getId()
+        );
+        this.startActivity(intent);
+    }
+
+
     @Event(value = R.id.bt_frg_mine_password, type = View.OnClickListener.class)
     private void onModifyPasswordAction(View view) {
         Intent intent = new Intent(this.getActivity(), ModifyActivity.class);

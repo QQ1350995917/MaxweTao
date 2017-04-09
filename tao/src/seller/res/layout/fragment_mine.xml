@@ -48,9 +48,15 @@
                 android:layout_below="@+id/bt_frg_mine_ask_for"/>
 
             <Button
+                android:id="@+id/bt_frg_mine_reference"
+                style="@style/button_list_green"
+                android:text="推广赚积分"
+                android:layout_below="@+id/bt_frg_mine_promotion_common"/>
+
+            <Button
                 android:id="@+id/bt_frg_mine_password"
                 style="@style/button_list_green"
-                android:layout_below="@+id/bt_frg_mine_promotion_common"
+                android:layout_below="@+id/bt_frg_mine_reference"
                 android:text="@string/string_modify_password" />
 
             <Button
