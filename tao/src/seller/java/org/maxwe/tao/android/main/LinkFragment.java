@@ -31,6 +31,8 @@ import org.xutils.view.annotation.Event;
 import org.xutils.view.annotation.ViewInject;
 
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Created by Pengwei Ding on 2017-01-02 15:36.
@@ -64,12 +66,19 @@ public class LinkFragment extends BaseFragment {
                 CharSequence str = item.coerceToText(this.getContext());
                 resultString += str;
             }
-            if (resultString.startsWith("http")) {
-                this.et_frg_link_content.setText(resultString);
-                this.bt_frg_link_result.setVisibility(View.GONE);
-            } else {
-                Toast.makeText(this.getContext(), "您粘贴板上的内容不符合转链要求", Toast.LENGTH_SHORT).show();
-            }
+            this.et_frg_link_content.setText(resultString);
+            this.bt_frg_link_result.setVisibility(View.GONE);
+            Pattern p = Pattern.compile("\\b(https?|ftp|file)://[-a-zA-Z0-9+&@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#/%=~_|]",Pattern.CASE_INSENSITIVE);
+            Matcher matcher = p.matcher(resultString);
+            matcher.find();
+//            System.out.println(matcher.group());
+
+//            if (resultString.startsWith("http")) {
+//                this.et_frg_link_content.setText(resultString);
+//                this.bt_frg_link_result.setVisibility(View.GONE);
+//            } else {
+//                Toast.makeText(this.getContext(), "您粘贴板上的内容不符合转链要求", Toast.LENGTH_SHORT).show();
+//            }
         }
     }
 

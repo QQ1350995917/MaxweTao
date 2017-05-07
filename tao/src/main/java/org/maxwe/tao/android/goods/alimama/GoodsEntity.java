@@ -137,7 +137,11 @@ public class GoodsEntity implements Serializable {
     }
 
     public String getPictUrl() {
-        return pictUrl;
+        if (pictUrl.startsWith("http")){
+            return pictUrl;
+        }else{
+            return "http:" + pictUrl;
+        }
     }
 
     public void setPictUrl(String pictUrl) {
