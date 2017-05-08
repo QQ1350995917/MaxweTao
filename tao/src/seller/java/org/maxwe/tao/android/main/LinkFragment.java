@@ -68,10 +68,7 @@ public class LinkFragment extends BaseFragment {
             }
             this.et_frg_link_content.setText(resultString);
             this.bt_frg_link_result.setVisibility(View.GONE);
-            Pattern p = Pattern.compile("\\b(https?|ftp|file)://[-a-zA-Z0-9+&@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#/%=~_|]",Pattern.CASE_INSENSITIVE);
-            Matcher matcher = p.matcher(resultString);
-            matcher.find();
-//            System.out.println(matcher.group());
+
 
 //            if (resultString.startsWith("http")) {
 //                this.et_frg_link_content.setText(resultString);
@@ -86,9 +83,16 @@ public class LinkFragment extends BaseFragment {
     @Event(value = R.id.bt_act_link_action, type = View.OnClickListener.class)
     private void onLinkConvertAction(View view) {
         this.convertUrl = et_frg_link_content.getText().toString();
+
         if (TextUtils.isEmpty(this.convertUrl)) {
             Toast.makeText(LinkFragment.this.getContext(), "请输入要转换的链接", Toast.LENGTH_SHORT).show();
         } else {
+            Pattern p = Pattern.compile("\\b(https?|ftp|file)://[-a-zA-Z0-9+&@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#/%=~_|]",Pattern.CASE_INSENSITIVE);
+            Matcher matcher = p.matcher(convertUrl);
+            if (matcher.find()){
+                this.convertUrl = matcher.group();
+            }
+
             AuthorActivity.requestTaoLoginStatus(this.getContext(), new AuthorActivity.TaoLoginStatusCallback() {
                 @Override
                 public void onNeedLoginCallback() {

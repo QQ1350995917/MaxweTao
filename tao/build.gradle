@@ -61,8 +61,8 @@ android {
 //        }
         seller {
             applicationId "org.maxwe.tao.seller.android"
-            versionCode 29
-            versionName "1.4"
+            versionCode 30
+            versionName "1.5"
         }
 
     }

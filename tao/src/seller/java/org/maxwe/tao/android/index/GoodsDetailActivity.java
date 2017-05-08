@@ -239,15 +239,8 @@ public class GoodsDetailActivity extends BaseActivity {
 
     @Event(value = R.id.bt_act_goods_detail_back, type = View.OnClickListener.class)
     private void onModifyBackAction(View view) {
-        this.onBackPressed();
-    }
-
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
         this.finish();
     }
-
 
     private void onRequestTaoPwd() {
         this.bt_act_goods_detail_get_link.setClickable(false);

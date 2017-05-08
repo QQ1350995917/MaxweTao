@@ -191,7 +191,7 @@ public class BrandActivity extends BaseActivity {
         } else {
             this.setResult(CODE_RESULT_SUCCESS);
         }
-        super.onBackPressed();
+        this.finish();
     }
 
     private void onNoGuideList() {

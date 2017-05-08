@@ -118,4 +118,9 @@ public class LoginActivity extends BaseActivity {
         this.startActivity(intent);
         this.finish();
     }
+
+    @Override
+    public void onBackPressed() {
+        this.finish();
+    }
 }

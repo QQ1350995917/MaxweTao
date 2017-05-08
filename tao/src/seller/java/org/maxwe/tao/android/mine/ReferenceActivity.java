@@ -159,7 +159,7 @@ public class ReferenceActivity extends BaseActivity {
 
     @Event(value = R.id.bt_act_webview_back, type = View.OnClickListener.class)
     private void onBackAction(View view) {
-        this.onBackPressed();
+        this.finish();
     }
 
     @Override

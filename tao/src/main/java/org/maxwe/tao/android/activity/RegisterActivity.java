@@ -89,7 +89,6 @@ public class RegisterActivity extends BaseActivity {
 
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
         this.setResult(LoginActivity.RESPONSE_CODE_FAIL);
         this.finish();
     }
@@ -199,4 +198,5 @@ public class RegisterActivity extends BaseActivity {
             }
         });
     }
+
 }

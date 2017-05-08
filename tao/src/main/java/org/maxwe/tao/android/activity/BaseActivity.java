@@ -43,4 +43,5 @@ public class BaseActivity extends AppCompatActivity {
     public static String getEMOJIStringByUnicode(int unicode){
         return new String(Character.toChars(unicode));
     }
+
 }

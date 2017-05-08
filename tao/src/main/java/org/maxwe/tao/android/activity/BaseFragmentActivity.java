@@ -26,6 +26,10 @@ public class BaseFragmentActivity extends FragmentActivity {
         x.view().inject(this);
     }
 
+    @Override
+    public void onBackPressed() {
+        moveTaskToBack(true);
+    }
 
     protected void onCheckNewVersion(){
         VersionEntity versionModel = new VersionEntity(this.getString(R.string.platform), this.getResources().getInteger(R.integer.integer_app_type), this.getVersionCode());

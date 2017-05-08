@@ -27,6 +27,7 @@ import org.xutils.view.annotation.Event;
 import org.xutils.view.annotation.ViewInject;
 import org.xutils.x;
 
+import java.util.LinkedList;
 import java.util.Map;
 
 
@@ -147,7 +148,13 @@ public class AuthorActivity extends BaseActivity {
 
 
     // 登录成功后跳转的页面 在这个页面加载完毕后执行 SCRIPT_ON_INDEX 脚本
-    private static final String URL_INDEX = "http://www.alimama.com/index.htm";//
+    private static final String URL_INDEX1 = "https://www.alimama.com/index.htm";
+    private static final String URL_INDEX2 = "https://www.alimama.com/index.htm";
+    private static final LinkedList<String> URL_INDEX_SUCCESS= new LinkedList<>();
+    static {
+        URL_INDEX_SUCCESS.add(URL_INDEX1);
+        URL_INDEX_SUCCESS.add(URL_INDEX2);
+    }
     // 执行 SCRIPT_ON_INDEX 脚本后要执行一个脚本跳转到用户后台页面 在该页面执行 SCRIPT_SHOPPING_ADD_CLICK 脚本
     private static final String URL_MY_UNION = "http://pub.alimama.com/myunion.htm";
     private static final String URL_SHOPPING = "http://pub.alimama.com/myunion.htm#!/manage/site/site?tab=4&toPage=1";//导购管理页面
@@ -184,7 +191,6 @@ public class AuthorActivity extends BaseActivity {
         this.wv_act_author.getSettings().setDatabaseEnabled(true);
         this.wv_act_author.getSettings().setDomStorageEnabled(true);
 
-
         this.wv_act_author.setWebViewClient(new WebViewClient() {
             @Override
             public void onPageStarted(WebView view, final String url, Bitmap favicon) {
@@ -194,7 +200,7 @@ public class AuthorActivity extends BaseActivity {
 
             @Override
             public void onPageFinished(final WebView view, String url) {
-                if (url.equals(URL_INDEX)) {
+                if (URL_INDEX_SUCCESS.contains(url)) {
                     //view.loadUrl("javascript:window.local_obj.showSource(document.body)");
                     onSuccessBack();
                 }
@@ -235,7 +241,6 @@ public class AuthorActivity extends BaseActivity {
 
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
         this.setResult(CODE_RESULT_OF_AUTHOR_FAIL);
         this.finish();
     }

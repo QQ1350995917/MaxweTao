@@ -421,7 +421,6 @@ public class GoodsListActivity extends BaseActivity implements SwipeRefreshLayou
     @Event(value = R.id.ib_act_goods_list_back, type = View.OnClickListener.class)
     private void onBackAction(View view) {
         this.resetAction();
-        this.onBackPressed();
         this.finish();
     }
 }

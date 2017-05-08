@@ -74,7 +74,6 @@ public class LostActivity extends BaseActivity {
 
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
         this.setResult(LoginActivity.RESPONSE_CODE_FAIL);
         this.finish();
     }

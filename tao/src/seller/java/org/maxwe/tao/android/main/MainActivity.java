@@ -304,7 +304,6 @@ public class MainActivity extends BaseFragmentActivity implements View.OnClickLi
         }
     }
 
-
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
             ExistDialog.Builder builder = new ExistDialog.Builder(this);
